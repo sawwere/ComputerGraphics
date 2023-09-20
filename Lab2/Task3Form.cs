@@ -21,8 +21,6 @@ namespace Lab2
 
         private (double, double, double) ConvertHSVtoRGB(double h, double s, double v)
         {
-            s *= 100;
-            v *= 100;
             int hi = ((int)Math.Floor(h / 60)) % 6;
             double vmin = ((100 - s) * v / 100);
             double a = (v - vmin) * ((int)h % 60) / 60;
@@ -90,14 +88,14 @@ namespace Lab2
             }
 
             v = MAX;
-            return  (h, s, v);
+            return  (h, s*100, v*100);
         }
 
         void Draw()
         {
             double deltaH = trackBar1.Value;
-            double deltaS = trackBar2.Value / 100.0;
-            double deltaV = trackBar3.Value / 100.0;
+            double deltaS = trackBar2.Value;
+            double deltaV = trackBar3.Value;
             Bitmap newImage = (Bitmap)buffer.Clone();
 
             using (var fastBitmap = new FastBitmap.FastBitmap(newImage))
@@ -111,9 +109,23 @@ namespace Lab2
                         change.Item1 += deltaH;
                         change.Item1 = change.Item1 % 360;
                         change.Item2 += deltaS;
-                        change.Item2 = Math.Min(change.Item2, 1);
+                        if (change.Item2 > 100)
+                        {
+                            change.Item2 = 100;
+                        }
+                        else if (change.Item2 < 0)
+                        {
+                            change.Item2 = 0;
+                        }
                         change.Item3 += deltaV;
-                        change.Item3 = Math.Min(change.Item3, 1);
+                        if (change.Item3 > 100)
+                        {
+                            change.Item3 = 100;
+                        }
+                        else if (change.Item3 < 0)
+                        {
+                            change.Item3 = 0;
+                        }
 
                         var rgb = ConvertHSVtoRGB(change.Item1, change.Item2, change.Item3);
                         fastBitmap[x, y] = Color.FromArgb((int)(rgb.Item1), (int)(rgb.Item2), (int)(rgb.Item3));
@@ -132,6 +144,30 @@ namespace Lab2
         private void button2_Click(object sender, EventArgs e)
         {
             Draw();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (pictureBox2.Image != null)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+
+                sfd.Title = "Save as...";
+                sfd.CheckPathExists = true;
+                sfd.Filter = "Image Files(*.JPEG)|*.JPEG|Image Files(*.JPG)|*.JPG|Image Files(*.PNG)|*.PNG";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        pictureBox2.Image.Save(sfd.FileName);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

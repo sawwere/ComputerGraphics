@@ -80,6 +80,7 @@ namespace Lab3
             this.buttonDraw.TabIndex = 4;
             this.buttonDraw.Text = "Draw";
             this.buttonDraw.UseVisualStyleBackColor = true;
+            this.buttonDraw.Click += new System.EventHandler(this.buttonDraw_Click);
             // 
             // buttonClear
             // 

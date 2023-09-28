@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace FastBitmap
+namespace Tools.FastBitmap
 {
     public unsafe class FastBitmap : IDisposable
     {

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{74FF5F8E-2F71-4ED4-AEE6-83ECB260C363}</ProjectGuid>
+    <ProjectGuid>{DA8D9B65-9965-497B-95BC-EBB7EBD80641}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Lab3</RootNamespace>
-    <AssemblyName>Lab3</AssemblyName>
+    <RootNamespace>Lab4</RootNamespace>
+    <AssemblyName>Lab4</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,7 +31,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -56,27 +54,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Task1Form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Task1Form.Designer.cs">
-      <DependentUpon>Task1Form.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Task2Form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Task2Form.Designer.cs">
-      <DependentUpon>Task2Form.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Task3Form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Task3Form.Designer.cs">
-      <DependentUpon>Task3Form.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -85,11 +62,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Task3Form.resx">
-      <DependentUpon>Task3Form.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -102,15 +75,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\grid.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tools\Tools.csproj">
-      <Project>{aa987dbf-b86f-44c1-a015-cb8c09a3a8dc}</Project>
-      <Name>Tools</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

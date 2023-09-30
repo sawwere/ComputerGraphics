@@ -87,6 +87,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Task1Form.resx">
+      <DependentUpon>Task1Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Task3Form.resx">
       <DependentUpon>Task3Form.cs</DependentUpon>
     </EmbeddedResource>

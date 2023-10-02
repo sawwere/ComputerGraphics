@@ -25,8 +25,8 @@ namespace Lab3
         Point prevPoint;
         int clickX;
         int clickY;
-        Color Color_Zalivka=Color.Blue;
-
+        Color Color_Zalivka=Color.White;
+        Bitmap kartinka;
 
         public Task1Form()
         {
@@ -56,6 +56,9 @@ namespace Lab3
                 button2.Text = "Рисовать далее";
             else
                 button2.Text = "Заливка цветом";
+
+            flag2 = false;
+            button3.Text = "Заливка картинкой";
         }
 
         private void button1_Click(object sender, EventArgs e)//выбор цвета
@@ -125,15 +128,26 @@ namespace Lab3
                 button3.Text = "Рисовать далее";
             else
                 button3.Text = "Заливка картинкой";
+
+            flag = false;
+            button2.Text = "Заливка цветом";
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (flag)
+            if ((flag) && (!flag2))
             {
                 clickX = Convert.ToInt32(e.X);
                 clickY = Convert.ToInt32(e.Y);
                 task_a(Convert.ToInt32(e.X), Convert.ToInt32(e.Y));
+            }
+            if ((!flag) && (flag2))
+            {
+                clickX = Convert.ToInt32(e.X);
+                clickY = Convert.ToInt32(e.Y);
+                Color cvet = drawArea.GetPixel(e.X, e.Y);
+
+                task_b(Convert.ToInt32(e.X), Convert.ToInt32(e.Y),cvet);
             }
         }//считываем клик
 
@@ -153,22 +167,23 @@ namespace Lab3
             } while (help_variable.ToArgb() != Color.Black.ToArgb());//ищем правую границу
 
             x_left++;//!!! 
-            x_right--;//!!!
-
+            x_right--;//!!!        
             Pen p = new Pen(Color_Zalivka);
+
+            if (x_left == x_right)//4 часа      ┗|｀O′|┛      (┬┬﹏┬┬)     .·´¯`(>▂<)´¯`·.         (╯°□°）╯︵ ┻━┻
+                drawArea.SetPixel(x_left, y, Color_Zalivka);
+            else
             g.DrawLine(p, x_left, y, x_right, y);
-            //pictureBox1.Image = drawArea;
 
             for (x = x_left; x <= x_right; x++)//рисуем линии сверху 
             {
                 help_variable = drawArea.GetPixel(x, y + 1);
                 if ((help_variable.ToArgb() != Color.Black.ToArgb()) && (help_variable.ToArgb() != Color_Zalivka.ToArgb()))
                 {
-                    task_a (x, (y + 1));
+                    task_a(x, (y + 1));
                 }
             }
-
-            for (x = x_left; x <= x_right; x++)//рисуем линии снизу 
+            for (x = x_left; x <= x_right; x++)//рисуем линии сверху 
             {
                 help_variable = drawArea.GetPixel(x, y - 1);
                 if ((help_variable.ToArgb() != Color.Black.ToArgb()) && (help_variable.ToArgb() != Color_Zalivka.ToArgb()))
@@ -176,9 +191,102 @@ namespace Lab3
                     task_a(x, (y - 1));
                 }
             }
-
             pictureBox1.Image = drawArea;
         }
 
+        private void task_b(int x, int y, Color cvet)
+        {
+            Color help_variable;
+
+            if (x < 0 || y < 0 || x >= drawArea.Width || y >= drawArea.Height)
+                return;
+            //var c = drawArea.GetPixel(x,)
+            if (drawArea.GetPixel(x, y).ToArgb() != cvet.ToArgb())
+                return;
+            int startX = x;
+            while (drawArea.GetPixel(x, y).ToArgb() == cvet.ToArgb())
+            {
+                drawArea.SetPixel(x, y, kartinka.GetPixel
+                (x % kartinka.Width, y % kartinka.Height));
+                x++;
+                if (x >= drawArea.Width)
+                {
+                    x--;
+                    break;
+                }
+            }
+            int rightX = x;
+            x = startX - 1;
+            if (x < 0)
+                x++;
+            while (drawArea.GetPixel(x, y).ToArgb() == cvet.ToArgb())
+            {
+                drawArea.SetPixel(x, y, kartinka.GetPixel
+                (x % kartinka.Width, y % kartinka.Height));
+                x--;
+                if (x < 0)
+                {
+                    x++;
+                    break;
+                }
+            }
+            for (int i = x + 1; i < rightX; i++)
+            {
+                task_b(i, y - 1,cvet);
+                task_b(i, y + 1,cvet);
+            }
+            pictureBox1.Image = drawArea;
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            pictureBox2.Image= new Bitmap(filename);
+            kartinka = new Bitmap(filename);
+        }
+
+
+        //private void FillPicture(int x, int y, Color oldColor)
+        //{
+        //    if (x < 0 || y < 0 || x >= map.Width || y >= map.Height)
+        //        return;
+        //    if (map.GetPixel(x, y) != oldColor)
+        //        return;
+        //    int startX = x;
+        //    while (map.GetPixel(x, y) == oldColor)
+        //    {
+        //        map.SetPixel(x, y, pictureMap.GetPixel
+        //        (x % pictureMap.Width, y % pictureMap.Height));
+        //        x++;
+        //        if (x >= map.Width)
+        //        {
+        //            x--;
+        //            break;
+        //        }
+        //    }
+        //    int rightX = x;
+        //    x = startX - 1;
+        //    if (x < 0)
+        //        x++;
+        //    while (map.GetPixel(x, y) == oldColor)
+        //    {
+        //        map.SetPixel(x, y, pictureMap.GetPixel
+        //        (x % pictureMap.Width, y % pictureMap.Height));
+        //        x--;
+        //        if (x < 0)
+        //        {
+        //            x++;
+        //            break;
+        //        }
+        //    }
+        //    for (int i = x + 1; i < rightX; i++)
+        //    {
+        //        FillPicture(i, y - 1, oldColor);
+        //        FillPicture(i, y + 1, oldColor);
+        //    }
+        //}
     }
 }

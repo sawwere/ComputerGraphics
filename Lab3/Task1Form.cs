@@ -21,6 +21,7 @@ namespace Lab3
         private bool Zajata=false;//ЛКМ зажата 
         private bool flag = false;// чтобы рисовать далее (поле заливки цветом)
         private bool flag2 = false;//чтобы рисовать далее (поле заливки картинкой) 
+        private bool flag3 = false;//выделить границу
         Point currentPoint;
         Point prevPoint;
         int clickX;
@@ -59,6 +60,8 @@ namespace Lab3
 
             flag2 = false;
             button3.Text = "Заливка картинкой";
+            flag3 = false;
+            button6.Text = "Выделить границу";
         }
 
         private void button1_Click(object sender, EventArgs e)//выбор цвета
@@ -79,15 +82,16 @@ namespace Lab3
             SetBorders();
             flag = false;
             flag2 = false;
+            flag3 = false;
             button2.Text = "Заливка цветом";
             button3.Text = "Заливка картинкой";
-
+            button6.Text = "Выделить границу";
         }
 
         /*начало блока дря рисования*/
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if ((!flag)&&(!flag2))
+            if ((!flag)&&(!flag2) && (!flag3))
             {
                 Zajata = true;
                 currentPoint = e.Location;
@@ -101,7 +105,7 @@ namespace Lab3
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if ((!flag) && (!flag2)) 
+            if ((!flag) && (!flag2) && (!flag3)) 
             {                
                 if (Zajata)
                 {
@@ -131,23 +135,32 @@ namespace Lab3
 
             flag = false;
             button2.Text = "Заливка цветом";
+            flag3 = false;
+            button6.Text = "Выделить границу";
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if ((flag) && (!flag2))
+            if ((flag) && (!flag2) && (!flag3))
             {
                 clickX = Convert.ToInt32(e.X);
                 clickY = Convert.ToInt32(e.Y);
                 task_a(Convert.ToInt32(e.X), Convert.ToInt32(e.Y));
             }
-            if ((!flag) && (flag2))
+            if ((!flag) && (flag2) && (!flag3))
             {
                 clickX = Convert.ToInt32(e.X);
                 clickY = Convert.ToInt32(e.Y);
                 Color cvet = drawArea.GetPixel(e.X, e.Y);
 
                 task_b(Convert.ToInt32(e.X), Convert.ToInt32(e.Y),cvet);
+            }
+            if ((!flag) && (!flag2) && (flag3))
+            {
+                clickX = Convert.ToInt32(e.X);
+                clickY = Convert.ToInt32(e.Y);
+
+                task_c(Convert.ToInt32(e.X), Convert.ToInt32(e.Y));
             }
         }//считываем клик
 
@@ -198,7 +211,8 @@ namespace Lab3
         {
             Color help_variable;
 
-
+            if (x < 0 || y < 0 || x >= drawArea.Width || y >= drawArea.Height)
+                return;
             //var c = drawArea.GetPixel(x,)
             if (drawArea.GetPixel(x, y).ToArgb() != cvet.ToArgb())
                 return;
@@ -238,6 +252,74 @@ namespace Lab3
 
         }
 
+        private void task_c(int x, int y)
+        {
+            
+        }
+        private Point FindStartPoint(Bitmap sourceImage)
+        {
+            Color back_color = drawArea.GetPixel(drawArea.Width - 1, 0);
+            Color cur_color = back_color;
+
+            for (var x = drawArea.Width - 3; x >= 0; x--) //x
+                for (var y = 0; y < drawArea.Height - 3; y++) //y
+                    if (cur_color == back_color)
+                    {
+                        cur_color = drawArea.GetPixel(x, y++);
+                    }
+                    else return new Point(x, y);
+
+            return new Point(0, 0);
+        }
+        private List<Point> GetBorderPoints(Bitmap drawArea_img)
+        {
+            List<Point> border = new List<Point>();
+            Point cur = FindStartPoint(drawArea_img);
+            border.Add(cur);
+            Point start = cur;
+            Point next = cur;
+            Color borderColor = drawArea_img.GetPixel(cur.X, cur.Y);
+
+            //Будем идти против часовой стрелки и ходить внутри области
+            int dir = 8;
+            do
+            {
+                dir += dir - 1 < 0 ? 7 : -2; // поворот на 90 градусов
+                int t = dir;
+                do
+                {
+                    next = cur;
+                    switch (dir)
+                    {
+                        case 0: next.X++; break;
+                        case 1: next.X++; next.Y--; break;
+                        case 2: next.Y--; break;
+                        case 3: next.X--; next.Y--; break;
+                        case 4: next.X--; break;
+                        case 5: next.X--; next.Y++; break;
+                        case 6: next.Y++; break;
+                        case 7: next.X++; next.Y++; break;
+                    }
+                    //Если не нашли - останавливаемся
+                    if (next == start)
+                        break;
+                    if (drawArea_img.GetPixel(next.X, next.Y) == borderColor)
+                    {
+                        //Кладем в список
+                        border.Add(next);
+                        cur = next;
+                        //cur_dir = pred_Dir;
+                        break;
+                    }
+                    dir = (dir + 1) % 8;
+                } while (dir != t);
+            } while (next != start);
+
+            return border;
+        }
+
+
+
         private void button5_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
@@ -247,45 +329,24 @@ namespace Lab3
             kartinka = new Bitmap(filename);
         }
 
+        private void button6_Click(object sender, EventArgs e)
+        {
+            flag3 = !flag3;
+            if (flag3)
+                button6.Text = "Рисовать далее";
+            else
+                button6.Text = "Выделить границу";
 
-        //private void FillPicture(int x, int y, Color oldColor)
-        //{
-        //    if (x < 0 || y < 0 || x >= map.Width || y >= map.Height)
-        //        return;
-        //    if (map.GetPixel(x, y) != oldColor)
-        //        return;
-        //    int startX = x;
-        //    while (map.GetPixel(x, y) == oldColor)
-        //    {
-        //        map.SetPixel(x, y, pictureMap.GetPixel
-        //        (x % pictureMap.Width, y % pictureMap.Height));
-        //        x++;
-        //        if (x >= map.Width)
-        //        {
-        //            x--;
-        //            break;
-        //        }
-        //    }
-        //    int rightX = x;
-        //    x = startX - 1;
-        //    if (x < 0)
-        //        x++;
-        //    while (map.GetPixel(x, y) == oldColor)
-        //    {
-        //        map.SetPixel(x, y, pictureMap.GetPixel
-        //        (x % pictureMap.Width, y % pictureMap.Height));
-        //        x--;
-        //        if (x < 0)
-        //        {
-        //            x++;
-        //            break;
-        //        }
-        //    }
-        //    for (int i = x + 1; i < rightX; i++)
-        //    {
-        //        FillPicture(i, y - 1, oldColor);
-        //        FillPicture(i, y + 1, oldColor);
-        //    }
-        //}
+            foreach (var x in GetBorderPoints(drawArea))
+                drawArea.SetPixel(x.X, x.Y, Color.Red);
+            pictureBox1.Refresh();
+
+            flag = false;
+            button2.Text = "Заливка цветом";
+            flag2 = false;
+            button3.Text = "Заливка картинкой";
+
+
+        }
     }
 }

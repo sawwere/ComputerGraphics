@@ -39,6 +39,7 @@ namespace Lab3
             this.button5 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -65,7 +66,7 @@ namespace Lab3
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(16, 92);
+            this.button4.Location = new System.Drawing.Point(16, 132);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(130, 34);
             this.button4.TabIndex = 4;
@@ -109,7 +110,7 @@ namespace Lab3
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(16, 132);
+            this.button5.Location = new System.Drawing.Point(16, 172);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(130, 34);
             this.button5.TabIndex = 7;
@@ -123,18 +124,29 @@ namespace Lab3
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(16, 173);
+            this.pictureBox2.Location = new System.Drawing.Point(16, 212);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(130, 130);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(16, 92);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(130, 34);
+            this.button6.TabIndex = 9;
+            this.button6.Text = "Выделить границу";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // Task1Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label1);
@@ -164,5 +176,6 @@ namespace Lab3
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button button6;
     }
 }

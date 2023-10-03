@@ -198,8 +198,7 @@ namespace Lab3
         {
             Color help_variable;
 
-            if (x < 0 || y < 0 || x >= drawArea.Width || y >= drawArea.Height)
-                return;
+
             //var c = drawArea.GetPixel(x,)
             if (drawArea.GetPixel(x, y).ToArgb() != cvet.ToArgb())
                 return;
@@ -207,7 +206,7 @@ namespace Lab3
             while (drawArea.GetPixel(x, y).ToArgb() == cvet.ToArgb())
             {
                 drawArea.SetPixel(x, y, kartinka.GetPixel
-                (x % kartinka.Width, y % kartinka.Height));
+                (Math.Abs((x - clickX + kartinka.Width)) % kartinka.Width, Math.Abs((y - clickY + kartinka.Height-1)) % kartinka.Height));
                 x++;
                 if (x >= drawArea.Width)
                 {
@@ -222,7 +221,7 @@ namespace Lab3
             while (drawArea.GetPixel(x, y).ToArgb() == cvet.ToArgb())
             {
                 drawArea.SetPixel(x, y, kartinka.GetPixel
-                (x % kartinka.Width, y % kartinka.Height));
+                (Math.Abs((x - clickX + kartinka.Width)) % kartinka.Width, Math.Abs((y - clickY + kartinka.Height+1)) % kartinka.Height));
                 x--;
                 if (x < 0)
                 {

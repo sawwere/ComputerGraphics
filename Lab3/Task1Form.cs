@@ -254,31 +254,56 @@ namespace Lab3
 
         private void task_c(int x, int y)
         {
-            
-        }
-        private Point FindStartPoint(Bitmap sourceImage)
-        {
-            Color back_color = drawArea.GetPixel(drawArea.Width - 1, 0);
-            Color cur_color = back_color;
+            int x_left = x;
 
-            for (var x = drawArea.Width - 3; x >= 0; x--) //x
-                for (var y = 0; y < drawArea.Height - 3; y++) //y
-                    if (cur_color == back_color)
+            Color help_variable;
+            do
+            {
+                help_variable = drawArea.GetPixel(--x_left, y);
+            } while (help_variable.ToArgb() != Color.Black.ToArgb()); //ищем левую границу
+
+            Point p = new Point(x_left, y);
+            List<Point> border = GetBorderPoints(p);
+
+            border = GetBorderPoints(p).OrderBy(xx => xx.Y).ThenBy(xx => xx.X).ToList();
+
+            for (int i = 0; i < border.Count; i++)
+            {
+                drawArea.SetPixel(border[i].X, border[i].Y, Color.Red);
+            }
+            var bb = new HashSet<Point>();
+            for (int i = 0; i < border.Count - 1; i++)
+            {
+                {
+                    for (int xx = border[i].X; xx < border[i + 1].X; xx++)
                     {
-                        cur_color = drawArea.GetPixel(x, y++);
+                        if (drawArea.GetPixel(xx, border[i].Y) != Color.FromArgb(255, 0, 0, 0))
+                            continue;// drawArea.SetPixel(xx, border[i].Y, Color.Red);
+                        else
+                        {
+                            bb.UnionWith(GetBorderPoints(new Point(xx, border[i].Y)).ToHashSet());
+                            break;
+                        }
                     }
-                    else return new Point(x, y);
-
-            return new Point(0, 0);
+                }
+            }
+            border = bb.ToList().OrderBy(xx => xx.Y).ThenBy(xx => xx.X).ToList();
+            for (int i = 0; i < border.Count; i++)
+            {
+                drawArea.SetPixel(border[i].X, border[i].Y, Color.Red);
+            }
+            pictureBox1.Image = drawArea;
         }
-        private List<Point> GetBorderPoints(Bitmap drawArea_img)
+
+
+        private List<Point> GetBorderPoints(Point start)
         {
             List<Point> border = new List<Point>();
-            Point cur = FindStartPoint(drawArea_img);
+
+            Point cur = start;
             border.Add(cur);
-            Point start = cur;
             Point next = cur;
-            Color borderColor = drawArea_img.GetPixel(cur.X, cur.Y);
+            Color borderColor = drawArea.GetPixel(cur.X, cur.Y);
 
             //Будем идти против часовой стрелки и ходить внутри области
             int dir = 8;
@@ -303,7 +328,7 @@ namespace Lab3
                     //Если не нашли - останавливаемся
                     if (next == start)
                         break;
-                    if (drawArea_img.GetPixel(next.X, next.Y) == borderColor)
+                    if (drawArea.GetPixel(next.X, next.Y) == borderColor)
                     {
                         //Кладем в список
                         border.Add(next);
@@ -325,7 +350,7 @@ namespace Lab3
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
             string filename = openFileDialog1.FileName;
-            pictureBox2.Image= new Bitmap(filename);
+            pictureBox2.Image = new Bitmap(filename);
             kartinka = new Bitmap(filename);
         }
 
@@ -336,10 +361,10 @@ namespace Lab3
                 button6.Text = "Рисовать далее";
             else
                 button6.Text = "Выделить границу";
-
+            /*
             foreach (var x in GetBorderPoints(drawArea))
-                drawArea.SetPixel(x.X, x.Y, Color.Red);
-            pictureBox1.Refresh();
+            drawArea.SetPixel(x.X, x.Y, Color.Red);
+            pictureBox1.Refresh();*/
 
             flag = false;
             button2.Text = "Заливка цветом";

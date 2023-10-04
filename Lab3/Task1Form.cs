@@ -219,8 +219,24 @@ namespace Lab3
             int startX = x;
             while (drawArea.GetPixel(x, y).ToArgb() == cvet.ToArgb())
             {
-                drawArea.SetPixel(x, y, kartinka.GetPixel
-                (Math.Abs((x - clickX + kartinka.Width)) % kartinka.Width, Math.Abs((y - clickY + kartinka.Height-1)) % kartinka.Height));
+                int sx = (x - clickX);
+                int dx = sx;
+                if (sx < 0)
+                {
+                    sx *= -1;
+                }
+                sx = sx % (kartinka.Width-1);
+                int sy = (y - clickY );
+                int dy = sy;
+                if (sy < 0)
+                    sy *= -1;
+                sy = sy % (kartinka.Width-1);
+                if (dx < 0)
+                    sx = kartinka.Width - sx - 1;
+                if (dy < 0)
+                    sy = kartinka.Height - sy - 1;
+
+                drawArea.SetPixel(x, y, kartinka.GetPixel(sx, sy));   
                 x++;
                 if (x >= drawArea.Width)
                 {

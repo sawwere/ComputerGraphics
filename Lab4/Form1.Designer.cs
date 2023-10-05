@@ -47,7 +47,13 @@ namespace Lab4
             this.labelClassifyCustomPointPos = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonFindIntersections = new System.Windows.Forms.Button();
+            this.numericUpDownRotate = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownScaleX = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownScaleY = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleY)).BeginInit();
             this.SuspendLayout();
             // 
             // modeComboBox
@@ -77,6 +83,7 @@ namespace Lab4
             // radioButtonMove
             // 
             this.radioButtonMove.AutoSize = true;
+            this.radioButtonMove.Checked = true;
             this.radioButtonMove.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.radioButtonMove.Location = new System.Drawing.Point(14, 83);
             this.radioButtonMove.Name = "radioButtonMove";
@@ -94,7 +101,6 @@ namespace Lab4
             this.radioButtonRotate.Name = "radioButtonRotate";
             this.radioButtonRotate.Size = new System.Drawing.Size(76, 24);
             this.radioButtonRotate.TabIndex = 14;
-            this.radioButtonRotate.TabStop = true;
             this.radioButtonRotate.Text = "Rotate";
             this.radioButtonRotate.UseVisualStyleBackColor = true;
             // 
@@ -106,7 +112,6 @@ namespace Lab4
             this.radioButtonScale.Name = "radioButtonScale";
             this.radioButtonScale.Size = new System.Drawing.Size(69, 24);
             this.radioButtonScale.TabIndex = 15;
-            this.radioButtonScale.TabStop = true;
             this.radioButtonScale.Text = "Scale";
             this.radioButtonScale.UseVisualStyleBackColor = true;
             // 
@@ -129,6 +134,7 @@ namespace Lab4
             this.buttonAction.TabIndex = 17;
             this.buttonAction.Text = "Perform Action";
             this.buttonAction.UseVisualStyleBackColor = true;
+            this.buttonAction.Click += new System.EventHandler(this.buttonAction_Click);
             // 
             // label2
             // 
@@ -174,7 +180,9 @@ namespace Lab4
             // checkBoxCenterRotate
             // 
             this.checkBoxCenterRotate.AutoSize = true;
-            this.checkBoxCenterRotate.Location = new System.Drawing.Point(150, 113);
+            this.checkBoxCenterRotate.Checked = true;
+            this.checkBoxCenterRotate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCenterRotate.Location = new System.Drawing.Point(96, 119);
             this.checkBoxCenterRotate.Name = "checkBoxCenterRotate";
             this.checkBoxCenterRotate.Size = new System.Drawing.Size(93, 17);
             this.checkBoxCenterRotate.TabIndex = 24;
@@ -184,7 +192,9 @@ namespace Lab4
             // checkBoxCenterScale
             // 
             this.checkBoxCenterScale.AutoSize = true;
-            this.checkBoxCenterScale.Location = new System.Drawing.Point(150, 143);
+            this.checkBoxCenterScale.Checked = true;
+            this.checkBoxCenterScale.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCenterScale.Location = new System.Drawing.Point(96, 142);
             this.checkBoxCenterScale.Name = "checkBoxCenterScale";
             this.checkBoxCenterScale.Size = new System.Drawing.Size(93, 17);
             this.checkBoxCenterScale.TabIndex = 25;
@@ -241,12 +251,47 @@ namespace Lab4
             this.buttonFindIntersections.TabIndex = 30;
             this.buttonFindIntersections.Text = "Find intersections";
             this.buttonFindIntersections.UseVisualStyleBackColor = true;
+            this.buttonFindIntersections.Click += new System.EventHandler(this.buttonFindIntersections_Click);
+            // 
+            // numericUpDownRotate
+            // 
+            this.numericUpDownRotate.Location = new System.Drawing.Point(196, 119);
+            this.numericUpDownRotate.Maximum = new decimal(new int[] {
+            720,
+            0,
+            0,
+            0});
+            this.numericUpDownRotate.Name = "numericUpDownRotate";
+            this.numericUpDownRotate.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownRotate.TabIndex = 31;
+            this.numericUpDownRotate.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownScaleX
+            // 
+            this.numericUpDownScaleX.Location = new System.Drawing.Point(196, 142);
+            this.numericUpDownScaleX.Name = "numericUpDownScaleX";
+            this.numericUpDownScaleX.Size = new System.Drawing.Size(60, 20);
+            this.numericUpDownScaleX.TabIndex = 32;
+            // 
+            // numericUpDownScaleY
+            // 
+            this.numericUpDownScaleY.Location = new System.Drawing.Point(263, 142);
+            this.numericUpDownScaleY.Name = "numericUpDownScaleY";
+            this.numericUpDownScaleY.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownScaleY.TabIndex = 33;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(876, 446);
+            this.Controls.Add(this.numericUpDownScaleY);
+            this.Controls.Add(this.numericUpDownScaleX);
+            this.Controls.Add(this.numericUpDownRotate);
             this.Controls.Add(this.buttonFindIntersections);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelClassifyCustomPointPos);
@@ -268,6 +313,9 @@ namespace Lab4
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRotate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaleY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -292,6 +340,9 @@ namespace Lab4
         private System.Windows.Forms.Label labelClassifyCustomPointPos;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonFindIntersections;
+        private System.Windows.Forms.NumericUpDown numericUpDownRotate;
+        private System.Windows.Forms.NumericUpDown numericUpDownScaleX;
+        private System.Windows.Forms.NumericUpDown numericUpDownScaleY;
     }
 }
 

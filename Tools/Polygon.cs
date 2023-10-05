@@ -11,15 +11,55 @@ namespace Tools
     {
         public Color Color { get; set; }
 
+        /// <returns>X координата самой левой точки</returns>
         public int X 
-        { 
-            get; 
-            private set; 
+        {
+            get { return this.points.OrderBy(_x => _x.X).First().X; }
         }
+
+        /// <returns>Координата Y данного примитива - 
+        /// Y координата самой верхней(относительно отображения в winform) его точки</returns>
         public int Y 
-        { 
-            get; 
-            private set; 
+        {
+            get { return this.points.OrderBy(_x => _x.Y).First().Y; }
+        }
+
+        /// <returns>X координата самой левой точки</returns>
+        public int Left
+        {
+            get { return X; }
+        }
+
+        /// <returns>X координата самой правой точки</returns>
+        public int Right
+        {
+            get { return this.points.OrderBy(_x => _x.X).Last().X; }
+        }
+        /// <returns>Y координата самой верхней точки</returns>
+        public int Top
+        {
+            get { return Y; }
+        }
+        /// <returns>Y координата самой нижней точки</returns>
+        public int Bottom
+        {
+            get { return this.points.OrderBy(_x => _x.Y).Last().X; }
+        }
+
+        /// <returns>Количество вершин</returns>
+        public int Count
+        {
+            get { return this.points.Count; }
+        }
+
+        public Point2D Center
+        {
+            get
+            { 
+                int sx = this.points.Select(x => x.X).Sum();
+                int sy = this.points.Select(x => x.Y).Sum();
+                return new Point2D(sx / this.points.Count, sy / points.Count);
+            }
         }
 
         private List<Point2D> points;
@@ -27,7 +67,12 @@ namespace Tools
         public Point2D this[int i]
         {
             get { return points[i]; }
-            set { points[i] = value; }
+            set 
+            {
+                if (value is null)
+                    throw new ArgumentNullException();
+                points[i] = value; 
+            }
         }
 
         private void Initialize(List<Point2D> points, Color color)
@@ -63,10 +108,6 @@ namespace Tools
         public void AddNextPoint(Point2D point)
         {
             points.Add(point);
-            if (point.X < X)
-                X = point.X;
-            if (point.Y < Y)
-                Y = point.Y;
         }
 
         public void AddNextPoint(Point point)
@@ -79,8 +120,6 @@ namespace Tools
             if (points.Count == 0)
                 return;
             points.RemoveAt(points.Count - 1);
-            X = points.Min(x => x.X);
-            Y = points.Min(x => x.Y);
         }
 
         public void Clear()

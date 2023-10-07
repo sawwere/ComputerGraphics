@@ -263,15 +263,18 @@ namespace Lab4
             }
             else if (radioButtonScale.Checked)
             {
+                var scalePoint = customPoint;
                 switch (currentMode)
                 {
                     case Mode.POLYGON:
                         {
+                            if (checkBoxCenterScale.Checked)
+                                scalePoint = polygon.Center;
                             for (int i = 0; i < polygon.Count; i++)
                             {
-                                int scaleX = (int)numericUpDownScaleX.Value;
-                                int scaleY = (int)numericUpDownScaleY.Value;
-                                var pf = Scale(polygon[i], scaleX, scaleY);
+                                double scaleX = (int)numericUpDownScaleX.Value;
+                                double scaleY = (int)numericUpDownScaleY.Value;
+                                var pf = Scale(polygon[i], scaleX, scaleY, scalePoint);
                                 polygon[i].X = (int)pf.X;
                                 polygon[i].Y = (int)pf.Y;
                             }
@@ -386,46 +389,35 @@ namespace Lab4
             return pointF;
         }
 
-        private PointF Scale(Point2D point2D, int scaleX, int scaleY) // TODO
+        private PointF Scale(Point2D point2D, double scaleX, double scaleY, Point2D scalePoint) // TODO
         {
             // переделать
-            var mashtabX = (double)scaleX / 100d;
-            var mashtabY = (double)scaleY / 100d;
             PointF pointF = new PointF(point2D.X, point2D.Y);
-            PointF minPolyPoint, maxPolyPoint;
+            double[] offsetVector = new double[3] { pointF.X, pointF.Y, 1 };
 
-            double[] offsetVector = new double[3] { point2D.X, point2D.Y, 1 };
-            double[,] Matrix = new double[3, 3];
+            scaleX = (double)(scaleX / 100d);
+            scaleY = (double)(scaleY / 100d);
+
+
+            pointF = new PointF(scalePoint.X, scalePoint.Y);
+
+
             double[] resultVector = new double[3];
-            
-            if (checkBoxCenterScale.Checked)
-            {
-                pointF = new PointF((polygon.Left + polygon.Right) / 2, (polygon.Bottom + polygon.Top) / 2);
-            }
-            else
-            {
-                pointF = ;
-            }
-            
-            Matrix[0, 0] = scaleX;
-            Matrix[0, 1] = 0;
-            Matrix[0, 2] = 0; 
-            Matrix[1, 0] = 0;
-            Matrix[1, 1] = scaleY;
-            Matrix[1, 2] = 0; 
-            Matrix[2, 0] = (1 - scaleX) * pointF.X;
-            Matrix[2, 1] = (1 - scaleY) * pointF.Y;
-            Matrix[2, 2] = 1;
+            double[][] Matrix = new double[3][]{
+                new double[3] { scaleX,   0, 0 },
+                new double[3] { 0, scaleY, 0 },
+                new double[3] { ((1 - scaleX) * pointF.X), ((1 - scaleY) * pointF.Y), 1 } };
+
 
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
-                    resultVector[i] += Matrix[j, i] * offsetVector[j];
+                    resultVector[i] += Matrix[j][i] * offsetVector[j];
             }
 
             pointF.X = (float)resultVector[0];
             pointF.Y = (float)resultVector[1];
-            return new PointF();
+            return pointF;
         }
     }
 }

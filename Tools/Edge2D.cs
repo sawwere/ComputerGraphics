@@ -63,7 +63,15 @@ namespace Tools
             return Math.Sqrt((point1.X - point2.X) * (point1.X - point2.X)
                 + (point1.Y - point2.Y) * (point1.Y - point2.Y));
         }
+        public Point2D Origin
+        {
+            get { return Point1.DistanceTo(0, 0) < Point2.DistanceTo(0, 0) ? Point1 : Point2; }
+        }
 
+        public Point2D Dest
+        {
+            get { return Point1.DistanceTo(0, 0) > Point2.DistanceTo(0, 0) ? Point1 : Point2; }
+        }
         public (Point2D, EdgeIntersectionType) Intersect(Edge2D other) // TODO
         {
             double v = Point2.X - Point1.X;

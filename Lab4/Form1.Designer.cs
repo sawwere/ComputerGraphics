@@ -273,16 +273,36 @@ namespace Lab4
             // numericUpDownScaleX
             // 
             this.numericUpDownScaleX.Location = new System.Drawing.Point(196, 142);
+            this.numericUpDownScaleX.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDownScaleX.Name = "numericUpDownScaleX";
             this.numericUpDownScaleX.Size = new System.Drawing.Size(60, 20);
             this.numericUpDownScaleX.TabIndex = 32;
+            this.numericUpDownScaleX.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // numericUpDownScaleY
             // 
             this.numericUpDownScaleY.Location = new System.Drawing.Point(263, 142);
+            this.numericUpDownScaleY.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDownScaleY.Name = "numericUpDownScaleY";
             this.numericUpDownScaleY.Size = new System.Drawing.Size(50, 20);
             this.numericUpDownScaleY.TabIndex = 33;
+            this.numericUpDownScaleY.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // Form1
             // 

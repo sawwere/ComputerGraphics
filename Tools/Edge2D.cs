@@ -10,18 +10,18 @@ namespace Tools
     public class Edge2D : IPrimitive
     {
         public Color Color { get; set; }
-        public int X 
+        public float X 
         { 
             get { return Math.Min(Point1.X, Point2.X); }
         }
-        public int Y
+        public float Y
         {
             get { return Math.Min(Point1.Y, Point2.Y); }
         }
 
         public Point2D Center
         {
-            get { return new Point2D(Math.Abs(Point1.X - Point2.X) / 2, Math.Abs(Point1.Y - Point2.Y) / 2, Color); }
+            get { return new Point2D((Point1.X + Point2.X) / 2.0f, (Point1.Y + Point2.Y) / 2.0f, Color); }
         }
         public Point2D Point1 { get; set; }
         public Point2D Point2 { get; set; }
@@ -36,7 +36,7 @@ namespace Tools
             Color = color;
         }
 
-        public Edge2D(int x1, int y1, int x2, int y2, Color c)
+        public Edge2D(float x1, float y1, float x2, float y2, Color c)
         {
             Initialize(new Point2D(x1, y1, c), new Point2D(x2, y2, c), c);
         }

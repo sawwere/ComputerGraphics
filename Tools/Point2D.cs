@@ -10,17 +10,17 @@ namespace Tools
     public class Point2D : IPrimitive
     {
         public Color Color { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
-        public Point2D(int x, int y)
+        public Point2D(float x, float y)
         {
             X = x;
             Y = y;
             Color = Color.Black;
         }
 
-        public Point2D(int x, int y, Color c)
+        public Point2D(float x, float y, Color c)
         {
             X = x;
             Y = y;
@@ -53,16 +53,16 @@ namespace Tools
             g.DrawRectangle(pen, X - width / 2, Y - width / 2, width, width);
         }
 
-        public Point ToPoint()
+        public PointF ToPoint()
         {
-            return new Point(X, Y);
+            return new PointF(X, Y);
         }
 
         /// <summary>
         /// Сравнивает значение координат Y данной точки и точки other
         /// </summary>
         /// <returns>меньше 0 - ниже;  больше 0 - выше; == 0 - равны</returns>
-        public int CompareByY(Point2D other)
+        public float CompareByY(Point2D other)
         {
             return Y - other.Y;
         }
@@ -71,7 +71,7 @@ namespace Tools
         /// Сравнивает значение координат X данной точки и точки other
         /// </summary>
         /// <returns>меньше 0 - левее; больше 0 - Правее; == 0 - равны</returns>
-        public int CompareByX(Point2D other)
+        public float CompareByX(Point2D other)
         {
             return X - other.X;
         }
@@ -80,13 +80,13 @@ namespace Tools
         /// Сравнивает положение точки и отрезка
         /// </summary>
         /// <returns>меньше 0 - ниже; больше 0 - выше; == 0 - на отрезке</returns>
-        public int CompareToEdge(Edge2D edge) // TODO
+        public float CompareToEdge(Edge2D edge) // TODO
         {
             //int val = (X - edge.Origin.X) * (edge.Dest.Y - edge.Origin.Y) 
             //    - (Y - edge.Origin.Y) * (edge.Dest.X - edge.Origin.X);
             Point2D a = this - edge.Origin;
             Point2D b = edge.Dest - edge.Origin;
-            int val = a.X * b.Y - a.Y * b.X;
+            float val = a.X * b.Y - a.Y * b.X;
             Console.WriteLine(val);
             return val;
         }
@@ -148,7 +148,7 @@ namespace Tools
             return (parity == 1 ? true : false);
         }
 
-        MyEdge edgeType(Point a, Edge2D e)
+        MyEdge edgeType(PointF a, Edge2D e)
         {
             Point2D v = e.Origin;
             Point2D w = e.Dest;

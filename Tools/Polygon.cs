@@ -12,36 +12,36 @@ namespace Tools
         public Color Color { get; set; }
 
         /// <returns>X координата самой левой точки</returns>
-        public int X 
+        public float X 
         {
             get { return this.points.OrderBy(_x => _x.X).First().X; }
         }
 
         /// <returns>Координата Y данного примитива - 
         /// Y координата самой верхней(относительно отображения в winform) его точки</returns>
-        public int Y 
+        public float Y 
         {
             get { return this.points.OrderBy(_x => _x.Y).First().Y; }
         }
 
         /// <returns>X координата самой левой точки</returns>
-        public int Left
+        public float Left
         {
             get { return X; }
         }
 
         /// <returns>X координата самой правой точки</returns>
-        public int Right
+        public float Right
         {
             get { return this.points.OrderBy(_x => _x.X).Last().X; }
         }
         /// <returns>Y координата самой верхней точки</returns>
-        public int Top
+        public float Top
         {
             get { return Y; }
         }
         /// <returns>Y координата самой нижней точки</returns>
-        public int Bottom
+        public float Bottom
         {
             get { return this.points.OrderBy(_x => _x.Y).Last().X; }
         }
@@ -55,9 +55,9 @@ namespace Tools
         public Point2D Center
         {
             get
-            { 
-                int sx = this.points.Select(x => x.X).Sum();
-                int sy = this.points.Select(x => x.Y).Sum();
+            {
+                float sx = this.points.Select(x => x.X).Sum();
+                float sy = this.points.Select(x => x.Y).Sum();
                 return new Point2D(sx / this.points.Count, sy / points.Count);
             }
         }

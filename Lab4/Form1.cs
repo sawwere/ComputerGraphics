@@ -164,14 +164,14 @@ namespace Lab4
             switch (currentMode)
             {
                 case Mode.POINT:
-                    int dx = customPoint.CompareByX(point);
+                    float dx = customPoint.CompareByX(point);
                     if (dx < 0)
                         res.Append("Левее, ");
                     else if (dx > 0)
                         res.Append("Правее, ");
                     else
                         res.Append("Равны по х, ");
-                    int dy = customPoint.CompareByY(point);
+                    float dy = customPoint.CompareByY(point);
                     dy *= -1; // Так как рисуем сверху вниз, а значит положения точек по у противоположны настоящим
                     if (dy < 0)
                         res.Append("Ниже");
@@ -181,8 +181,8 @@ namespace Lab4
                         res.Append("Равны по y");
                     break;
                 case Mode.EDGE:
-                    int cmp = customPoint.CompareToEdge(edge);
-                    cmp *= -1; // Так как рисуем сверху вниз, а значит положения точек по у противоположны настоящим
+                    float cmp = customPoint.CompareToEdge(edge);
+                   // cmp *= -1; // Так как рисуем сверху вниз, а значит положения точек по у противоположны настоящим
                     if (cmp < 0)
                         res.Append("Ниже");
                     else if (cmp > 0)
@@ -208,35 +208,35 @@ namespace Lab4
                 {
                     case Mode.POLYGON:
                         {
-                            int offsetX = customPoint.X - polygon.Center.X;
-                            int offsetY = customPoint.Y - polygon.Center.Y;
+                            float offsetX = customPoint.X - polygon.Center.X;
+                            float offsetY = customPoint.Y - polygon.Center.Y;
                             for (int i = 0; i < polygon.Count; i++)
                             {
                                 var pf = Translate(polygon[i], offsetX, offsetY);
-                                polygon[i].X = (int)pf.X;
-                                polygon[i].Y = (int)pf.Y;
+                                polygon[i].X = pf.X;
+                                polygon[i].Y = pf.Y;
                             }
                             break;
                         }
                     case Mode.EDGE:
                         {
-                            int offsetX = customPoint.X - edge.Center.X;
-                            int offsetY = customPoint.Y - edge.Center.Y;
+                            float offsetX = customPoint.X - edge.Center.X;
+                            float offsetY = customPoint.Y - edge.Center.Y;
                             var pf = Translate(edge.Point1, offsetX, offsetY);
-                            edge.Point1.X = (int)pf.X;
-                            edge.Point1.Y = (int)pf.Y;
+                            edge.Point1.X = pf.X;
+                            edge.Point1.Y = pf.Y;
                             pf = Translate(edge.Point2, offsetX, offsetY);
-                            edge.Point2.X = (int)pf.X;
-                            edge.Point2.Y = (int)pf.Y;
+                            edge.Point2.X = pf.X;
+                            edge.Point2.Y = pf.Y;
                             break;
                         }
                     case Mode.POINT:
                         {
-                            int offsetX = customPoint.X - point.X;
-                            int offsetY = customPoint.X - point.X;
+                            float offsetX = customPoint.X - point.X;
+                            float offsetY = customPoint.X - point.X;
                             var pf = Translate(point, offsetX, offsetY);
-                            point.X = (int)pf.X;
-                            point.Y = (int)pf.Y;
+                            point.X = pf.X;
+                            point.Y = pf.Y;
                             break;
                         }
                 }
@@ -254,9 +254,21 @@ namespace Lab4
                             for (int i = 0; i < polygon.Count; i++)
                             {
                                 var pf = Rotate(polygon[i], rotatePoint, rotateAngle);
-                                polygon[i].X = (int)pf.X;
-                                polygon[i].Y = (int)pf.Y;
+                                polygon[i].X = pf.X;
+                                polygon[i].Y = pf.Y;
                             }
+                            break;
+                        }
+                    case Mode.EDGE:
+                        {
+                            if (checkBoxCenterRotate.Checked)
+                                rotatePoint = edge.Center;
+                            var pf = Rotate(edge.Point1, rotatePoint, rotateAngle);
+                            edge.Point1.X = pf.X;
+                            edge.Point1.Y = pf.Y;
+                            pf = Rotate(edge.Point2, rotatePoint, rotateAngle);
+                            edge.Point2.X = pf.X;
+                            edge.Point2.Y = pf.Y;
                             break;
                         }
                 }
@@ -275,8 +287,8 @@ namespace Lab4
                                 double scaleX = (int)numericUpDownScaleX.Value;
                                 double scaleY = (int)numericUpDownScaleY.Value;
                                 var pf = Scale(polygon[i], scaleX, scaleY, scalePoint);
-                                polygon[i].X = (int)pf.X;
-                                polygon[i].Y = (int)pf.Y;
+                                polygon[i].X = pf.X;
+                                polygon[i].Y = pf.Y;
                             }
                             break;
                         }
@@ -336,16 +348,16 @@ namespace Lab4
             pictureBox1.Invalidate();
         }
 
-        private Point2D Translate(Point2D pp, int offsetX, int offsetY)
+        private Point2D Translate(Point2D pp, float offsetX, float offsetY)
         {
-            int[] offsetVector = new int[3] { pp.X, pp.Y, 1 };
+            float[] offsetVector = new float[3] { pp.X, pp.Y, 1 };
 
-            int[] resultVector = new int[3];
+            float[] resultVector = new float[3];
 
-            int[][] Matrix = new int[3][]{
-                new int[3] { 1,   0, 0 },
-                new int[3] { 0,   1, 0 },
-                new int[3] { offsetX, offsetY, 1 } };
+            float[][] Matrix = new float[3][]{
+                new float[3] { 1,   0, 0 },
+                new float[3] { 0,   1, 0 },
+                new float[3] { offsetX, offsetY, 1 } };
 
             for (int i = 0; i < 3; i++)
             {
@@ -361,16 +373,11 @@ namespace Lab4
             PointF pointF = new PointF(point2D.X, point2D.Y);
             double pointA, pointB;
             var angle = (rotateAngle / 180D) * Math.PI;
-            if (currentMode == Mode.POLYGON) // ??
-            {
+
                 pointA = -rotatePoint.X * Math.Cos(angle) + rotatePoint.Y * Math.Sin(angle) + rotatePoint.X;
                 pointB = -rotatePoint.X * Math.Sin(angle) - rotatePoint.Y * Math.Cos(angle) + rotatePoint.Y;
-            }
-            else
-            {
-                pointA = -rotatePoint.X * (Math.Cos(angle) - 1) + rotatePoint.Y * Math.Sin(angle);
-                pointB = -rotatePoint.X * Math.Sin(angle) - rotatePoint.Y * (Math.Cos(angle) - 1);
-            }
+
+
 
             double[] offsetVector = new double[3] { pointF.X, pointF.Y, 1 };
             double[][] Matrix = new double[3][]{

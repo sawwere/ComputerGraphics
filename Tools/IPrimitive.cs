@@ -10,8 +10,8 @@ namespace Tools
     {
         System.Drawing.Color Color { get; set; }
 
-        int X { get; }
-        int Y { get; }
+        float X { get; }
+        float Y { get; }
 
         void Draw(System.Drawing.Graphics g); 
     }

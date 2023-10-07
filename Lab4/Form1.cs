@@ -389,6 +389,42 @@ namespace Lab4
         private PointF Scale(Point2D point2D, int scaleX, int scaleY) // TODO
         {
             // переделать
+            var mashtabX = (double)scaleX / 100d;
+            var mashtabY = (double)scaleY / 100d;
+            PointF pointF = new PointF(point2D.X, point2D.Y);
+            PointF minPolyPoint, maxPolyPoint;
+
+            double[] offsetVector = new double[3] { point2D.X, point2D.Y, 1 };
+            double[,] Matrix = new double[3, 3];
+            double[] resultVector = new double[3];
+            
+            if (checkBoxCenterScale.Checked)
+            {
+                pointF = new PointF((polygon.Left + polygon.Right) / 2, (polygon.Bottom + polygon.Top) / 2);
+            }
+            else
+            {
+                pointF = ;
+            }
+            
+            Matrix[0, 0] = scaleX;
+            Matrix[0, 1] = 0;
+            Matrix[0, 2] = 0; 
+            Matrix[1, 0] = 0;
+            Matrix[1, 1] = scaleY;
+            Matrix[1, 2] = 0; 
+            Matrix[2, 0] = (1 - scaleX) * pointF.X;
+            Matrix[2, 1] = (1 - scaleY) * pointF.Y;
+            Matrix[2, 2] = 1;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                    resultVector[i] += Matrix[j, i] * offsetVector[j];
+            }
+
+            pointF.X = (float)resultVector[0];
+            pointF.Y = (float)resultVector[1];
             return new PointF();
         }
     }

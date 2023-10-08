@@ -13,5 +13,5 @@ namespace Tools
     public enum MyEdge { TOUCHING, CROSSING, INESSENTIAL };
     public enum EdgeIntersectionType { PARRALEL, INTERSECT, NOT_INTERSECT, COLLINEAR };
     public enum PointRealtiveToPolygon { INSIDE, OUTSIDE, BOUNDARY };
-    public enum classifyEnum { LEFT, RIGHT, BEYOUND, BEHIND, BETWEEN, ORIGIN, DESTINATION};
+    public enum classifyEnum { LEFT, RIGHT, BEYOND, BEHIND, BETWEEN, ORIGIN, DESTINATION};
 }

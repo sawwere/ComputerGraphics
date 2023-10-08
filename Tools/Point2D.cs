@@ -91,6 +91,17 @@ namespace Tools
             return val;
         }
 
+        public float CompareToEdge2(Edge2D edge) // TODO
+        {
+            //int val = (X - edge.Origin.X) * (edge.Dest.Y - edge.Origin.Y) 
+            //    - (Y - edge.Origin.Y) * (edge.Dest.X - edge.Origin.X);
+            Point2D a = this - edge.Point1;
+            Point2D b = edge.Point2 - edge.Point1;
+            float val = a.X * b.Y - a.Y * b.X;
+            Console.WriteLine(val);
+            return val;
+        }
+
         /// <summary>
         /// Расстояние до точки other
         /// </summary>
@@ -166,16 +177,17 @@ namespace Tools
                     return MyEdge.INESSENTIAL;
             }
         }
-        classifyEnum classify(Point2D p0, Point2D p1)
+        public classifyEnum classify(Point2D p0, Point2D p1)
         {
             Point2D p2 = this;
             Point2D a = p1 - p0;
             Point2D b = p2 - p0;
             double sa = a.X * b.Y - b.X * a.Y;
+            Console.WriteLine(sa);
             if (sa > 0.0) return classifyEnum.LEFT;
             if (sa < 0.0) return classifyEnum.RIGHT;
             if ((a.X * b.X < 0) || (a.Y * b.Y < 0)) return classifyEnum.BEHIND;
-            //if (a.length() < b.length()) return classifyEnum.BEYOUND;
+            if (a.DistanceTo(0, 0) < b.DistanceTo(0, 0)) return classifyEnum.BEYOND;
             if (p0 == p2) return classifyEnum.ORIGIN;
             if (p1 == p2) return classifyEnum.DESTINATION;
 

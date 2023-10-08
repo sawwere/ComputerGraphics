@@ -67,7 +67,7 @@ namespace Tools
         public Point2D this[int i]
         {
             get { return points[i]; }
-            set 
+            private set 
             {
                 if (value is null)
                     throw new ArgumentNullException();
@@ -131,13 +131,31 @@ namespace Tools
         {
             if (points.Count < 1)
                 return;
-            Pen pen = new Pen(Color.Black);
+            Pen pen = new Pen(Color);
             for (int i = 0; i < points.Count - 1; i++)
             {
                 g.DrawLine(pen, points[i].X, points[i].Y, points[i + 1].X, points[i + 1].Y);
             }
 
             g.DrawLine(pen, points[0].X, points[0].Y, points.Last().X, points.Last().Y);
+        }
+
+        public (Polygon, Polygon) Split(int left, int right)
+        {
+            Polygon p1 = new Polygon(Color.Red);
+            Polygon p2 = new Polygon(Color.Green);
+            if (left > right)
+                (left, right) = (right, left);
+            for (int i = left; i <= right; i++)
+                p1.AddNextPoint(points[i]);
+
+            for (int i = right; i != left; i = (i+1)%points.Count)
+            {
+                p2.AddNextPoint(points[i]);
+            }
+            p2.AddNextPoint(points[left]);
+
+            return (p1, p2);
         }
     }
 }

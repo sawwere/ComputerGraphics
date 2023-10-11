@@ -350,21 +350,17 @@ namespace Lab4
 
         private Point2D Translate(Point2D pp, float offsetX, float offsetY)
         {
-            float[] offsetVector = new float[3] { pp.X, pp.Y, 1 };
+            double[] offsetVector = new double[3] { pp.X, pp.Y, 1 };
 
-            float[] resultVector = new float[3];
+            //float[] resultVector = new float[3];
 
-            float[][] Matrix = new float[3][]{
-                new float[3] { 1,   0, 0 },
-                new float[3] { 0,   1, 0 },
-                new float[3] { offsetX, offsetY, 1 } };
+            double[][] Matrix = new double[3][]{
+                new double[3] { 1,   0, 0 },
+                new double[3] { 0,   1, 0 },
+                new double[3] { offsetX, offsetY, 1 } };
 
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                    resultVector[i] += Matrix[j][i] * offsetVector[j];
-            }
-            return new Point2D(resultVector[0], resultVector[1]);
+            double[] resultVector = Multiply(Matrix, offsetVector);
+            return new Point2D((float)resultVector[0], (float)resultVector[1]);
         }
 
 
@@ -384,12 +380,7 @@ namespace Lab4
                 new double[3] {  Math.Cos(angle),   Math.Sin(angle), 0 },
                 new double[3] { -Math.Sin(angle),   Math.Cos(angle), 0 },
                 new double[3] { pointA, pointB, 1 } };
-            double[] resultVector = new double[3];
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                    resultVector[i] += offsetVector[j] * Matrix[j][i];
-            }
+            double[] resultVector = Multiply(Matrix, offsetVector);
 
             pointF.X = (float)resultVector[0];
             pointF.Y = (float)resultVector[1];
@@ -407,24 +398,29 @@ namespace Lab4
 
 
             pointF = new PointF(scalePoint.X, scalePoint.Y);
-
-
-            double[] resultVector = new double[3];
             double[][] Matrix = new double[3][]{
                 new double[3] { scaleX,   0, 0 },
                 new double[3] { 0, scaleY, 0 },
                 new double[3] { ((1 - scaleX) * pointF.X), ((1 - scaleY) * pointF.Y), 1 } };
 
 
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                    resultVector[i] += Matrix[j][i] * offsetVector[j];
-            }
+            double[]  resultVector = Multiply(Matrix, offsetVector);
 
             pointF.X = (float)resultVector[0];
             pointF.Y = (float)resultVector[1];
             return pointF;
+        }
+
+
+        private double[] Multiply(double[][] Matrix, double[] array)
+        {
+            double[] resultVector = new double[3];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                    resultVector[i] += Matrix[j][i] * array[j];
+            }
+            return resultVector;
         }
     }
 }

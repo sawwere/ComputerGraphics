@@ -27,7 +27,7 @@ namespace Tools
             Color = c;
         }
 
-        public Point2D(Point point)
+        public Point2D(PointF point)
         {
             X = point.X;
             Y = point.Y;
@@ -87,7 +87,6 @@ namespace Tools
             Point2D a = this - edge.Origin;
             Point2D b = edge.Dest - edge.Origin;
             float val = a.X * b.Y - a.Y * b.X;
-            Console.WriteLine(val);
             return val;
         }
 
@@ -98,7 +97,6 @@ namespace Tools
             Point2D a = this - edge.Point1;
             Point2D b = edge.Point2 - edge.Point1;
             float val = a.X * b.Y - a.Y * b.X;
-            Console.WriteLine(val);
             return val;
         }
 

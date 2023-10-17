@@ -110,7 +110,7 @@ namespace Tools
             points.Add(point);
         }
 
-        public void AddNextPoint(Point point)
+        public void AddNextPoint(PointF point)
         {
             AddNextPoint(new Point2D(point));
         }

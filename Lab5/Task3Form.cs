@@ -100,26 +100,16 @@ namespace Lab5
         
         void Bezier()
         {
+
+            g.Clear(Color.White);
+            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            drawArea = new Bitmap(pictureBox1.Image);
+            g = Graphics.FromImage(drawArea);
             int j = 0;
             float step = 0.01f;
             g.DrawLines(new Pen(Color.White), result2);// плохо
             g.DrawLines(new Pen(Color.White), result);//плохо
             
-            /*
-            for (int i=0; i<101; i++)
-            {
-                if (((drawArea.GetPixel((int)result[i].X, (int)result[i].Y)).ToArgb() != Color.Black.ToArgb()) ||
-                    ((drawArea.GetPixel((int)result[i].X, (int)result[i].Y)).ToArgb() != Color.Blue.ToArgb()))
-                {
-                    drawArea.SetPixel((int)result[i].X, (int)result[i].Y, Color.White);
-                }
-                if (((drawArea.GetPixel((int)result2[i].X, (int)result2[i].Y)).ToArgb() != Color.Black.ToArgb()) ||
-                    ((drawArea.GetPixel((int)result2[i].X, (int)result2[i].Y)).ToArgb() != Color.Blue.ToArgb()))
-                {
-                    drawArea.SetPixel((int)result2[i].X, (int)result2[i].Y, Color.White);
-                }
-
-            }*/
 
 
             result = result2;

@@ -1,0 +1,30 @@
+solid Uranium STLWriter Sat 14 Oct 2023 13:46:00
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 23.205001831054688 50.0 -50.0
+    vertex 50.0 -50.0 -50.0
+    vertex -50.0 -23.204999923706055 -50.0
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 7.7350006103515625 -7.7350006103515625 50.0
+    vertex 50.0 -50.0 -50.0
+    vertex 23.205001831054688 50.0 -50.0
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex -50.0 -23.204999923706055 -50.0
+    vertex 50.0 -50.0 -50.0
+    vertex 7.7350006103515625 -7.7350006103515625 50.0
+  endloop
+endfacet
+facet normal 0.0 0.0 0.0
+  outer loop
+    vertex 23.205001831054688 50.0 -50.0
+    vertex -50.0 -23.204999923706055 -50.0
+    vertex 7.7350006103515625 -7.7350006103515625 50.0
+  endloop
+endfacet
+endsolid Uranium STLWriter Sat 14 Oct 2023 13:46:00

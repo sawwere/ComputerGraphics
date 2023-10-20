@@ -18,7 +18,7 @@ namespace Tools
             var res = new float[4][]
             { new float[4] {1,  0,  0,  0},
               new float[4] {0,  1,  0,  0},
-              new float[4] {0,  0,  0,  -1/k},
+              new float[4] {0,  0,  1,  -1/k},
               new float[4] {0,  0,  0,  1}
             };
             return res;
@@ -49,8 +49,8 @@ namespace Tools
         /// </summary>
         public static float[][] MatrixIsometric()
         {
-            double r_phi = Math.PI / 6;
-            double r_psi = Math.PI / 6;
+            double r_phi = Math.PI / 4;
+            double r_psi = Math.PI / 4;
             float cos_phi = (float)Math.Cos(r_phi);
             float sin_phi = (float)Math.Sin(r_phi);
             float cos_psi = (float)Math.Cos(r_psi);

@@ -87,7 +87,6 @@ namespace Tools.Primitives
 
         public void Draw(Graphics g, Projection pr = 0, Pen pen = null)
         {
-            g.Clear(Color.White);
             foreach (Triangle3D t in polygons)
             {
                 if (t.isVisible)

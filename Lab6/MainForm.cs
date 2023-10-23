@@ -15,8 +15,59 @@ using Tools;
 
 namespace Lab6
 {
+    
+
     public partial class MainForm : Form
     {
+        public struct MeshInfo
+        {
+            public string name;
+            public Mesh mesh;
+            public float dx;
+            public float dy;
+            public float dz;
+
+            public float rx;
+            public float ry;
+            public float rz;
+
+            public float sx;
+            public float sy;
+            public float sz;
+
+            public MeshInfo(string name, Mesh mesh)
+            {
+                this.name = name;
+                this.mesh = mesh;
+                this.dx = 0;
+                this.dy = 0;
+                this.dz = 0;
+                this.rx = 0;
+                this.ry = 0;
+                this.rz = 0;
+                this.sx = 100;
+                this.sy = 100;
+                this.sz = 100;
+            }
+
+            public MeshInfo(string name, Mesh mesh, float dx, float dy, float dz, float rx, float ry, float rz, float sx, float sy, float sz)
+            {
+                this.name = name;
+                this.mesh = mesh;
+                this.dx = dx;
+                this.dy = dy;
+                this.dz = dz;
+                this.rx = rx;
+                this.ry = ry;
+                this.rz = rz;
+                this.sx = sx;
+                this.sy = sy;
+                this.sz = sz;
+            }
+        }
+
+        private FormRotationFigure rotationFigure = new FormRotationFigure();
+
         Graphics g;
         Projection projection = Projection.ORTHOGR_X;
         Edge3D axisLineX;
@@ -28,23 +79,96 @@ namespace Lab6
         private enum DeltaAxis { X, Y, Z, None };
         private DeltaAxis curDeltaAxis = DeltaAxis.None;
 
+        private Dictionary<string, MeshInfo> sceneObjects;
+
         Mesh figure = null;
+
+        private void radioButtonScene_CheckedChanged(object sender, EventArgs e)
+        {
+            figure = sceneObjects[((RadioButton)sender).Name].mesh;
+            UpdateInspector();
+        }
+
+        private void AddToHierarchy(string name)
+        {
+            RadioButton rb = new RadioButton();
+            rb.Name = name;
+            rb.Checked = false;
+            rb.Text = rb.Name;
+            rb.Width = panelSceneHierarchy.Width - 40;
+            rb.Height = 30;
+            rb.Location = new Point(15, sceneObjects.Count * (rb.Height));
+            rb.CheckedChanged += radioButtonScene_CheckedChanged;
+            foreach (Control r in panelSceneHierarchy.Controls)
+            {
+                if ( r is RadioButton)
+                    ((RadioButton)r).Checked = false;
+            }
+            rb.Checked = true;
+            panelSceneHierarchy.Controls.Add(rb);
+        }
 
         public MainForm()
         {
             InitializeComponent();
+            AddOwnedForm(rotationFigure);
+
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
-            //g = pictureBox1.CreateGraphics();
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
-            figure = Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools\Meshes\Гексаэдр.stl");
+
+            Mesh def = Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl");
+            sceneObjects = new Dictionary<string, MeshInfo>();
+            sceneObjects["Гексаэдр"] = new MeshInfo("Гексаэдр", def);
+            figure = sceneObjects.First().Value.mesh;
+            AddToHierarchy("Гексаэдр");
+            
+
+
             axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(200, 0, 0), Color.Red);
             axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 200, 0), Color.Green);
             axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 200), Color.Blue);
             comboBoxProjection.SelectedIndex = 0;
 
-            groupBoxInspector.Text = $"Объект: Гексаэдр.stl";
+            
+        }
+
+        private void AddMeshToScene()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog1.Filter = "Stl files (*.stl)|*.stl|All files (*.*)|*.*";
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+
+                    try
+                    {
+                        var filename = openFileDialog1.FileName;
+                        figure = Tools.Meshes.MeshBuilder.LoadFromFile(filename);
+
+                        StringBuilder figureName = new StringBuilder();
+                        figureName.Append( filename.Split('\\').Last().Split('.').First());
+                        int i = 1;
+                        while (sceneObjects.ContainsKey(figureName.ToString()))
+                        {
+                            figureName.Append(i);
+                            i++;
+                        }
+
+                        sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+                        AddToHierarchy(figureName.ToString());
+
+                        groupBoxInspector.Text = $"Объект: {figureName}";
+                        Render();
+                    }
+                    catch
+                    {
+                        DialogResult result = MessageBox.Show("Could not open file",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void DrawAxesLines()
@@ -66,7 +190,11 @@ namespace Lab6
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
             g.Clear(Color.Gray);
-            figure.Draw(g, projection);
+            foreach (var kv in sceneObjects)
+            {
+                kv.Value.mesh.Draw(g, projection);
+            }
+            
             DrawAxesLines();
             pictureBox1.Refresh();
             stopWatch.Stop();
@@ -84,26 +212,7 @@ namespace Lab6
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog1.Filter = "Stl files (*.stl)|*.stl|All files (*.*)|*.*";
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-
-                    try
-                    {
-                        var filename = openFileDialog1.FileName;
-                        figure = Tools.Meshes.MeshBuilder.LoadFromFile(filename);
-                        groupBoxInspector.Text = $"Объект: {filename.Split('\\').Last()}";
-                        Render();
-                    }
-                    catch
-                    {
-                        DialogResult result = MessageBox.Show("Could not open file",
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
+            AddMeshToScene();
             
         }
 
@@ -159,21 +268,22 @@ namespace Lab6
             
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
             var prx = axisLineX.ProjectedEdge(projection);
-            if (Math.Abs(p.CompareToEdge2(prx)) < 1000)
+            Console.WriteLine($"{prx.Point1.X} {prx.Point1.Y} {prx.Point2.X} {prx.Point2.Y}");
+            if (prx.Length > 0.1f  && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
             prx = axisLineY.ProjectedEdge(projection);
-            if (Math.Abs(p.CompareToEdge2(prx)) < 1000)
+            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
             prx = axisLineZ.ProjectedEdge(projection);
-            if (Math.Abs(p.CompareToEdge2(prx)) < 1000)
+            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
                 startAxisValue = p.X;
@@ -236,16 +346,6 @@ namespace Lab6
             Render();
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonToDefault_Click(object sender, EventArgs e)
         {
             //TRANSLATE
@@ -264,9 +364,65 @@ namespace Lab6
                 tb.Text = "0";
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            ResetHierarchy();
+            AddMeshToScene();
+        }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddMeshToScene();
+        }
+
+        private void buttonRotateFigure_Click(object sender, EventArgs e)
+        {
+            if (rotationFigure.ShowDialog() == DialogResult.OK)
+            {
+                var list = rotationFigure.GetPoints();
+                foreach (var obj in list)
+                    Console.WriteLine(obj.X);
+            }
+        }
+
+        private void ResetHierarchy()
+        {
+            sceneObjects = new Dictionary<string, MeshInfo>();
+            figure = new Mesh();
+            panelSceneHierarchy.Controls.Clear();
+            var lab = new Label();
+            lab.Text = "Сцена";
+            panelSceneHierarchy.Controls.Add(lab);
+        }
+
+        private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            figure = new Mesh();
+            figure.make_hexahedron();
+            StringBuilder figureName = new StringBuilder("Гексаэдр");
+            int i = 1;
+            while (sceneObjects.ContainsKey(figureName.ToString()))
+            {
+                figureName.Append(i);
+                i++;
+            }
+            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+            AddToHierarchy(figureName.ToString());
+
+            groupBoxInspector.Text = $"Объект: {figureName}";
+
+            Render();
+        }
+
+        private void sceneAddFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddMeshToScene();
+        }
+
+        private void buttonSceneClear_Click(object sender, EventArgs e)
+        {
+            ResetHierarchy();
+            Render();
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Lab6
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label50 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
@@ -54,9 +55,7 @@ namespace Lab6
             this.label14 = new System.Windows.Forms.Label();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.comboBoxProjection = new System.Windows.Forms.ComboBox();
-            this.buttonLoad = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.buttonReflectX = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonReflectY = new System.Windows.Forms.Button();
@@ -90,7 +89,7 @@ namespace Lab6
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonRotateFigure = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.groupBoxInspector = new System.Windows.Forms.GroupBox();
@@ -140,10 +139,26 @@ namespace Lab6
             this.label42 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
             this.labelFPS = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.panelSceneHierarchy = new System.Windows.Forms.Panel();
+            this.label49 = new System.Windows.Forms.Label();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.sceneAddToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tetrahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hexahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.octahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.icosahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dodecahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sceneAddFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.buttonSceneClear = new System.Windows.Forms.Button();
+            this.sceneClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -166,6 +181,8 @@ namespace Lab6
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown29)).BeginInit();
             this.groupBoxInspector.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.panelSceneHierarchy.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -193,7 +210,7 @@ namespace Lab6
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox1.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox1.Location = new System.Drawing.Point(12, 52);
+            this.groupBox1.Location = new System.Drawing.Point(13, 40);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(375, 207);
             this.groupBox1.TabIndex = 4;
@@ -449,9 +466,9 @@ namespace Lab6
             this.groupBox2.Controls.Add(this.comboBox5);
             this.groupBox2.Controls.Add(this.comboBoxProjection);
             this.groupBox2.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox2.Location = new System.Drawing.Point(395, 3);
+            this.groupBox2.Location = new System.Drawing.Point(396, 33);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(700, 43);
+            this.groupBox2.Size = new System.Drawing.Size(700, 40);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Опции рендера";
@@ -486,7 +503,7 @@ namespace Lab6
             "Алгоритм Z-буфера",
             "Алгоритм закраски Гуро",
             "Текстурирование"});
-            this.comboBox5.Location = new System.Drawing.Point(387, 16);
+            this.comboBox5.Location = new System.Drawing.Point(387, 13);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(121, 21);
             this.comboBox5.TabIndex = 1;
@@ -504,44 +521,15 @@ namespace Lab6
             "Ортографическая_X",
             "Ортографическая_Y",
             "Ортографическая_Z"});
-            this.comboBoxProjection.Location = new System.Drawing.Point(75, 16);
+            this.comboBoxProjection.Location = new System.Drawing.Point(84, 13);
             this.comboBoxProjection.Name = "comboBoxProjection";
             this.comboBoxProjection.Size = new System.Drawing.Size(121, 21);
             this.comboBoxProjection.TabIndex = 0;
             this.comboBoxProjection.SelectedIndexChanged += new System.EventHandler(this.comboBoxProjection_SelectedIndexChanged);
             // 
-            // buttonLoad
-            // 
-            this.buttonLoad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonLoad.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.buttonLoad.ForeColor = System.Drawing.Color.SeaShell;
-            this.buttonLoad.Location = new System.Drawing.Point(12, 12);
-            this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(140, 34);
-            this.buttonLoad.TabIndex = 7;
-            this.buttonLoad.Text = " Загрузить";
-            this.buttonLoad.UseVisualStyleBackColor = false;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonSave.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.buttonSave.ForeColor = System.Drawing.Color.SeaShell;
-            this.buttonSave.Location = new System.Drawing.Point(169, 12);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(140, 34);
-            this.buttonSave.TabIndex = 8;
-            this.buttonSave.Text = "Сохранить";
-            this.buttonSave.UseVisualStyleBackColor = false;
             // 
             // buttonReflectX
             // 
@@ -563,7 +551,7 @@ namespace Lab6
             this.groupBox3.Controls.Add(this.buttonReflectX);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox3.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox3.Location = new System.Drawing.Point(13, 265);
+            this.groupBox3.Location = new System.Drawing.Point(13, 253);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(374, 65);
             this.groupBox3.TabIndex = 10;
@@ -616,7 +604,7 @@ namespace Lab6
             this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox4.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox4.Location = new System.Drawing.Point(12, 337);
+            this.groupBox4.Location = new System.Drawing.Point(13, 324);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(375, 211);
             this.groupBox4.TabIndex = 11;
@@ -847,12 +835,12 @@ namespace Lab6
             this.groupBox5.Controls.Add(this.label20);
             this.groupBox5.Controls.Add(this.label21);
             this.groupBox5.Controls.Add(this.comboBox1);
-            this.groupBox5.Controls.Add(this.button1);
+            this.groupBox5.Controls.Add(this.buttonRotateFigure);
             this.groupBox5.Controls.Add(this.label15);
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox5.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox5.Location = new System.Drawing.Point(12, 554);
+            this.groupBox5.Location = new System.Drawing.Point(14, 541);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(375, 201);
             this.groupBox5.TabIndex = 32;
@@ -1021,18 +1009,19 @@ namespace Lab6
             this.comboBox1.Size = new System.Drawing.Size(115, 28);
             this.comboBox1.TabIndex = 22;
             // 
-            // button1
+            // buttonRotateFigure
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.button1.Location = new System.Drawing.Point(175, 25);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 30);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Построить";
-            this.button1.UseVisualStyleBackColor = false;
+            this.buttonRotateFigure.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonRotateFigure.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonRotateFigure.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRotateFigure.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.buttonRotateFigure.Location = new System.Drawing.Point(175, 25);
+            this.buttonRotateFigure.Name = "buttonRotateFigure";
+            this.buttonRotateFigure.Size = new System.Drawing.Size(115, 30);
+            this.buttonRotateFigure.TabIndex = 21;
+            this.buttonRotateFigure.Text = "Построить";
+            this.buttonRotateFigure.UseVisualStyleBackColor = false;
+            this.buttonRotateFigure.Click += new System.EventHandler(this.buttonRotateFigure_Click);
             // 
             // label15
             // 
@@ -1081,7 +1070,7 @@ namespace Lab6
             this.groupBoxInspector.Controls.Add(this.label13);
             this.groupBoxInspector.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBoxInspector.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBoxInspector.Location = new System.Drawing.Point(1098, 52);
+            this.groupBoxInspector.Location = new System.Drawing.Point(1101, 297);
             this.groupBoxInspector.Name = "groupBoxInspector";
             this.groupBoxInspector.Size = new System.Drawing.Size(375, 161);
             this.groupBoxInspector.TabIndex = 18;
@@ -1374,7 +1363,7 @@ namespace Lab6
             this.groupBox6.Controls.Add(this.label43);
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox6.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox6.Location = new System.Drawing.Point(1098, 219);
+            this.groupBox6.Location = new System.Drawing.Point(1102, 464);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(375, 161);
             this.groupBox6.TabIndex = 36;
@@ -1644,54 +1633,136 @@ namespace Lab6
             this.labelFPS.AutoSize = true;
             this.labelFPS.BackColor = System.Drawing.Color.Transparent;
             this.labelFPS.ForeColor = System.Drawing.Color.Lime;
-            this.labelFPS.Location = new System.Drawing.Point(393, 52);
+            this.labelFPS.Location = new System.Drawing.Point(393, 76);
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(39, 13);
             this.labelFPS.TabIndex = 12;
             this.labelFPS.Text = "FPS: 0";
             // 
-            // pictureBox1
+            // panelSceneHierarchy
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
-            this.pictureBox1.Location = new System.Drawing.Point(395, 52);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(700, 700);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
-            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            this.panelSceneHierarchy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelSceneHierarchy.AutoScroll = true;
+            this.panelSceneHierarchy.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelSceneHierarchy.Controls.Add(this.label49);
+            this.panelSceneHierarchy.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.panelSceneHierarchy.ForeColor = System.Drawing.Color.SeaShell;
+            this.panelSceneHierarchy.Location = new System.Drawing.Point(1102, 76);
+            this.panelSceneHierarchy.Name = "panelSceneHierarchy";
+            this.panelSceneHierarchy.Size = new System.Drawing.Size(375, 215);
+            this.panelSceneHierarchy.TabIndex = 42;
             // 
-            // radioButton5
+            // label49
             // 
-            this.radioButton5.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.radioButton5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton5.Image = global::Lab6.Properties.Resources.rotate;
-            this.radioButton5.Location = new System.Drawing.Point(396, 195);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(40, 40);
-            this.radioButton5.TabIndex = 37;
-            this.radioButton5.UseVisualStyleBackColor = true;
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(4, 5);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(61, 20);
+            this.label49.TabIndex = 0;
+            this.label49.Text = "Сцена";
             // 
-            // radioButton4
+            // toolStrip1
             // 
-            this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.radioButton4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.radioButton4.Image = global::Lab6.Properties.Resources.scale;
-            this.radioButton4.Location = new System.Drawing.Point(395, 149);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(40, 40);
-            this.radioButton4.TabIndex = 38;
-            this.radioButton4.UseVisualStyleBackColor = true;
+            this.toolStrip1.BackColor = System.Drawing.Color.Silver;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1,
+            this.toolStripDropDownButton2});
+            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1484, 22);
+            this.toolStrip1.TabIndex = 43;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
+            this.toolStripDropDownButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.toolStripDropDownButton1.ForeColor = System.Drawing.Color.Black;
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(52, 19);
+            this.toolStripDropDownButton1.Text = "Файл";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.openToolStripMenuItem.Text = "Открыть";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.saveAsToolStripMenuItem.Text = "Сохранить как";
+            // 
+            // toolStripDropDownButton2
+            // 
+            this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sceneAddToolStripMenuItem,
+            this.sceneClearToolStripMenuItem});
+            this.toolStripDropDownButton2.ForeColor = System.Drawing.Color.Black;
+            this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
+            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(54, 19);
+            this.toolStripDropDownButton2.Text = "Сцена";
+            // 
+            // sceneAddToolStripMenuItem
+            // 
+            this.sceneAddToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tetrahedronToolStripMenuItem,
+            this.hexahedronToolStripMenuItem,
+            this.octahedronToolStripMenuItem,
+            this.icosahedronToolStripMenuItem,
+            this.dodecahedronToolStripMenuItem,
+            this.sceneAddFromFileToolStripMenuItem});
+            this.sceneAddToolStripMenuItem.Name = "sceneAddToolStripMenuItem";
+            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneAddToolStripMenuItem.Text = "Добавить модель";
+            // 
+            // tetrahedronToolStripMenuItem
+            // 
+            this.tetrahedronToolStripMenuItem.Name = "tetrahedronToolStripMenuItem";
+            this.tetrahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.tetrahedronToolStripMenuItem.Text = "Тетраэдр";
+            // 
+            // hexahedronToolStripMenuItem
+            // 
+            this.hexahedronToolStripMenuItem.Name = "hexahedronToolStripMenuItem";
+            this.hexahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.hexahedronToolStripMenuItem.Text = "Гексаэдр";
+            this.hexahedronToolStripMenuItem.Click += new System.EventHandler(this.hexahedronToolStripMenuItem_Click);
+            // 
+            // octahedronToolStripMenuItem
+            // 
+            this.octahedronToolStripMenuItem.Name = "octahedronToolStripMenuItem";
+            this.octahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.octahedronToolStripMenuItem.Text = "Октаэдр";
+            // 
+            // icosahedronToolStripMenuItem
+            // 
+            this.icosahedronToolStripMenuItem.Name = "icosahedronToolStripMenuItem";
+            this.icosahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.icosahedronToolStripMenuItem.Text = "Икосаэдр";
+            // 
+            // dodecahedronToolStripMenuItem
+            // 
+            this.dodecahedronToolStripMenuItem.Name = "dodecahedronToolStripMenuItem";
+            this.dodecahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.dodecahedronToolStripMenuItem.Text = "Додекаэдр";
+            // 
+            // sceneAddFromFileToolStripMenuItem
+            // 
+            this.sceneAddFromFileToolStripMenuItem.Name = "sceneAddFromFileToolStripMenuItem";
+            this.sceneAddFromFileToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.sceneAddFromFileToolStripMenuItem.Text = "Загрузить из файла";
+            this.sceneAddFromFileToolStripMenuItem.Click += new System.EventHandler(this.sceneAddFromFileToolStripMenuItem_Click);
             // 
             // radioButton1
             // 
@@ -1701,12 +1772,76 @@ namespace Lab6
             this.radioButton1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
             this.radioButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.radioButton1.Image = global::Lab6.Properties.Resources.move;
-            this.radioButton1.Location = new System.Drawing.Point(395, 103);
+            this.radioButton1.Location = new System.Drawing.Point(395, 127);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(40, 40);
             this.radioButton1.TabIndex = 38;
             this.radioButton1.TabStop = true;
             this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.radioButton4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.radioButton4.Image = global::Lab6.Properties.Resources.scale;
+            this.radioButton4.Location = new System.Drawing.Point(395, 173);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(40, 40);
+            this.radioButton4.TabIndex = 38;
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            this.radioButton5.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButton5.AutoSize = true;
+            this.radioButton5.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.radioButton5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.radioButton5.Image = global::Lab6.Properties.Resources.rotate;
+            this.radioButton5.Location = new System.Drawing.Point(396, 219);
+            this.radioButton5.Name = "radioButton5";
+            this.radioButton5.Size = new System.Drawing.Size(40, 40);
+            this.radioButton5.TabIndex = 37;
+            this.radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
+            this.pictureBox1.Location = new System.Drawing.Point(395, 76);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(700, 700);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.SizeChanged += new System.EventHandler(this.pictureBox1_SizeChanged);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            // 
+            // buttonSceneClear
+            // 
+            this.buttonSceneClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSceneClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonSceneClear.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonSceneClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSceneClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonSceneClear.Location = new System.Drawing.Point(1342, 35);
+            this.buttonSceneClear.Name = "buttonSceneClear";
+            this.buttonSceneClear.Size = new System.Drawing.Size(134, 35);
+            this.buttonSceneClear.TabIndex = 36;
+            this.buttonSceneClear.Text = "Очистить";
+            this.buttonSceneClear.UseVisualStyleBackColor = false;
+            this.buttonSceneClear.Click += new System.EventHandler(this.buttonSceneClear_Click);
+            // 
+            // sceneClearToolStripMenuItem
+            // 
+            this.sceneClearToolStripMenuItem.Name = "sceneClearToolStripMenuItem";
+            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneClearToolStripMenuItem.Text = "Очистить";
+            this.sceneClearToolStripMenuItem.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
             // MainForm
             // 
@@ -1714,6 +1849,9 @@ namespace Lab6
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1484, 767);
+            this.Controls.Add(this.buttonSceneClear);
+            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.panelSceneHierarchy);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.radioButton4);
             this.Controls.Add(this.radioButton5);
@@ -1723,12 +1861,11 @@ namespace Lab6
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.buttonSave);
-            this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
+            this.ForeColor = System.Drawing.Color.SeaShell;
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.groupBox1.ResumeLayout(false);
@@ -1759,6 +1896,10 @@ namespace Lab6
             this.groupBoxInspector.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.panelSceneHierarchy.ResumeLayout(false);
+            this.panelSceneHierarchy.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1773,9 +1914,7 @@ namespace Lab6
         private System.Windows.Forms.Button buttonApplyTransform;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox comboBoxProjection;
-        private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonReflectX;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonReflectY;
@@ -1801,7 +1940,7 @@ namespace Lab6
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonRotateFigure;
         private System.Windows.Forms.GroupBox groupBoxInspector;
         private System.Windows.Forms.Button buttonToDefault;
         private System.Windows.Forms.Label label11;
@@ -1881,6 +2020,22 @@ namespace Lab6
         private System.Windows.Forms.Label label47;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Panel panelSceneHierarchy;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.Button buttonSceneClear;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
+        private System.Windows.Forms.ToolStripMenuItem sceneAddToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tetrahedronToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hexahedronToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem octahedronToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem icosahedronToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dodecahedronToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sceneAddFromFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sceneClearToolStripMenuItem;
     }
 }
 

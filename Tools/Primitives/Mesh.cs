@@ -93,5 +93,28 @@ namespace Tools.Primitives
                     t.Draw(g, pr, pen);
             }
         }
+        public void reflectX()
+        {
+            if (polygons != null)
+                foreach (var f in polygons)
+                    f.reflectX();
+            UpdateCenter();
+        }
+
+        public void reflectY()
+        {
+            if (polygons != null)
+                foreach (var f in polygons)
+                    f.reflectY();
+            UpdateCenter();
+        }
+
+        public void reflectZ()
+        {
+            if (polygons != null)
+                foreach (var f in polygons)
+                    f.reflectZ();
+            UpdateCenter();
+        }
     }
 }

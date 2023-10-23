@@ -76,7 +76,18 @@ namespace Tools
               new float[4] {tx, ty, tz, 1}
             };
         }
-
+        /// <summary>
+        /// Матриица аффинного преобразования - scale
+        /// </summary>
+        public static float[][] MatrixScale(float kx, float ky, float kz)
+        {
+            return new float[4][]
+            { new float[4] {kx,  0,  0,  0},
+              new float[4] {0,  ky,  0,  0},
+              new float[4] {0,  0,  kz,  0},
+              new float[4] {0, 0, 0, 1}
+            };
+        }
         /// <summary>
         /// Матриица аффинного преобразования - поворот
         /// </summary>

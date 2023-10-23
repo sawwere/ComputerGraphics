@@ -228,7 +228,12 @@ namespace Lab6
             float kx = (float)numericUpDown4.Value;
             float ky = (float)numericUpDown5.Value;
             float kz = (float)numericUpDown6.Value;
+            float o_x = figure.Center.X;
+            float o_y = figure.Center.Y;
+            float o_z = figure.Center.Z;
+            figure.Translate(-o_x, -o_y, -o_z);
             figure.Scale(kx, ky, kz);
+            figure.Translate(o_x, o_y, o_z);
 
             //ROTATE
             float old_x = figure.Center.X;
@@ -248,22 +253,25 @@ namespace Lab6
             Render();
         }
 
-        private void buttonReflectZ_Click(object sender, EventArgs e)
+        private void buttonReflectZ_Click(object sender, EventArgs e)     
         {
-
+        figure.reflectZ();
+        Render();
         }
 
         private void buttonReflectX_Click(object sender, EventArgs e)
         {
-            
+        figure.reflectX();
+        Render();
         }
 
         private void buttonReflectY_Click(object sender, EventArgs e)
         {
-
+        figure.reflectY();
+        Render();
         }
 
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+            private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));

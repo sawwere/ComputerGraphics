@@ -73,7 +73,15 @@ namespace Tools.Primitives
 
         public void Scale(float kx, float ky, float kz)
         {
-
+            float[][] xyz = new float[1][]
+            {
+                new float[4] { X, Y, Z, 1 }
+            };
+            float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx / 100, ky / 100, kz / 100));
+            c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
+            X = c[0][0];
+            Y = c[0][1];
+            Z = c[0][2];
         }
 
         /// <summary>

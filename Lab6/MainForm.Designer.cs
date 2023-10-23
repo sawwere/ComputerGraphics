@@ -153,12 +153,12 @@ namespace Lab6
             this.icosahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dodecahedronToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sceneAddFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sceneClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
-            this.sceneClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -418,6 +418,11 @@ namespace Lab6
             this.numericUpDown6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown6.ForeColor = System.Drawing.Color.SeaShell;
             this.numericUpDown6.Location = new System.Drawing.Point(308, 79);
+            this.numericUpDown6.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDown6.Name = "numericUpDown6";
             this.numericUpDown6.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown6.TabIndex = 12;
@@ -433,6 +438,11 @@ namespace Lab6
             this.numericUpDown5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown5.ForeColor = System.Drawing.Color.SeaShell;
             this.numericUpDown5.Location = new System.Drawing.Point(215, 79);
+            this.numericUpDown5.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDown5.Name = "numericUpDown5";
             this.numericUpDown5.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown5.TabIndex = 11;
@@ -448,6 +458,11 @@ namespace Lab6
             this.numericUpDown4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown4.ForeColor = System.Drawing.Color.SeaShell;
             this.numericUpDown4.Location = new System.Drawing.Point(112, 81);
+            this.numericUpDown4.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDown4.Name = "numericUpDown4";
             this.numericUpDown4.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown4.TabIndex = 10;
@@ -1723,7 +1738,7 @@ namespace Lab6
             this.dodecahedronToolStripMenuItem,
             this.sceneAddFromFileToolStripMenuItem});
             this.sceneAddToolStripMenuItem.Name = "sceneAddToolStripMenuItem";
-            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.sceneAddToolStripMenuItem.Text = "Добавить модель";
             // 
             // tetrahedronToolStripMenuItem
@@ -1763,6 +1778,13 @@ namespace Lab6
             this.sceneAddFromFileToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.sceneAddFromFileToolStripMenuItem.Text = "Загрузить из файла";
             this.sceneAddFromFileToolStripMenuItem.Click += new System.EventHandler(this.sceneAddFromFileToolStripMenuItem_Click);
+            // 
+            // sceneClearToolStripMenuItem
+            // 
+            this.sceneClearToolStripMenuItem.Name = "sceneClearToolStripMenuItem";
+            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.sceneClearToolStripMenuItem.Text = "Очистить";
+            this.sceneClearToolStripMenuItem.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
             // radioButton1
             // 
@@ -1835,13 +1857,6 @@ namespace Lab6
             this.buttonSceneClear.Text = "Очистить";
             this.buttonSceneClear.UseVisualStyleBackColor = false;
             this.buttonSceneClear.Click += new System.EventHandler(this.buttonSceneClear_Click);
-            // 
-            // sceneClearToolStripMenuItem
-            // 
-            this.sceneClearToolStripMenuItem.Name = "sceneClearToolStripMenuItem";
-            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.sceneClearToolStripMenuItem.Text = "Очистить";
-            this.sceneClearToolStripMenuItem.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
             // MainForm
             // 

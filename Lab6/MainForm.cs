@@ -177,6 +177,17 @@ namespace Lab6
             axisLineX.Draw(g, projection);
             axisLineY.Draw(g, projection);
             axisLineZ.Draw(g, projection);
+            float x_1 = (float)numericUpDown12.Value;
+            float y_1 = (float)numericUpDown11.Value;
+            float z_1 = (float)numericUpDown10.Value;
+
+            float x_2 = (float)numericUpDown15.Value;
+            float y_2 = (float)numericUpDown14.Value;
+            float z_2 = (float)numericUpDown13.Value;
+
+
+            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);
+            line_1.Draw(g, projection);
         }
 
         private void UpdateInspector()
@@ -444,14 +455,10 @@ namespace Lab6
             float y_2 = (float)numericUpDown14.Value;
             float z_2 = (float)numericUpDown13.Value;
 
-            float angle =(float)numericUpDown16.Value;
-            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);//не работает
-            line_1.Draw(g, projection);                                                               //не работает            
+            
+            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);                   
 
-            float old_x = figure.Center.X;
-            float old_y = figure.Center.Y;
-            float old_z = figure.Center.Z;
-
+            float angle = (float)numericUpDown16.Value;
             figure.Rotate(angle, Axis.CUSTOM,line_1);
 
 

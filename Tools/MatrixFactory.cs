@@ -77,7 +77,7 @@ namespace Tools
             };
         }
         /// <summary>
-        /// Матриица аффинного преобразования - scale
+        /// Матриица аффинного преобразования - масштабирование
         /// </summary>
         public static float[][] MatrixScale(float kx, float ky, float kz)
         {
@@ -102,7 +102,7 @@ namespace Tools
             {
                 case Axis.AXIS_X:
                     res = new float[4][] { 
-                        new float[4] { 1,   0,     0,  0 },
+                        new float[4] { 1,   0,     0,   0 },
                         new float[4] { 0,  cos,   sin,  0 },
                         new float[4] { 0,  -sin,  cos,  0 },
                         new float[4] { 0,   0,     0,   1 } 
@@ -111,7 +111,7 @@ namespace Tools
                 case Axis.AXIS_Y:
                     res = new float[4][] {
                         new float[4] { cos,   0,     -sin,  0 },
-                        new float[4] { 0,     1,     0,   0 },
+                        new float[4] { 0,     1,     0,     0 },
                         new float[4] { sin,   0,     cos,   0 },
                         new float[4] { 0,     0,     0,     1 }
                     };
@@ -119,8 +119,21 @@ namespace Tools
                 case Axis.AXIS_Z:
                     res = new float[4][] {
                         new float[4] { cos,   sin,   0,    0 },
-                        new float[4] { -sin,  cos,   0,  0 },
+                        new float[4] { -sin,  cos,   0,    0 },
                         new float[4] { 0,     0,     1,    0 },
+                        new float[4] { 0,     0,     0,    1 }
+                    };
+                    break;
+                case Axis.CUSTOM:
+                    float l = line.Destination.X - line.Origin.X;
+                    float m = line.Destination.Y - line.Origin.Y;
+                    float n = line.Destination.Z - line.Origin.Z;
+                    float length = (float)Math.Sqrt(l * l + m * m + n * n);
+                    l /= length; m /= length; n /= length;
+                    res = new float[4][] {
+                        new float[4] {l * l + cos * (1 - l * l),   l * (1 - cos) * m + n * sin,   l * (1 - cos) * n - m * sin,  0 },
+                        new float[4] { l * (1 - cos) * m - n * sin,   m * m + cos * (1 - m * m),    m * (1 - cos) * n + l * sin,  0 },
+                        new float[4] { l * (1 - cos) * n + m * sin,  m * (1 - cos) * n - l * sin,    n * n + cos * (1 - n * n),   0 },
                         new float[4] { 0,     0,     0,    1 }
                     };
                     break;

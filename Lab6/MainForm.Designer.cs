@@ -416,10 +416,16 @@ namespace Lab6
             // 
             this.numericUpDown6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDown6.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDown6.DecimalPlaces = 1;
             this.numericUpDown6.ForeColor = System.Drawing.Color.SeaShell;
+            this.numericUpDown6.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDown6.Location = new System.Drawing.Point(308, 79);
             this.numericUpDown6.Maximum = new decimal(new int[] {
-            200,
+            2,
             0,
             0,
             0});
@@ -427,7 +433,7 @@ namespace Lab6
             this.numericUpDown6.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown6.TabIndex = 12;
             this.numericUpDown6.Value = new decimal(new int[] {
-            100,
+            1,
             0,
             0,
             0});
@@ -436,10 +442,16 @@ namespace Lab6
             // 
             this.numericUpDown5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDown5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDown5.DecimalPlaces = 1;
             this.numericUpDown5.ForeColor = System.Drawing.Color.SeaShell;
+            this.numericUpDown5.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDown5.Location = new System.Drawing.Point(215, 79);
             this.numericUpDown5.Maximum = new decimal(new int[] {
-            200,
+            2,
             0,
             0,
             0});
@@ -447,7 +459,7 @@ namespace Lab6
             this.numericUpDown5.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown5.TabIndex = 11;
             this.numericUpDown5.Value = new decimal(new int[] {
-            100,
+            1,
             0,
             0,
             0});
@@ -456,10 +468,16 @@ namespace Lab6
             // 
             this.numericUpDown4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDown4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDown4.DecimalPlaces = 1;
             this.numericUpDown4.ForeColor = System.Drawing.Color.SeaShell;
+            this.numericUpDown4.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDown4.Location = new System.Drawing.Point(112, 81);
             this.numericUpDown4.Maximum = new decimal(new int[] {
-            200,
+            2,
             0,
             0,
             0});
@@ -467,7 +485,7 @@ namespace Lab6
             this.numericUpDown4.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown4.TabIndex = 10;
             this.numericUpDown4.Value = new decimal(new int[] {
-            100,
+            1,
             0,
             0,
             0});
@@ -637,6 +655,7 @@ namespace Lab6
             this.buttonRotateAround.TabIndex = 18;
             this.buttonRotateAround.Text = "Повернуть";
             this.buttonRotateAround.UseVisualStyleBackColor = false;
+            this.buttonRotateAround.Click += new System.EventHandler(this.buttonRotateAround_Click);
             // 
             // numericUpDown16
             // 

@@ -84,6 +84,69 @@ namespace Tools.Primitives
                 new Triangle3D( new Point3D(-size, -size, size), new Point3D(size, -size, -size), new Point3D(size, -size, size))
             };
         }
+        public void make_tetrahedron(float size = 100)
+        {
+            // Point3D A11 = new Point3D(0,0,0);//C = new Point3D(0.5*size,(float)System.Math.Sqrt(3)/2,0),
+            // Point3D D11 = new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6);
+            // Point3D B11 = new Point3D(size, 0, 0);
+            polygons = new List<Triangle3D>
+            {
+                new Triangle3D(new Point3D(0,0,0),  new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D(size, 0, 0)),
+                new Triangle3D(new Point3D(0,0,0),  new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0)),
+                new Triangle3D(new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0), new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D(size, 0, 0)),
+                new Triangle3D(new Point3D(0,0,0), new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0), new Point3D(size, 0, 0)),
+            };
+        }
+
+        public void make_octahedron(float size = 50)
+        {
+            //Point3D A=new Point3D(0,size,0),
+            //        B=new Point3D(size,0,0),
+            //        C=new Point3D(0,-size,0),
+            //        D=new Point3D(-size,0,0),
+            //        E=new Point3D(0,0,size),
+            //        F=new Point3D(0,0,-size);
+            polygons = new List<Triangle3D>
+            {
+                new Triangle3D(new Point3D(0,size,0),new Point3D(0,0,size),new Point3D(size,0,0)),
+                new Triangle3D(new Point3D(0,size,0),new Point3D(0,0,size),new Point3D(-size,0,0)),
+                new Triangle3D(new Point3D(0,-size,0),new Point3D(0,0,size),new Point3D(-size,0,0)),
+                new Triangle3D(new Point3D(0,-size,0),new Point3D(0,0,size),new Point3D(size,0,0)),
+                new Triangle3D(new Point3D(0,size,0),new Point3D(0,0,-size),new Point3D(size,0,0)),
+                new Triangle3D(new Point3D(0,size,0),new Point3D(0,0,-size),new Point3D(-size,0,0)),
+                new Triangle3D(new Point3D(0,-size,0),new Point3D(0,0,-size),new Point3D(-size,0,0)),
+                new Triangle3D(new Point3D(0,-size,0),new Point3D(0,0,-size),new Point3D(size,0,0))
+            };
+        }
+        public void make_icosahedron(float size = 50)
+        {
+            float p =(float) (1 + System.Math.Sqrt(5)) / 2;//phi
+            polygons = new List<Triangle3D>
+            {
+                new Triangle3D(new Point3D(-p*size,0,size),new Point3D(0,-size,p*size),new Point3D(0,size,p*size)),//1
+                new Triangle3D(new Point3D(0,-size,p*size),new Point3D(0,size,p*size),new Point3D(p*size,0,size)),//2
+                new Triangle3D(new Point3D(0,-size,p*size),new Point3D(-size,-p*size,0),new Point3D(size,-p*size,0)),//3
+                new Triangle3D(new Point3D(0,-size,p*size),new Point3D(-size,-p*size,0),new Point3D(p*size,0,size)),//4
+                new Triangle3D(new Point3D(p*size,0,size),new Point3D(0,size,p*size),new Point3D(size,p*size,0)),//5
+                new Triangle3D(new Point3D(size,p*size,0),new Point3D(0,size,p*size),new Point3D(-size,p*size,0)),//6
+                new Triangle3D(new Point3D(0,size,p*size),new Point3D(-p*size,0,size),new Point3D(-size,p*size,0)),//7
+                new Triangle3D(new Point3D(-size,p*size,0),new Point3D(0,-size,p*size),new Point3D(-size,-p*size,0)),//8
+                new Triangle3D(new Point3D(size,-p*size,0),new Point3D(p*size,0,size),new Point3D(p*size,0,-size)),//9
+                new Triangle3D(new Point3D(p*size,0,size),new Point3D(size,p*size,0),new Point3D(p*size,0,-size)),//10
+                new Triangle3D(new Point3D(-size,p*size,0),new Point3D(-p*size,0,size),new Point3D(-p*size,0,-size)),//11
+                new Triangle3D(new Point3D(-p*size,0,size),new Point3D(-p*size,0,-size),new Point3D(-size,-p*size,0)),//12
+                new Triangle3D(new Point3D(-size,-p*size,0),new Point3D(size,-p*size,0),new Point3D(0,-size,-p*size)),//13
+                new Triangle3D(new Point3D(size,-p*size,0),new Point3D(0,-size,-p*size),new Point3D(p*size,0,-size)),//14
+                new Triangle3D(new Point3D(p*size,0,-size),new Point3D(size,p*size,0),new Point3D(0,size,-p*size)),//15
+                new Triangle3D(new Point3D(size,p*size,0),new Point3D(-size,p*size,0),new Point3D(0,size,-p*size)),//16
+                new Triangle3D(new Point3D(-size,p*size,0),new Point3D(0,size,-p*size),new Point3D(-p*size,0,-size)),//17
+                new Triangle3D(new Point3D(-p*size,0,-size),new Point3D(-size,-p*size,0),new Point3D(0,-size,-p*size)),//18
+                new Triangle3D(new Point3D(-p*size,0,-size),new Point3D(0,-size,-p*size),new Point3D(0,size,-p*size)),//19
+                new Triangle3D(new Point3D(0,-size,-p*size),new Point3D(p*size,0,-size),new Point3D(0,size,-p*size)),//20
+
+            };
+        }
+
 
         public void Draw(Graphics g, Projection pr = 0, Pen pen = null)
         {

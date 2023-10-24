@@ -77,7 +77,7 @@ namespace Tools.Primitives
             {
                 new float[4] { X, Y, Z, 1 }
             };
-            float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx / 100, ky / 100, kz / 100));
+            float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx, ky, kz));
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];

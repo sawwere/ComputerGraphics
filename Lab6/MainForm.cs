@@ -73,6 +73,7 @@ namespace Lab6
         Edge3D axisLineX;
         Edge3D axisLineY;
         Edge3D axisLineZ;
+        Edge3D line_1;
 
         private float startAxisValue = 0;
         private float deltaAxis = 0;
@@ -255,19 +256,19 @@ namespace Lab6
 
         private void buttonReflectZ_Click(object sender, EventArgs e)     
         {
-        figure.reflectZ();
+        figure.reflectY();
         Render();
         }
 
         private void buttonReflectX_Click(object sender, EventArgs e)
         {
-        figure.reflectX();
+        figure.reflectZ();
         Render();
         }
 
         private void buttonReflectY_Click(object sender, EventArgs e)
         {
-        figure.reflectY();
+        figure.reflectX();
         Render();
         }
 
@@ -430,6 +431,30 @@ namespace Lab6
         private void buttonSceneClear_Click(object sender, EventArgs e)
         {
             ResetHierarchy();
+            Render();
+        }
+
+        private void buttonRotateAround_Click(object sender, EventArgs e)
+        {
+            float x_1 = (float)numericUpDown12.Value;
+            float y_1 = (float)numericUpDown11.Value;
+            float z_1 = (float)numericUpDown10.Value;
+
+            float x_2 = (float)numericUpDown15.Value;
+            float y_2 = (float)numericUpDown14.Value;
+            float z_2 = (float)numericUpDown13.Value;
+
+            float angle =(float)numericUpDown16.Value;
+            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);//не работает
+            line_1.Draw(g, projection);                                                               //не работает            
+
+            float old_x = figure.Center.X;
+            float old_y = figure.Center.Y;
+            float old_z = figure.Center.Z;
+
+            figure.Rotate(angle, Axis.CUSTOM,line_1);
+
+
             Render();
         }
     }

@@ -54,6 +54,12 @@
     <Compile Include="FormRotationFigure.Designer.cs">
       <DependentUpon>FormRotationFigure.cs</DependentUpon>
     </Compile>
+    <Compile Include="Inspector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Inspector.Designer.cs">
+      <DependentUpon>Inspector.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +70,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormRotationFigure.resx">
       <DependentUpon>FormRotationFigure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Inspector.resx">
+      <DependentUpon>Inspector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

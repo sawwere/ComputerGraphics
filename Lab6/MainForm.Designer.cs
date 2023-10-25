@@ -159,6 +159,9 @@ namespace Lab6
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -188,6 +191,9 @@ namespace Lab6
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label53);
+            this.groupBox1.Controls.Add(this.label52);
+            this.groupBox1.Controls.Add(this.label51);
             this.groupBox1.Controls.Add(this.label50);
             this.groupBox1.Controls.Add(this.label45);
             this.groupBox1.Controls.Add(this.textBoxRZ);
@@ -423,7 +429,7 @@ namespace Lab6
             0,
             0,
             65536});
-            this.numericUpDown6.Location = new System.Drawing.Point(308, 79);
+            this.numericUpDown6.Location = new System.Drawing.Point(308, 78);
             this.numericUpDown6.Maximum = new decimal(new int[] {
             2,
             0,
@@ -449,7 +455,7 @@ namespace Lab6
             0,
             0,
             65536});
-            this.numericUpDown5.Location = new System.Drawing.Point(215, 79);
+            this.numericUpDown5.Location = new System.Drawing.Point(215, 78);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             2,
             0,
@@ -475,7 +481,7 @@ namespace Lab6
             0,
             0,
             65536});
-            this.numericUpDown4.Location = new System.Drawing.Point(112, 81);
+            this.numericUpDown4.Location = new System.Drawing.Point(122, 78);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             2,
             0,
@@ -1757,7 +1763,7 @@ namespace Lab6
             this.dodecahedronToolStripMenuItem,
             this.sceneAddFromFileToolStripMenuItem});
             this.sceneAddToolStripMenuItem.Name = "sceneAddToolStripMenuItem";
-            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sceneAddToolStripMenuItem.Text = "Добавить модель";
             // 
             // tetrahedronToolStripMenuItem
@@ -1765,6 +1771,7 @@ namespace Lab6
             this.tetrahedronToolStripMenuItem.Name = "tetrahedronToolStripMenuItem";
             this.tetrahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.tetrahedronToolStripMenuItem.Text = "Тетраэдр";
+            this.tetrahedronToolStripMenuItem.Click += new System.EventHandler(this.tetrahedronToolStripMenuItem_Click);
             // 
             // hexahedronToolStripMenuItem
             // 
@@ -1778,18 +1785,21 @@ namespace Lab6
             this.octahedronToolStripMenuItem.Name = "octahedronToolStripMenuItem";
             this.octahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.octahedronToolStripMenuItem.Text = "Октаэдр";
+            this.octahedronToolStripMenuItem.Click += new System.EventHandler(this.octahedronToolStripMenuItem_Click);
             // 
             // icosahedronToolStripMenuItem
             // 
             this.icosahedronToolStripMenuItem.Name = "icosahedronToolStripMenuItem";
             this.icosahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.icosahedronToolStripMenuItem.Text = "Икосаэдр";
+            this.icosahedronToolStripMenuItem.Click += new System.EventHandler(this.icosahedronToolStripMenuItem_Click);
             // 
             // dodecahedronToolStripMenuItem
             // 
             this.dodecahedronToolStripMenuItem.Name = "dodecahedronToolStripMenuItem";
             this.dodecahedronToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.dodecahedronToolStripMenuItem.Text = "Додекаэдр";
+            this.dodecahedronToolStripMenuItem.Click += new System.EventHandler(this.dodecahedronToolStripMenuItem_Click);
             // 
             // sceneAddFromFileToolStripMenuItem
             // 
@@ -1801,7 +1811,7 @@ namespace Lab6
             // sceneClearToolStripMenuItem
             // 
             this.sceneClearToolStripMenuItem.Name = "sceneClearToolStripMenuItem";
-            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sceneClearToolStripMenuItem.Text = "Очистить";
             this.sceneClearToolStripMenuItem.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
@@ -1876,6 +1886,42 @@ namespace Lab6
             this.buttonSceneClear.Text = "Очистить";
             this.buttonSceneClear.UseVisualStyleBackColor = false;
             this.buttonSceneClear.Click += new System.EventHandler(this.buttonSceneClear_Click);
+            // 
+            // label51
+            // 
+            this.label51.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label51.ForeColor = System.Drawing.Color.Red;
+            this.label51.Location = new System.Drawing.Point(95, 78);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(21, 20);
+            this.label51.TabIndex = 37;
+            this.label51.Text = "X";
+            // 
+            // label52
+            // 
+            this.label52.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label52.ForeColor = System.Drawing.Color.PaleGreen;
+            this.label52.Location = new System.Drawing.Point(189, 78);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(20, 20);
+            this.label52.TabIndex = 38;
+            this.label52.Text = "Y";
+            // 
+            // label53
+            // 
+            this.label53.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label53.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.label53.Location = new System.Drawing.Point(282, 78);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(19, 20);
+            this.label53.TabIndex = 39;
+            this.label53.Text = "Z";
             // 
             // MainForm
             // 
@@ -2070,6 +2116,9 @@ namespace Lab6
         private System.Windows.Forms.ToolStripMenuItem dodecahedronToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sceneAddFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sceneClearToolStripMenuItem;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label51;
     }
 }
 

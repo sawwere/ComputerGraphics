@@ -197,7 +197,7 @@ namespace Lab6
             textBoxPosZ.Text = figure.Center.Z.ToString("0.000");
         }
 
-        private void Render()
+        public void Render()
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
@@ -463,6 +463,26 @@ namespace Lab6
 
 
             Render();
+        }
+
+        private void tetrahedronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void octahedronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void icosahedronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dodecahedronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

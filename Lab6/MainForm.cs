@@ -467,22 +467,78 @@ namespace Lab6
 
         private void tetrahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            figure = new Mesh();
+            figure.make_tetrahedron();
+            StringBuilder figureName = new StringBuilder("Тетраэдр");
+            int i = 1;
+            while (sceneObjects.ContainsKey(figureName.ToString()))
+            {
+                figureName.Append(i);
+                i++;
+            }
+            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+            AddToHierarchy(figureName.ToString());
 
+            groupBoxInspector.Text = $"Объект: {figureName}";
+
+            Render();
         }
 
         private void octahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            figure = new Mesh();
+            figure.make_octahedron();
+            StringBuilder figureName = new StringBuilder("Октаэдр");
+            int i = 1;
+            while (sceneObjects.ContainsKey(figureName.ToString()))
+            {
+                figureName.Append(i);
+                i++;
+            }
+            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+            AddToHierarchy(figureName.ToString());
 
+            groupBoxInspector.Text = $"Объект: {figureName}";
+
+            Render();
         }
 
         private void icosahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            figure = new Mesh();
+            figure.make_icosahedron();
+            StringBuilder figureName = new StringBuilder("Икосаэдр");
+            int i = 1;
+            while (sceneObjects.ContainsKey(figureName.ToString()))
+            {
+                figureName.Append(i);
+                i++;
+            }
+            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+            AddToHierarchy(figureName.ToString());
 
+            groupBoxInspector.Text = $"Объект: {figureName}";
+
+            Render();
         }
 
         private void dodecahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            figure = new Mesh();
+            figure.make_dodecahedron();
+            StringBuilder figureName = new StringBuilder("Додекаэдр");
+            int i = 1;
+            while (sceneObjects.ContainsKey(figureName.ToString()))
+            {
+                figureName.Append(i);
+                i++;
+            }
+            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
+            AddToHierarchy(figureName.ToString());
 
+            groupBoxInspector.Text = $"Объект: {figureName}";
+
+            Render();
         }
     }
 }

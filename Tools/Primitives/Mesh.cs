@@ -84,17 +84,19 @@ namespace Tools.Primitives
                 new Triangle3D( new Point3D(-size, -size, size), new Point3D(size, -size, -size), new Point3D(size, -size, size))
             };
         }
-        public void make_tetrahedron(float size = 100)
+        public void make_tetrahedron(float size = 50)
         {
-            // Point3D A11 = new Point3D(0,0,0);//C = new Point3D(0.5*size,(float)System.Math.Sqrt(3)/2,0),
-            // Point3D D11 = new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6);
-            // Point3D B11 = new Point3D(size, 0, 0);
+           // float a = 1/(float)System.Math.Sqrt(2);
             polygons = new List<Triangle3D>
             {
-                new Triangle3D(new Point3D(0,0,0),  new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D(size, 0, 0)),
-                new Triangle3D(new Point3D(0,0,0),  new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0)),
-                new Triangle3D(new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0), new Point3D((float)0.5*size, (float)System.Math.Sqrt(3)*size/6, (float)System.Math.Sqrt(2) * size / 6), new Point3D(size, 0, 0)),
-                new Triangle3D(new Point3D(0,0,0), new Point3D((float)0.5*size,(float)System.Math.Sqrt(3)*size/2,0), new Point3D(size, 0, 0)),
+                 //new Triangle3D(new Point3D(0,-size,a*size),new Point3D(0,size,a),new Point3D(size,0,-a*size )),
+                 //new Triangle3D(new Point3D(0,-size,a*size ),new Point3D(0,size,a*size ),new Point3D(-size,0,-a*size )),
+                 //new Triangle3D(new Point3D(-size,0,-a*size ),new Point3D(0,size,a*size ),new Point3D(size,0,-a*size )),
+                 //new Triangle3D(new Point3D(-size,0,-a*size ),new Point3D(0,-size,a*size ),new Point3D(size,0,-a*size )),
+                 new Triangle3D(new Point3D(size,size,size),new Point3D(-size,-size,size),new Point3D(-size,size,-size)),
+                 new Triangle3D(new Point3D(size,size,size),new Point3D(-size,-size,size),new Point3D(size,-size,-size)),
+                 new Triangle3D(new Point3D(size,size,size),new Point3D(size,-size,-size),new Point3D(-size,size,-size)),
+                 new Triangle3D(new Point3D(-size,-size,size),new Point3D(-size,size,-size),new Point3D(size,-size,-size))
             };
         }
 
@@ -142,7 +144,7 @@ namespace Tools.Primitives
                 new Triangle3D(new Point3D(-size,p*size,0),new Point3D(0,size,-p*size),new Point3D(-p*size,0,-size)),//17
                 new Triangle3D(new Point3D(-p*size,0,-size),new Point3D(-size,-p*size,0),new Point3D(0,-size,-p*size)),//18
                 new Triangle3D(new Point3D(-p*size,0,-size),new Point3D(0,-size,-p*size),new Point3D(0,size,-p*size)),//19
-                new Triangle3D(new Point3D(0,-size,-p*size),new Point3D(p*size,0,-size),new Point3D(0,size,-p*size)),//20
+                new Triangle3D(new Point3D(0,-size,-p*size),new Point3D(p*size,0,-size),new Point3D(0,size,-p*size))//20
 
             };
         }
@@ -199,7 +201,7 @@ namespace Tools.Primitives
 
                 new Triangle3D(new Point3D(-p1*size,0,-p*size),new Point3D(size,size,-size),new Point3D(p1*size,0,-p*size)),//34
                 new Triangle3D(new Point3D(-p1*size,0,-p*size),new Point3D(size,size,-size),new Point3D(-size,size,-size)),//35
-                new Triangle3D(new Point3D(0,p*size,-p1*size),new Point3D(size,size,-size),new Point3D(-size,size,-size)),//36
+                new Triangle3D(new Point3D(0,p*size,-p1*size),new Point3D(size,size,-size),new Point3D(-size,size,-size))//36
             };
         }
 

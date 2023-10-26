@@ -12,8 +12,18 @@ namespace Tools
         public Guid Id { get; private set; }
 
         public string Name { get; set; }
-
-        public Mesh Mesh { get; set; }
+        public Mesh Local { get; set; }
+        public Mesh Tranformed
+        {
+            get
+            {
+                var res = Local.Copy();
+                res.Rotate(rotation);
+                res.Scale(scale);
+                res.Translate(position);
+                return res;
+            }
+        }
         public Point3D position { get; set; }
         public Point3D rotation { get; set; }
         public Point3D scale { get; set; }
@@ -21,7 +31,7 @@ namespace Tools
         public SceneObject()
         {
             Name = string.Empty;
-            Mesh = new Mesh();
+            Local = new Mesh();
             Id = Guid.NewGuid();
             position = new Point3D(0, 0, 0);
             rotation = new Point3D(0, 0, 0);
@@ -32,10 +42,12 @@ namespace Tools
         {
             Translate(new Point3D(dx, dy, dz));
         }
-
+        /// <summary>
+        /// Не надо вызывать эту функцию!!!
+        /// </summary>
         public void RotateAroundAxis(float angle, Axis axis, Edge3D edge = null)
         {
-            Mesh.Rotate(angle, axis, edge);
+            //Local.Rotate(angle, axis, edge); 
         }
 
         public void Rotate(float rx, float ry, float rz)
@@ -50,24 +62,17 @@ namespace Tools
 
         public void Translate(Point3D vec)
         {
-            Mesh.Translate(vec.X, vec.Y, vec.Z);
             position += vec;
         }
 
         public void Rotate(Point3D vec)
         {
-            Mesh.Rotate(vec.X, Axis.AXIS_X);
-            Mesh.Rotate(vec.Y, Axis.AXIS_Y);
-            Mesh.Rotate(vec.Z, Axis.AXIS_Z);
             rotation += vec;
         }
 
         public void Scale(Point3D vec)
         {
-            Mesh.Scale(vec.X, vec.Y, vec.Z);
-            scale.X *= vec.X;
-            scale.Y *= vec.Y;
-            scale.Z *= vec.Z;
+            scale = scale * vec;
         }
     }
 }

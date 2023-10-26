@@ -132,6 +132,11 @@ namespace Tools.Primitives
             return new Point3D(ths.X * k, ths.Y * k, ths.Z * k);
         }
 
+        public static Point3D operator *(Point3D ths, Point3D other)
+        {
+            return new Point3D(ths.X * other.X, ths.Y * other.Y, ths.Z * other.Z);
+        }
+
         public static Point3D operator +(Point3D ths, Point3D other)
         {
             return new Point3D(ths.X + other.X, ths.Y + other.Y, ths.Z + other.Z);

@@ -32,8 +32,8 @@ namespace Tools.Primitives
             get { return points[i]; }
             private set
             {
-                if (value is null)
-                    throw new ArgumentNullException();
+                //if (value is null)
+                //    throw new ArgumentNullException();
                 points[i] = value;
             }
         }
@@ -51,14 +51,14 @@ namespace Tools.Primitives
             points = new Point3D[3];
             for (int i = 0; i < 3; i++)
                 points[i] = ps.ElementAt(i);
-            boundingBox = new Edge3D(new Point3D(0,0,0), new Point3D(0, 0, 0), Color.Black);
-            boundingBox.Origin.X = points.Min(p => p.X);
-            boundingBox.Origin.Y = points.Min(p => p.Y);
-            boundingBox.Origin.Z = points.Min(p => p.Z);
+            //boundingBox = new Edge3D(new Point3D(0,0,0), new Point3D(0, 0, 0), Color.Black);
+            //boundingBox.Origin.X = points.Min(p => p.X);
+            //boundingBox.Origin.Y = points.Min(p => p.Y);
+            //boundingBox.Origin.Z = points.Min(p => p.Z);
 
-            boundingBox.Destination.X = points.Max(p => p.X);
-            boundingBox.Destination.Y = points.Max(p => p.Y);
-            boundingBox.Destination.Z = points.Max(p => p.Z);
+            //boundingBox.Destination.X = points.Max(p => p.X);
+            //boundingBox.Destination.Y = points.Max(p => p.Y);
+            //boundingBox.Destination.Z = points.Max(p => p.Z);
         }
 
         public Triangle3D(Point3D p1, Point3D p2, Point3D p3)
@@ -73,42 +73,36 @@ namespace Tools.Primitives
 
         public void reflectX()
         {
-            Center.X = -Center.X;
-            if (points != null)
-                foreach (var p in points)
-                    p.ReflectX();
+            for (int i = 0; i < points.Length; i++)
+                points[i].ReflectX();
         }
         public void reflectY()
         {
-            Center.Y = -Center.Y;
-            if (points != null)
-                foreach (var p in points)
-                    p.ReflectY();
+            for (int i = 0; i < points.Length; i++)
+                points[i].ReflectY();
         }
         public void reflectZ()
         {
-            Center.Z = -Center.Z;
-            if (points != null)
-                foreach (var p in points)
-                    p.ReflectZ();
+            for (int i = 0; i < points.Length; i++)
+                points[i].ReflectZ();
         }
 
         public void Translate(float x, float y, float z)
         {
-            foreach (Point3D p in points)
-                p.Translate(x, y, z);
+            for (int i = 0; i < points.Length; i++)
+                points[i].Translate(x, y, z);
         }
 
         public void Rotate(double angle, Axis a, Edge3D line = null)
         {
-            foreach (Point3D p in points)
-                p.Rotate(angle, a, line);
+            for (int i = 0; i < points.Length; i++)
+                points[i].Rotate(angle, a, line);
         }
 
         public void Scale(float kx, float ky, float kz)
         {
-            foreach (Point3D p in points)
-                p.Scale(kx, ky, kz);
+            for (int i = 0; i < points.Length; i++)
+                points[i].Scale(kx, ky, kz);
         }
 
         public List<PointF> GetIsometric()

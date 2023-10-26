@@ -132,6 +132,7 @@ namespace Lab6
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
             this.inspector = new Lab6.Inspector();
+            this.buttonFunction = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -867,6 +868,7 @@ namespace Lab6
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.buttonFunction);
             this.groupBox5.Controls.Add(this.label22);
             this.groupBox5.Controls.Add(this.numericUpDown30);
             this.groupBox5.Controls.Add(this.numericUpDown26);
@@ -904,7 +906,7 @@ namespace Lab6
             this.numericUpDown30.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDown30.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown30.ForeColor = System.Drawing.Color.SeaShell;
-            this.numericUpDown30.Location = new System.Drawing.Point(179, 166);
+            this.numericUpDown30.Location = new System.Drawing.Point(176, 167);
             this.numericUpDown30.Maximum = new decimal(new int[] {
             300,
             0,
@@ -1509,6 +1511,20 @@ namespace Lab6
             this.inspector.Size = new System.Drawing.Size(375, 173);
             this.inspector.TabIndex = 44;
             // 
+            // buttonFunction
+            // 
+            this.buttonFunction.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFunction.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFunction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonFunction.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.buttonFunction.Location = new System.Drawing.Point(253, 159);
+            this.buttonFunction.Name = "buttonFunction";
+            this.buttonFunction.Size = new System.Drawing.Size(115, 30);
+            this.buttonFunction.TabIndex = 39;
+            this.buttonFunction.Text = "Построить";
+            this.buttonFunction.UseVisualStyleBackColor = false;
+            this.buttonFunction.Click += new System.EventHandler(this.buttonFunction_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1673,6 +1689,7 @@ namespace Lab6
         private System.Windows.Forms.Label label51;
         private Inspector inspector;
         private System.Windows.Forms.Button buttonReflectY;
+        private System.Windows.Forms.Button buttonFunction;
     }
 }
 

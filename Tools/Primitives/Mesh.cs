@@ -7,6 +7,7 @@ namespace Tools.Primitives
     public class Mesh
     {
         private List<Triangle3D> polygons;
+        private List<Triangle3D> localPolygons;
 
         public Point3D Center
         {
@@ -17,11 +18,13 @@ namespace Tools.Primitives
 
         public Mesh(List<Triangle3D> list = null)
         {
+            localPolygons = new List<Triangle3D>();
             polygons = new List<Triangle3D>();
             Center = new Point3D(0, 0, 0);
             if (list != null)
             {
                 polygons.AddRange(list);
+                localPolygons.AddRange(list);
             }
         }
 

@@ -11,14 +11,9 @@ namespace Tools
     {
         public Guid Id { get; private set; }
 
-        public string Name 
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         public Mesh Mesh { get; set; }
-
         public Point3D position { get; set; }
         public Point3D rotation { get; set; }
         public Point3D scale { get; set; }
@@ -36,6 +31,11 @@ namespace Tools
         public void Translate(float dx, float dy, float dz)
         {
             Translate(new Point3D(dx, dy, dz));
+        }
+
+        public void RotateAroundAxis(float angle, Axis axis, Edge3D edge = null)
+        {
+            Mesh.Rotate(angle, axis, edge);
         }
 
         public void Rotate(float rx, float ry, float rz)
@@ -65,9 +65,9 @@ namespace Tools
         public void Scale(Point3D vec)
         {
             Mesh.Scale(vec.X, vec.Y, vec.Z);
-            scale.X *= vec.X / 100;
-            scale.Y *= vec.Y / 100;
-            scale.Z *= vec.Z / 100;
+            scale.X *= vec.X;
+            scale.Y *= vec.Y;
+            scale.Z *= vec.Z;
         }
     }
 }

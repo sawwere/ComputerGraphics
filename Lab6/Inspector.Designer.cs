@@ -344,6 +344,7 @@ namespace Lab6
             this.textBoxName.TabIndex = 58;
             this.textBoxName.Text = "Имя";
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            this.textBoxName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxName_KeyUp);
             // 
             // buttonToDefault
             // 

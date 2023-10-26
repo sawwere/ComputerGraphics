@@ -31,6 +31,9 @@ namespace Lab6
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
             this.label50 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
             this.textBoxRZ = new System.Windows.Forms.TextBox();
@@ -92,55 +95,24 @@ namespace Lab6
             this.buttonRotateFigure = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.groupBoxInspector = new System.Windows.Forms.GroupBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
-            this.textBoxPosZ = new System.Windows.Forms.TextBox();
-            this.textBoxPosY = new System.Windows.Forms.TextBox();
-            this.textBoxPosX = new System.Windows.Forms.TextBox();
-            this.buttonToDefault = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.textBoxCameraRotationZ = new System.Windows.Forms.TextBox();
+            this.textBoxCameraRotationY = new System.Windows.Forms.TextBox();
+            this.textBoxCameraRotationX = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.textBoxCameraPosZ = new System.Windows.Forms.TextBox();
+            this.textBoxCameraPosY = new System.Windows.Forms.TextBox();
+            this.textBoxCameraPosX = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label41 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
             this.labelFPS = new System.Windows.Forms.Label();
             this.panelSceneHierarchy = new System.Windows.Forms.Panel();
-            this.label49 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -159,9 +131,7 @@ namespace Lab6
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
-            this.label51 = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
+            this.inspector = new Lab6.Inspector();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -182,9 +152,7 @@ namespace Lab6
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown27)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown28)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown29)).BeginInit();
-            this.groupBoxInspector.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.panelSceneHierarchy.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -222,6 +190,42 @@ namespace Lab6
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tools";
+            // 
+            // label53
+            // 
+            this.label53.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label53.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.label53.Location = new System.Drawing.Point(282, 78);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(19, 20);
+            this.label53.TabIndex = 39;
+            this.label53.Text = "Z";
+            // 
+            // label52
+            // 
+            this.label52.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label52.ForeColor = System.Drawing.Color.PaleGreen;
+            this.label52.Location = new System.Drawing.Point(189, 78);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(20, 20);
+            this.label52.TabIndex = 38;
+            this.label52.Text = "Y";
+            // 
+            // label51
+            // 
+            this.label51.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label51.ForeColor = System.Drawing.Color.Red;
+            this.label51.Location = new System.Drawing.Point(95, 78);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(21, 20);
+            this.label51.TabIndex = 37;
+            this.label51.Text = "X";
             // 
             // label50
             // 
@@ -546,7 +550,6 @@ namespace Lab6
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(121, 21);
             this.comboBox5.TabIndex = 1;
-            this.comboBox5.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // comboBoxProjection
             // 
@@ -1083,414 +1086,32 @@ namespace Lab6
             this.label17.TabIndex = 20;
             this.label17.Text = "График функции";
             // 
-            // groupBoxInspector
-            // 
-            this.groupBoxInspector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxInspector.Controls.Add(this.label31);
-            this.groupBoxInspector.Controls.Add(this.textBox7);
-            this.groupBoxInspector.Controls.Add(this.textBox8);
-            this.groupBoxInspector.Controls.Add(this.textBox9);
-            this.groupBoxInspector.Controls.Add(this.label32);
-            this.groupBoxInspector.Controls.Add(this.label33);
-            this.groupBoxInspector.Controls.Add(this.label34);
-            this.groupBoxInspector.Controls.Add(this.label27);
-            this.groupBoxInspector.Controls.Add(this.textBox4);
-            this.groupBoxInspector.Controls.Add(this.textBox5);
-            this.groupBoxInspector.Controls.Add(this.textBox6);
-            this.groupBoxInspector.Controls.Add(this.label28);
-            this.groupBoxInspector.Controls.Add(this.label29);
-            this.groupBoxInspector.Controls.Add(this.label30);
-            this.groupBoxInspector.Controls.Add(this.label26);
-            this.groupBoxInspector.Controls.Add(this.textBoxPosZ);
-            this.groupBoxInspector.Controls.Add(this.textBoxPosY);
-            this.groupBoxInspector.Controls.Add(this.textBoxPosX);
-            this.groupBoxInspector.Controls.Add(this.buttonToDefault);
-            this.groupBoxInspector.Controls.Add(this.label11);
-            this.groupBoxInspector.Controls.Add(this.label12);
-            this.groupBoxInspector.Controls.Add(this.label13);
-            this.groupBoxInspector.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.groupBoxInspector.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBoxInspector.Location = new System.Drawing.Point(1101, 297);
-            this.groupBoxInspector.Name = "groupBoxInspector";
-            this.groupBoxInspector.Size = new System.Drawing.Size(375, 161);
-            this.groupBoxInspector.TabIndex = 18;
-            this.groupBoxInspector.TabStop = false;
-            this.groupBoxInspector.Text = "Объект";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label31.Location = new System.Drawing.Point(6, 80);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(68, 17);
-            this.label31.TabIndex = 35;
-            this.label31.Text = "Масштаб";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox7.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox7.Location = new System.Drawing.Point(308, 81);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(61, 16);
-            this.textBox7.TabIndex = 34;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox8.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox8.Location = new System.Drawing.Point(215, 80);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(61, 16);
-            this.textBox8.TabIndex = 33;
-            // 
-            // textBox9
-            // 
-            this.textBox9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox9.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox9.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox9.Location = new System.Drawing.Point(122, 81);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(61, 16);
-            this.textBox9.TabIndex = 32;
-            // 
-            // label32
-            // 
-            this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label32.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label32.Location = new System.Drawing.Point(282, 77);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(19, 20);
-            this.label32.TabIndex = 31;
-            this.label32.Text = "Z";
-            // 
-            // label33
-            // 
-            this.label33.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label33.AutoSize = true;
-            this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label33.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label33.Location = new System.Drawing.Point(189, 79);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(20, 20);
-            this.label33.TabIndex = 30;
-            this.label33.Text = "Y";
-            // 
-            // label34
-            // 
-            this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label34.AutoSize = true;
-            this.label34.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label34.ForeColor = System.Drawing.Color.Red;
-            this.label34.Location = new System.Drawing.Point(95, 79);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(21, 20);
-            this.label34.TabIndex = 29;
-            this.label34.Text = "X";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label27.Location = new System.Drawing.Point(6, 52);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(64, 17);
-            this.label27.TabIndex = 28;
-            this.label27.Text = "Поворот";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox4.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox4.Location = new System.Drawing.Point(308, 53);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(61, 16);
-            this.textBox4.TabIndex = 27;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox5.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox5.Location = new System.Drawing.Point(215, 52);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(61, 16);
-            this.textBox5.TabIndex = 26;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox6.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox6.Location = new System.Drawing.Point(122, 53);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(61, 16);
-            this.textBox6.TabIndex = 25;
-            // 
-            // label28
-            // 
-            this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label28.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label28.Location = new System.Drawing.Point(282, 49);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(19, 20);
-            this.label28.TabIndex = 24;
-            this.label28.Text = "Z";
-            // 
-            // label29
-            // 
-            this.label29.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label29.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label29.Location = new System.Drawing.Point(189, 51);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(20, 20);
-            this.label29.TabIndex = 23;
-            this.label29.Text = "Y";
-            // 
-            // label30
-            // 
-            this.label30.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label30.AutoSize = true;
-            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label30.ForeColor = System.Drawing.Color.Red;
-            this.label30.Location = new System.Drawing.Point(95, 51);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(21, 20);
-            this.label30.TabIndex = 22;
-            this.label30.Text = "X";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label26.Location = new System.Drawing.Point(6, 25);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(83, 17);
-            this.label26.TabIndex = 21;
-            this.label26.Text = "Положение";
-            // 
-            // textBoxPosZ
-            // 
-            this.textBoxPosZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPosZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBoxPosZ.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxPosZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBoxPosZ.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBoxPosZ.Location = new System.Drawing.Point(308, 26);
-            this.textBoxPosZ.Name = "textBoxPosZ";
-            this.textBoxPosZ.Size = new System.Drawing.Size(61, 16);
-            this.textBoxPosZ.TabIndex = 20;
-            // 
-            // textBoxPosY
-            // 
-            this.textBoxPosY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPosY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBoxPosY.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxPosY.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBoxPosY.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBoxPosY.Location = new System.Drawing.Point(215, 25);
-            this.textBoxPosY.Name = "textBoxPosY";
-            this.textBoxPosY.Size = new System.Drawing.Size(61, 16);
-            this.textBoxPosY.TabIndex = 19;
-            // 
-            // textBoxPosX
-            // 
-            this.textBoxPosX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPosX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBoxPosX.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxPosX.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBoxPosX.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBoxPosX.Location = new System.Drawing.Point(122, 26);
-            this.textBoxPosX.Name = "textBoxPosX";
-            this.textBoxPosX.Size = new System.Drawing.Size(61, 16);
-            this.textBoxPosX.TabIndex = 18;
-            // 
-            // buttonToDefault
-            // 
-            this.buttonToDefault.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonToDefault.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonToDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonToDefault.Location = new System.Drawing.Point(66, 112);
-            this.buttonToDefault.Name = "buttonToDefault";
-            this.buttonToDefault.Size = new System.Drawing.Size(260, 35);
-            this.buttonToDefault.TabIndex = 16;
-            this.buttonToDefault.Text = "Вернуть к исходному";
-            this.buttonToDefault.UseVisualStyleBackColor = false;
-            this.buttonToDefault.Click += new System.EventHandler(this.buttonToDefault_Click);
-            // 
-            // label11
-            // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label11.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label11.Location = new System.Drawing.Point(282, 22);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(19, 20);
-            this.label11.TabIndex = 7;
-            this.label11.Text = "Z";
-            // 
-            // label12
-            // 
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label12.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label12.Location = new System.Drawing.Point(189, 24);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(20, 20);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "Y";
-            // 
-            // label13
-            // 
-            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label13.ForeColor = System.Drawing.Color.Red;
-            this.label13.Location = new System.Drawing.Point(95, 24);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(21, 20);
-            this.label13.TabIndex = 5;
-            this.label13.Text = "X";
-            // 
             // groupBox6
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox6.Controls.Add(this.label23);
-            this.groupBox6.Controls.Add(this.textBox1);
-            this.groupBox6.Controls.Add(this.textBox2);
-            this.groupBox6.Controls.Add(this.textBox3);
-            this.groupBox6.Controls.Add(this.label24);
-            this.groupBox6.Controls.Add(this.label25);
-            this.groupBox6.Controls.Add(this.label35);
             this.groupBox6.Controls.Add(this.label36);
-            this.groupBox6.Controls.Add(this.textBox10);
-            this.groupBox6.Controls.Add(this.textBox11);
-            this.groupBox6.Controls.Add(this.textBox12);
+            this.groupBox6.Controls.Add(this.textBoxCameraRotationZ);
+            this.groupBox6.Controls.Add(this.textBoxCameraRotationY);
+            this.groupBox6.Controls.Add(this.textBoxCameraRotationX);
             this.groupBox6.Controls.Add(this.label37);
             this.groupBox6.Controls.Add(this.label38);
             this.groupBox6.Controls.Add(this.label39);
             this.groupBox6.Controls.Add(this.label40);
-            this.groupBox6.Controls.Add(this.textBox13);
-            this.groupBox6.Controls.Add(this.textBox14);
-            this.groupBox6.Controls.Add(this.textBox15);
+            this.groupBox6.Controls.Add(this.textBoxCameraPosZ);
+            this.groupBox6.Controls.Add(this.textBoxCameraPosY);
+            this.groupBox6.Controls.Add(this.textBoxCameraPosX);
             this.groupBox6.Controls.Add(this.button2);
             this.groupBox6.Controls.Add(this.label41);
             this.groupBox6.Controls.Add(this.label42);
             this.groupBox6.Controls.Add(this.label43);
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox6.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox6.Location = new System.Drawing.Point(1102, 464);
+            this.groupBox6.Location = new System.Drawing.Point(1102, 475);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(375, 161);
             this.groupBox6.TabIndex = 36;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Камера";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label23.Location = new System.Drawing.Point(6, 80);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(68, 17);
-            this.label23.TabIndex = 35;
-            this.label23.Text = "Масштаб";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox1.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox1.Location = new System.Drawing.Point(308, 81);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(61, 16);
-            this.textBox1.TabIndex = 34;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox2.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox2.Location = new System.Drawing.Point(215, 80);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(61, 16);
-            this.textBox2.TabIndex = 33;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox3.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox3.Location = new System.Drawing.Point(122, 81);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(61, 16);
-            this.textBox3.TabIndex = 32;
-            // 
-            // label24
-            // 
-            this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label24.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label24.Location = new System.Drawing.Point(282, 77);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(19, 20);
-            this.label24.TabIndex = 31;
-            this.label24.Text = "Z";
-            // 
-            // label25
-            // 
-            this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label25.AutoSize = true;
-            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label25.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label25.Location = new System.Drawing.Point(189, 79);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(20, 20);
-            this.label25.TabIndex = 30;
-            this.label25.Text = "Y";
-            // 
-            // label35
-            // 
-            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label35.ForeColor = System.Drawing.Color.Red;
-            this.label35.Location = new System.Drawing.Point(95, 79);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(21, 20);
-            this.label35.TabIndex = 29;
-            this.label35.Text = "X";
             // 
             // label36
             // 
@@ -1502,41 +1123,41 @@ namespace Lab6
             this.label36.TabIndex = 28;
             this.label36.Text = "Поворот";
             // 
-            // textBox10
+            // textBoxCameraRotationZ
             // 
-            this.textBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox10.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox10.Location = new System.Drawing.Point(308, 53);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(61, 16);
-            this.textBox10.TabIndex = 27;
+            this.textBoxCameraRotationZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraRotationZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraRotationZ.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraRotationZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraRotationZ.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraRotationZ.Location = new System.Drawing.Point(308, 53);
+            this.textBoxCameraRotationZ.Name = "textBoxCameraRotationZ";
+            this.textBoxCameraRotationZ.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraRotationZ.TabIndex = 27;
             // 
-            // textBox11
+            // textBoxCameraRotationY
             // 
-            this.textBox11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox11.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox11.Location = new System.Drawing.Point(215, 52);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(61, 16);
-            this.textBox11.TabIndex = 26;
+            this.textBoxCameraRotationY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraRotationY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraRotationY.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraRotationY.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraRotationY.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraRotationY.Location = new System.Drawing.Point(215, 52);
+            this.textBoxCameraRotationY.Name = "textBoxCameraRotationY";
+            this.textBoxCameraRotationY.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraRotationY.TabIndex = 26;
             // 
-            // textBox12
+            // textBoxCameraRotationX
             // 
-            this.textBox12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox12.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox12.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox12.Location = new System.Drawing.Point(122, 53);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(61, 16);
-            this.textBox12.TabIndex = 25;
+            this.textBoxCameraRotationX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraRotationX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraRotationX.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraRotationX.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraRotationX.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraRotationX.Location = new System.Drawing.Point(122, 53);
+            this.textBoxCameraRotationX.Name = "textBoxCameraRotationX";
+            this.textBoxCameraRotationX.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraRotationX.TabIndex = 25;
             // 
             // label37
             // 
@@ -1584,41 +1205,41 @@ namespace Lab6
             this.label40.TabIndex = 21;
             this.label40.Text = "Положение";
             // 
-            // textBox13
+            // textBoxCameraPosZ
             // 
-            this.textBox13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox13.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox13.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox13.Location = new System.Drawing.Point(308, 26);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(61, 16);
-            this.textBox13.TabIndex = 20;
+            this.textBoxCameraPosZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraPosZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraPosZ.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraPosZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraPosZ.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraPosZ.Location = new System.Drawing.Point(308, 26);
+            this.textBoxCameraPosZ.Name = "textBoxCameraPosZ";
+            this.textBoxCameraPosZ.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraPosZ.TabIndex = 20;
             // 
-            // textBox14
+            // textBoxCameraPosY
             // 
-            this.textBox14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox14.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox14.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox14.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox14.Location = new System.Drawing.Point(215, 25);
-            this.textBox14.Name = "textBox14";
-            this.textBox14.Size = new System.Drawing.Size(61, 16);
-            this.textBox14.TabIndex = 19;
+            this.textBoxCameraPosY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraPosY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraPosY.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraPosY.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraPosY.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraPosY.Location = new System.Drawing.Point(215, 25);
+            this.textBoxCameraPosY.Name = "textBoxCameraPosY";
+            this.textBoxCameraPosY.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraPosY.TabIndex = 19;
             // 
-            // textBox15
+            // textBoxCameraPosX
             // 
-            this.textBox15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.textBox15.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.textBox15.ForeColor = System.Drawing.Color.SeaShell;
-            this.textBox15.Location = new System.Drawing.Point(122, 26);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(61, 16);
-            this.textBox15.TabIndex = 18;
+            this.textBoxCameraPosX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCameraPosX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.textBoxCameraPosX.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCameraPosX.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.textBoxCameraPosX.ForeColor = System.Drawing.Color.SeaShell;
+            this.textBoxCameraPosX.Location = new System.Drawing.Point(122, 26);
+            this.textBoxCameraPosX.Name = "textBoxCameraPosX";
+            this.textBoxCameraPosX.Size = new System.Drawing.Size(61, 16);
+            this.textBoxCameraPosX.TabIndex = 18;
             // 
             // button2
             // 
@@ -1684,22 +1305,12 @@ namespace Lab6
             this.panelSceneHierarchy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelSceneHierarchy.AutoScroll = true;
             this.panelSceneHierarchy.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panelSceneHierarchy.Controls.Add(this.label49);
             this.panelSceneHierarchy.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.panelSceneHierarchy.ForeColor = System.Drawing.Color.SeaShell;
             this.panelSceneHierarchy.Location = new System.Drawing.Point(1102, 76);
             this.panelSceneHierarchy.Name = "panelSceneHierarchy";
             this.panelSceneHierarchy.Size = new System.Drawing.Size(375, 215);
             this.panelSceneHierarchy.TabIndex = 42;
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(4, 5);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(61, 20);
-            this.label49.TabIndex = 0;
-            this.label49.Text = "Сцена";
             // 
             // toolStrip1
             // 
@@ -1763,7 +1374,7 @@ namespace Lab6
             this.dodecahedronToolStripMenuItem,
             this.sceneAddFromFileToolStripMenuItem});
             this.sceneAddToolStripMenuItem.Name = "sceneAddToolStripMenuItem";
-            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneAddToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.sceneAddToolStripMenuItem.Text = "Добавить модель";
             // 
             // tetrahedronToolStripMenuItem
@@ -1811,7 +1422,7 @@ namespace Lab6
             // sceneClearToolStripMenuItem
             // 
             this.sceneClearToolStripMenuItem.Name = "sceneClearToolStripMenuItem";
-            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sceneClearToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.sceneClearToolStripMenuItem.Text = "Очистить";
             this.sceneClearToolStripMenuItem.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
@@ -1887,41 +1498,16 @@ namespace Lab6
             this.buttonSceneClear.UseVisualStyleBackColor = false;
             this.buttonSceneClear.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
-            // label51
+            // inspector
             // 
-            this.label51.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label51.AutoSize = true;
-            this.label51.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label51.ForeColor = System.Drawing.Color.Red;
-            this.label51.Location = new System.Drawing.Point(95, 78);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(21, 20);
-            this.label51.TabIndex = 37;
-            this.label51.Text = "X";
-            // 
-            // label52
-            // 
-            this.label52.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label52.ForeColor = System.Drawing.Color.PaleGreen;
-            this.label52.Location = new System.Drawing.Point(189, 78);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(20, 20);
-            this.label52.TabIndex = 38;
-            this.label52.Text = "Y";
-            // 
-            // label53
-            // 
-            this.label53.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label53.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label53.Location = new System.Drawing.Point(282, 78);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(19, 20);
-            this.label53.TabIndex = 39;
-            this.label53.Text = "Z";
+            this.inspector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.inspector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.inspector.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.inspector.ForeColor = System.Drawing.Color.SeaShell;
+            this.inspector.Location = new System.Drawing.Point(1102, 298);
+            this.inspector.Name = "inspector";
+            this.inspector.Size = new System.Drawing.Size(375, 173);
+            this.inspector.TabIndex = 44;
             // 
             // MainForm
             // 
@@ -1929,6 +1515,7 @@ namespace Lab6
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1484, 767);
+            this.Controls.Add(this.inspector);
             this.Controls.Add(this.buttonSceneClear);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panelSceneHierarchy);
@@ -1936,7 +1523,6 @@ namespace Lab6
             this.Controls.Add(this.radioButton4);
             this.Controls.Add(this.radioButton5);
             this.Controls.Add(this.groupBox6);
-            this.Controls.Add(this.groupBoxInspector);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.groupBox4);
@@ -1946,8 +1532,10 @@ namespace Lab6
             this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.SeaShell;
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MainForm_KeyPress);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
@@ -1972,12 +1560,8 @@ namespace Lab6
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown27)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown28)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown29)).EndInit();
-            this.groupBoxInspector.ResumeLayout(false);
-            this.groupBoxInspector.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.panelSceneHierarchy.ResumeLayout(false);
-            this.panelSceneHierarchy.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -1997,7 +1581,6 @@ namespace Lab6
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonReflectX;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button buttonReflectY;
         private System.Windows.Forms.Button buttonReflectZ;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.NumericUpDown numericUpDown16;
@@ -2021,11 +1604,6 @@ namespace Lab6
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button buttonRotateFigure;
-        private System.Windows.Forms.GroupBox groupBoxInspector;
-        private System.Windows.Forms.Button buttonToDefault;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.Label label16;
@@ -2039,43 +1617,18 @@ namespace Lab6
         private System.Windows.Forms.NumericUpDown numericUpDown29;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox textBoxPosZ;
-        private System.Windows.Forms.TextBox textBoxPosY;
-        private System.Windows.Forms.TextBox textBoxPosX;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Label label30;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.TextBox textBoxCameraRotationZ;
+        private System.Windows.Forms.TextBox textBoxCameraRotationY;
+        private System.Windows.Forms.TextBox textBoxCameraRotationX;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.TextBox textBoxCameraPosZ;
+        private System.Windows.Forms.TextBox textBoxCameraPosY;
+        private System.Windows.Forms.TextBox textBoxCameraPosX;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label42;
@@ -2101,7 +1654,6 @@ namespace Lab6
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Panel panelSceneHierarchy;
-        private System.Windows.Forms.Label label49;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
@@ -2119,6 +1671,8 @@ namespace Lab6
         private System.Windows.Forms.Label label53;
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Label label51;
+        private Inspector inspector;
+        private System.Windows.Forms.Button buttonReflectY;
     }
 }
 

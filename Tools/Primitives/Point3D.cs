@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public class Point3D: IPrimitive3D, IEquatable<Point3D>
+    public struct Point3D: IPrimitive3D, IEquatable<Point3D>
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -137,7 +137,6 @@ namespace Tools.Primitives
             return new Point3D(ths.X + other.X, ths.Y + other.Y, ths.Z + other.Z);
         }
 
-
         public static Point3D operator -(Point3D ths, Point3D other)
         {
             return new Point3D(ths.X - other.X, ths.Y - other.Y, ths.Z - other.Z);
@@ -153,8 +152,9 @@ namespace Tools.Primitives
             return new { X, Y, Z }.GetHashCode();
         }
 
-        public PointF GetPerspective(float k = 1000)
+        public PointF GetPerspective()
         {
+            float k = 1000;
             if (Math.Abs(Z - k) < 1e-10)
                 k += 1;
 

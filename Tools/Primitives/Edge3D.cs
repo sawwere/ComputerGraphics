@@ -41,8 +41,8 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective(1000);
-                    p2 = Destination.GetPerspective(1000);
+                    p1 = Origin.GetPerspective();
+                    p2 = Destination.GetPerspective();
                     break;
             }
             return new Edge2D(new Point2D(p1), new Point2D(p2));
@@ -91,8 +91,8 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective(1000);
-                    p2 = Destination.GetPerspective(1000);
+                    p1 = Origin.GetPerspective();
+                    p2 = Destination.GetPerspective();
                     break;
             }
             //Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");

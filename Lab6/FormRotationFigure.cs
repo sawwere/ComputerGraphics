@@ -15,7 +15,9 @@ namespace Lab6
     {
         private Graphics g;
         private Polygon polygon;
-        private Axis rotationAzix = Axis.AXIS_Y;
+        public Axis RotaionAxis{ get { return (Axis)(int)comboBoxAxis.SelectedIndex; } }
+        public int Steps { get { return (int)numericUpDown4.Value; } }
+
         public FormRotationFigure()
         {
             InitializeComponent();
@@ -47,16 +49,6 @@ namespace Lab6
             for (int i = 0; i < polygon.Count; i++)
                 res.Add(polygon[i]);
             return res;
-        }
-
-        public int GetSteps()
-        {
-            return (int)numericUpDown4.Value;
-        }
-
-        public Axis GetAxis()
-        {
-            return Axis.AXIS_Y;
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tools;
+using Tools.Primitives;
 
 namespace Lab6
 {
@@ -48,9 +49,14 @@ namespace Lab6
 
         private void buttonToDefault_Click(object sender, EventArgs e)
         {
-            sceneObject.Translate(-sceneObject.position.X, -sceneObject.position.Y, -sceneObject.position.Z);
-            sceneObject.Rotate(-sceneObject.rotation.X, -sceneObject.rotation.Y, -sceneObject.rotation.Z);
-            //sceneObject.Scale(1/sceneObject.scale.X, 1 / sceneObject.scale.Y, 1 / sceneObject.scale.Z);
+            if (sceneObject == null) 
+            { 
+                return; 
+            }
+            sceneObject.Translate(new Point3D(-sceneObject.position.X, -sceneObject.position.Y, -sceneObject.position.Z));
+            sceneObject.Rotate(new Point3D(-sceneObject.rotation.X, -sceneObject.rotation.Y, -sceneObject.rotation.Z));
+            sceneObject.Scale(new Point3D(1 /sceneObject.scale.X, 1 / sceneObject.scale.Y, 1 / sceneObject.scale.Z));
+
             (Parent as MainForm).Render(); //TODO
         }
 
@@ -59,6 +65,11 @@ namespace Lab6
             if (sceneObject == null)
                 return;
             sceneObject.Name = textBoxName.Text;
+        }
+
+        private void textBoxName_KeyUp(object sender, KeyEventArgs e)
+        {
+            (Parent as MainForm).UpdateHierarchy();
         }
     }
 }

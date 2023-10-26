@@ -131,13 +131,13 @@ namespace Tools.Primitives
             return res;
         }
 
-        public List<PointF> GetPerspective(float k = 1000)
+        public List<PointF> GetPerspective()
         {
             List<PointF> res = new List<PointF>();
 
             foreach (Point3D p in points)
             {
-                res.Add(p.GetPerspective(k));
+                res.Add(p.GetPerspective());
             }
             return res;
         }
@@ -164,7 +164,7 @@ namespace Tools.Primitives
                     pts = GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    pts = GetPerspective(1000);
+                    pts = GetPerspective();
                     break;
             }
 

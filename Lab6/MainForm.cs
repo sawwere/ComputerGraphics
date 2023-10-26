@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using Tools.FastBitmap;
 using Tools.Primitives;
 using Tools;
-
+using Tools.Scene;
 
 namespace Lab6
 {
@@ -19,53 +19,6 @@ namespace Lab6
 
     public partial class MainForm : Form
     {
-        public struct MeshInfo
-        {
-            public string name;
-            public Mesh mesh;
-            public float dx;
-            public float dy;
-            public float dz;
-
-            public float rx;
-            public float ry;
-            public float rz;
-
-            public float sx;
-            public float sy;
-            public float sz;
-
-            public MeshInfo(string name, Mesh mesh)
-            {
-                this.name = name;
-                this.mesh = mesh;
-                this.dx = 0;
-                this.dy = 0;
-                this.dz = 0;
-                this.rx = 0;
-                this.ry = 0;
-                this.rz = 0;
-                this.sx = 100;
-                this.sy = 100;
-                this.sz = 100;
-            }
-
-            public MeshInfo(string name, Mesh mesh, float dx, float dy, float dz, float rx, float ry, float rz, float sx, float sy, float sz)
-            {
-                this.name = name;
-                this.mesh = mesh;
-                this.dx = dx;
-                this.dy = dy;
-                this.dz = dz;
-                this.rx = rx;
-                this.ry = ry;
-                this.rz = rz;
-                this.sx = sx;
-                this.sy = sy;
-                this.sz = sz;
-            }
-        }
-
         private FormRotationFigure rotationFigure = new FormRotationFigure();
 
         Graphics g;
@@ -80,33 +33,57 @@ namespace Lab6
         private enum DeltaAxis { X, Y, Z, None };
         private DeltaAxis curDeltaAxis = DeltaAxis.None;
 
-        private Dictionary<string, MeshInfo> sceneObjects;
+        private Scene scene;
+        private Camera camera;
 
-        Mesh figure = null;
+        SceneObject figure = null;
 
-        private void radioButtonScene_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonScene_Click(object sender, EventArgs e)
         {
-            figure = sceneObjects[((RadioButton)sender).Name].mesh;
-            UpdateInspector();
+            figure = scene.GetObject((Guid)((RadioButton)sender).Tag);
+            inspector.GetUpdate(figure);
         }
 
-        private void AddToHierarchy(string name)
+        private void AddToHierarchy(string name, Guid id)
         {
             RadioButton rb = new RadioButton();
+            rb.Tag = id;
             rb.Name = name;
             rb.Checked = false;
             rb.Text = rb.Name;
             rb.Width = panelSceneHierarchy.Width - 40;
             rb.Height = 30;
-            rb.Location = new Point(15, sceneObjects.Count * (rb.Height));
-            rb.CheckedChanged += radioButtonScene_CheckedChanged;
-            foreach (Control r in panelSceneHierarchy.Controls)
-            {
-                if ( r is RadioButton)
-                    ((RadioButton)r).Checked = false;
-            }
-            rb.Checked = true;
+            rb.Location = new Point(15, panelSceneHierarchy.Controls.Count * (rb.Height));
+            rb.Click += radioButtonScene_Click;
             panelSceneHierarchy.Controls.Add(rb);
+        }
+
+        public void UpdateHierarchy()
+        {
+            var selected = 0;
+            if (scene.Count() <= panelSceneHierarchy.Controls.Count)
+            {
+                int i = 0;
+                foreach (RadioButton r in panelSceneHierarchy.Controls)
+                {
+                    if (r.Checked)
+                    {
+                        selected = i;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else
+            {
+                selected = panelSceneHierarchy.Controls.Count;
+            }
+            panelSceneHierarchy.Controls.Clear();
+            foreach (var pair in scene.GetAllSceneObjects())
+            {
+                AddToHierarchy(pair.Value.Name, pair.Value.Id);
+            }
+            (panelSceneHierarchy.Controls[selected] as RadioButton).Checked = true;
         }
 
         public MainForm()
@@ -118,21 +95,23 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+            scene = new Scene();
 
-            Mesh def = Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl");
-            sceneObjects = new Dictionary<string, MeshInfo>();
-            sceneObjects["Гексаэдр"] = new MeshInfo("Гексаэдр", def);
-            figure = sceneObjects.First().Value.mesh;
-            AddToHierarchy("Гексаэдр");
-            
+            camera = new Camera(new Point3D(0, 0, -1000), new Point3D(0, 0, 0));
+            scene.camera = camera;
+
+            figure = new SceneObject();
+            figure.Mesh = Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl");
+            figure.Name = "Гексаэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
+
 
 
             axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(200, 0, 0), Color.Red);
             axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 200, 0), Color.Green);
             axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 200), Color.Blue);
             comboBoxProjection.SelectedIndex = 0;
-
-            
         }
 
         private void AddMeshToScene()
@@ -146,21 +125,15 @@ namespace Lab6
                     try
                     {
                         var filename = openFileDialog1.FileName;
-                        figure = Tools.Meshes.MeshBuilder.LoadFromFile(filename);
+                        figure = new SceneObject();
+                        figure.Mesh = Tools.Meshes.MeshBuilder.LoadFromFile(filename);
 
                         StringBuilder figureName = new StringBuilder();
-                        figureName.Append( filename.Split('\\').Last().Split('.').First());
-                        int i = 1;
-                        while (sceneObjects.ContainsKey(figureName.ToString()))
-                        {
-                            figureName.Append(i);
-                            i++;
-                        }
+                        figureName.Append(filename.Split('\\').Last().Split('.').First());
+                        figure.Name = figureName.ToString();
+                        scene.AddObject(figure);
+                        UpdateHierarchy();
 
-                        sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-                        AddToHierarchy(figureName.ToString());
-
-                        groupBoxInspector.Text = $"Объект: {figureName}";
                         Render();
                     }
                     catch
@@ -190,42 +163,29 @@ namespace Lab6
             line_1.Draw(g, projection);
         }
 
-        private void UpdateInspector()
-        {
-            textBoxPosX.Text = figure.Center.X.ToString("0.000");
-            textBoxPosY.Text = figure.Center.Y.ToString("0.000");
-            textBoxPosZ.Text = figure.Center.Z.ToString("0.000");
-        }
-
         public void Render()
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
-            g.Clear(Color.Gray);
-            foreach (var kv in sceneObjects)
+            Color backgroundColor = Color.Gray;
+            g.Clear(backgroundColor);
+            foreach (var kv in scene.GetAllSceneObjects())
             {
-                kv.Value.mesh.Draw(g, projection);
+                kv.Value.Mesh.Draw(g, projection);
             }
-            
+
             DrawAxesLines();
             pictureBox1.Refresh();
             stopWatch.Stop();
+            inspector.GetUpdate(figure);
 
             labelFPS.Text = $"FPS: {(1000.0f / stopWatch.ElapsedMilliseconds)}";
-            
-            UpdateInspector();
         }
 
         private void comboBoxProjection_SelectedIndexChanged(object sender, EventArgs e)
         {
             projection = (Projection)comboBoxProjection.SelectedIndex;
             Render();
-        }
-
-        private void buttonLoad_Click(object sender, EventArgs e)
-        {
-            AddMeshToScene();
-            
         }
 
         private void buttonApplyTransform_Click(object sender, EventArgs e)
@@ -240,25 +200,23 @@ namespace Lab6
             float kx = (float)numericUpDown4.Value;
             float ky = (float)numericUpDown5.Value;
             float kz = (float)numericUpDown6.Value;
-            float o_x = figure.Center.X;
-            float o_y = figure.Center.Y;
-            float o_z = figure.Center.Z;
+            float o_x = figure.Mesh.Center.X;
+            float o_y = figure.Mesh.Center.Y;
+            float o_z = figure.Mesh.Center.Z;
             figure.Translate(-o_x, -o_y, -o_z);
             figure.Scale(kx, ky, kz);
             figure.Translate(o_x, o_y, o_z);
 
             //ROTATE
-            float old_x = figure.Center.X;
-            float old_y = figure.Center.Y;
-            float old_z = figure.Center.Z;
+            float old_x = figure.Mesh.Center.X;
+            float old_y = figure.Mesh.Center.Y;
+            float old_z = figure.Mesh.Center.Z;
             figure.Translate(-old_x, -old_y, -old_z);
 
             float rX = float.Parse(textBoxRX.Text);
-            figure.Rotate(rX, Axis.AXIS_X);
             float rY = float.Parse(textBoxRY.Text);
-            figure.Rotate(rY, Axis.AXIS_Y);
             float rZ = float.Parse(textBoxRZ.Text);
-            figure.Rotate(rZ, Axis.AXIS_Z);
+            figure.Rotate(rX, rY, rZ);
 
             figure.Translate(old_x, old_y, old_z);
 
@@ -267,29 +225,32 @@ namespace Lab6
 
         private void buttonReflectZ_Click(object sender, EventArgs e)     
         {
-        figure.reflectY();
-        Render();
+            figure.Mesh.reflectY();
+            Render();
         }
 
         private void buttonReflectX_Click(object sender, EventArgs e)
         {
-        figure.reflectZ();
-        Render();
+            figure.Mesh.reflectZ();
+            Render();
         }
 
         private void buttonReflectY_Click(object sender, EventArgs e)
         {
-        figure.reflectX();
-        Render();
+            figure.Mesh.reflectX();
+            Render();
         }
 
-            private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            
+            if (figure == null)
+            {
+                return;
+            }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
             var prx = axisLineX.ProjectedEdge(projection);
-            Console.WriteLine($"{prx.Point1.X} {prx.Point1.Y} {prx.Point2.X} {prx.Point2.Y}");
-            if (prx.Length > 0.1f  && Math.Abs(p.CompareToEdge2(prx)) < 2000)
+            //Console.WriteLine($"{prx.Point1.X} {prx.Point1.Y} {prx.Point2.X} {prx.Point2.Y}");
+            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
@@ -320,6 +281,10 @@ namespace Lab6
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
+            if (figure == null)
+            {
+                return;
+            }
             switch (curDeltaAxis)
             {
                 case DeltaAxis.X:
@@ -327,7 +292,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Translate(deltaAxis , 0, 0);
+                        figure.Translate(deltaAxis, 0, 0);
                         break;
                     }
                 case DeltaAxis.Y:
@@ -351,31 +316,16 @@ namespace Lab6
             }
             Render();
         }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
+            if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
+                return;
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
             Render();
-        }
-
-        private void buttonToDefault_Click(object sender, EventArgs e)
-        {
-            //TRANSLATE
-            var dx = figure.Center.X;
-            var dy = figure.Center.Y;
-            var dz = figure.Center.Z;
-            figure.Translate(-dx, -dy, -dz);
-
-            Render();
-        }
+        }        
 
         private void textBoxDX_TextChanged(object sender, EventArgs e)
         {
@@ -390,46 +340,30 @@ namespace Lab6
             AddMeshToScene();
         }
 
-        private void addToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddMeshToScene();
-        }
-
         private void buttonRotateFigure_Click(object sender, EventArgs e)
         {
             if (rotationFigure.ShowDialog() == DialogResult.OK)
             {
                 var list = rotationFigure.GetPoints();
-                foreach (var obj in list)
-                    Console.WriteLine(obj.X);
+                Axis axis = rotationFigure.RotaionAxis;
+                int steps = rotationFigure.Steps;
             }
         }
 
         private void ResetHierarchy()
         {
-            sceneObjects = new Dictionary<string, MeshInfo>();
-            figure = new Mesh();
+            scene.Clear();
+            figure = null;
             panelSceneHierarchy.Controls.Clear();
-            var lab = new Label();
-            lab.Text = "Сцена";
-            panelSceneHierarchy.Controls.Add(lab);
         }
 
         private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new Mesh();
-            figure.make_hexahedron();
-            StringBuilder figureName = new StringBuilder("Гексаэдр");
-            int i = 1;
-            while (sceneObjects.ContainsKey(figureName.ToString()))
-            {
-                figureName.Append(i);
-                i++;
-            }
-            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-            AddToHierarchy(figureName.ToString());
-
-            groupBoxInspector.Text = $"Объект: {figureName}";
+            figure = new SceneObject();
+            figure.Mesh.make_hexahedron();
+            figure.Name = "Гексаэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
 
             Render();
         }
@@ -459,7 +393,7 @@ namespace Lab6
             line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);                   
 
             float angle = (float)numericUpDown16.Value;
-            figure.Rotate(angle, Axis.CUSTOM,line_1);
+            figure.RotateAroundAxis(angle, Axis.CUSTOM, line_1);
 
 
             Render();
@@ -467,77 +401,91 @@ namespace Lab6
 
         private void tetrahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new Mesh();
-            figure.make_tetrahedron();
-            StringBuilder figureName = new StringBuilder("Тетраэдр");
-            int i = 1;
-            while (sceneObjects.ContainsKey(figureName.ToString()))
-            {
-                figureName.Append(i);
-                i++;
-            }
-            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-            AddToHierarchy(figureName.ToString());
-
-            groupBoxInspector.Text = $"Объект: {figureName}";
+            figure = new SceneObject();
+            figure.Mesh.make_tetrahedron();
+            figure.Name = "Тетраэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
 
             Render();
         }
 
         private void octahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new Mesh();
-            figure.make_octahedron();
-            StringBuilder figureName = new StringBuilder("Октаэдр");
-            int i = 1;
-            while (sceneObjects.ContainsKey(figureName.ToString()))
-            {
-                figureName.Append(i);
-                i++;
-            }
-            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-            AddToHierarchy(figureName.ToString());
-
-            groupBoxInspector.Text = $"Объект: {figureName}";
+            figure = new SceneObject();
+            figure.Mesh.make_octahedron();
+            figure.Name = "Октаэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
 
             Render();
         }
 
         private void icosahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new Mesh();
-            figure.make_icosahedron();
-            StringBuilder figureName = new StringBuilder("Икосаэдр");
-            int i = 1;
-            while (sceneObjects.ContainsKey(figureName.ToString()))
-            {
-                figureName.Append(i);
-                i++;
-            }
-            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-            AddToHierarchy(figureName.ToString());
-
-            groupBoxInspector.Text = $"Объект: {figureName}";
+            figure = new SceneObject();
+            figure.Mesh.make_icosahedron();
+            figure.Name = "Икосаэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
 
             Render();
         }
 
         private void dodecahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new Mesh();
-            figure.make_dodecahedron();
-            StringBuilder figureName = new StringBuilder("Додекаэдр");
-            int i = 1;
-            while (sceneObjects.ContainsKey(figureName.ToString()))
+            figure = new SceneObject();
+            figure.Mesh.make_dodecahedron();
+            figure.Name = "Додекаэдр";
+            scene.AddObject(figure);
+            UpdateHierarchy();
+
+            Render();
+        }
+
+        //
+        // CAMERA
+        //
+        private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((this.ActiveControl as TextBox) != null)
             {
-                figureName.Append(i);
-                i++;
+                return;
             }
-            sceneObjects[figureName.ToString()] = new MeshInfo(figureName.ToString(), figure);
-            AddToHierarchy(figureName.ToString());
+            switch (e.KeyChar)
+            {
+                case 'a':
+                    {
+                        camera.position.Translate(1, 0, 0);
+                        break;
+                    }
+                case 'd':
+                    {
+                        camera.position.Translate(-1, 0, 0);
+                        break;
+                    }
+                case 'w':
+                    {
+                        camera.position.Translate(0, 0, 1);
+                        break;
+                    }
+                case 's':
+                    {
+                        camera.position.Translate(0, 0, -1);
+                        break;
+                    }
+                case 'z':
+                    {
+                        camera.position.Translate(0, -1, 0);
+                        break;
+                    }
+                case 'x':
+                    {
+                        camera.position.Translate(0, 1, 0);
+                        break;
+                    }
 
-            groupBoxInspector.Text = $"Объект: {figureName}";
-
+            }
             Render();
         }
     }

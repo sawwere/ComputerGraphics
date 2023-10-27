@@ -8,7 +8,7 @@ using Tools.Primitives;
 
 namespace Tools.Scene
 {
-    public class Light
+    public struct Light
     {
         public Point3D position;
         public Color color;

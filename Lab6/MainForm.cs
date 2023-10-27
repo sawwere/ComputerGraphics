@@ -100,8 +100,7 @@ namespace Lab6
             camera = new Camera(new Point3D(0, 0, -1000), new Point3D(0, 0, 0));
             scene.camera = camera;
 
-            figure = new SceneObject();
-            figure.Local = Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl");
+            figure = new SceneObject(Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl"));
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
@@ -125,8 +124,7 @@ namespace Lab6
                     try
                     {
                         var filename = openFileDialog1.FileName;
-                        figure = new SceneObject();
-                        figure.Local = Tools.Meshes.MeshBuilder.LoadFromFile(filename);
+                        figure = new SceneObject(Tools.Meshes.MeshBuilder.LoadFromFile(filename));
 
                         StringBuilder figureName = new StringBuilder();
                         figureName.Append(filename.Split('\\').Last().Split('.').First());
@@ -171,7 +169,7 @@ namespace Lab6
             g.Clear(backgroundColor);
             foreach (var kv in scene.GetAllSceneObjects())
             {
-                kv.Value.Tranformed.Draw(g, projection);
+                kv.Value.Tranform.Draw(g, projection);
             }
 
             DrawAxesLines();
@@ -200,17 +198,17 @@ namespace Lab6
             float kx = (float)numericUpDown4.Value;
             float ky = (float)numericUpDown5.Value;
             float kz = (float)numericUpDown6.Value;
-            float o_x = figure.Tranformed.Center.X;
-            float o_y = figure.Tranformed.Center.Y;
-            float o_z = figure.Tranformed.Center.Z;
+            float o_x = figure.Tranform.Center.X;
+            float o_y = figure.Tranform.Center.Y;
+            float o_z = figure.Tranform.Center.Z;
             figure.Translate(-o_x, -o_y, -o_z);
             figure.Scale(kx, ky, kz);
             figure.Translate(o_x, o_y, o_z);
 
             //ROTATE
-            float old_x = figure.Tranformed.Center.X;
-            float old_y = figure.Tranformed.Center.Y;
-            float old_z = figure.Tranformed.Center.Z;
+            float old_x = figure.Tranform.Center.X;
+            float old_y = figure.Tranform.Center.Y;
+            float old_z = figure.Tranform.Center.Z;
             figure.Translate(-old_x, -old_y, -old_z);
 
             float rX = float.Parse(textBoxRX.Text);
@@ -225,19 +223,19 @@ namespace Lab6
 
         private void buttonReflectZ_Click(object sender, EventArgs e)     
         {
-            figure.Tranformed.reflectY();
+            figure.Tranform.reflectY();
             Render();
         }
 
         private void buttonReflectX_Click(object sender, EventArgs e)
         {
-            figure.Tranformed.reflectZ();
+            figure.Tranform.reflectZ();
             Render();
         }
 
         private void buttonReflectY_Click(object sender, EventArgs e)
         {
-            figure.Tranformed.reflectX();
+            figure.Tranform.reflectX();
             Render();
         }
 
@@ -397,8 +395,9 @@ namespace Lab6
 
         private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new SceneObject();
-            figure.Local.make_hexahedron();
+            Mesh mesh = new Mesh();
+            mesh.make_hexahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
@@ -408,8 +407,9 @@ namespace Lab6
 
         private void tetrahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new SceneObject();
-            figure.Local.make_tetrahedron();
+            Mesh mesh = new Mesh();
+            mesh.make_tetrahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Тетраэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
@@ -419,8 +419,9 @@ namespace Lab6
 
         private void octahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new SceneObject();
-            figure.Local.make_octahedron();
+            Mesh mesh = new Mesh();
+            mesh.make_octahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Октаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
@@ -430,8 +431,9 @@ namespace Lab6
 
         private void icosahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new SceneObject();
-            figure.Local.make_icosahedron();
+            Mesh mesh = new Mesh();
+            mesh.make_icosahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Икосаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
@@ -441,8 +443,9 @@ namespace Lab6
 
         private void dodecahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            figure = new SceneObject();
-            figure.Local.make_dodecahedron();
+            Mesh mesh = new Mesh();
+            mesh.make_dodecahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Додекаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();

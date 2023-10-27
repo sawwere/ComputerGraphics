@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public class Edge3D: IPrimitive3D
+    public class Edge3D
     {
         public Point3D Origin { get; set; }
         public Point3D Destination { get; set; }

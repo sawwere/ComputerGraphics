@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public struct Point3D: IPrimitive3D, IEquatable<Point3D>
+    public struct Point3D: IEquatable<Point3D>
     {
         public float X { get; set; }
         public float Y { get; set; }

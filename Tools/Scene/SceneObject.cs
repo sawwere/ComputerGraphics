@@ -12,12 +12,12 @@ namespace Tools
         public Guid Id { get; private set; }
 
         public string Name { get; set; }
-        public Mesh Local { get; set; }
-        public Mesh Tranformed
+        public Mesh Local { get; private set; }
+        public Mesh Tranform
         {
             get
             {
-                var res = Local.Copy();
+                var res = (Local as Mesh).Clone();
                 res.Rotate(rotation);
                 res.Scale(scale);
                 res.Translate(position);
@@ -28,10 +28,10 @@ namespace Tools
         public Point3D rotation { get; set; }
         public Point3D scale { get; set; }
 
-        public SceneObject()
+        public SceneObject(Mesh init)
         {
             Name = string.Empty;
-            Local = new Mesh();
+            Local = init;
             Id = Guid.NewGuid();
             position = new Point3D(0, 0, 0);
             rotation = new Point3D(0, 0, 0);

@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Primitives\Edge2D.cs" />
+    <Compile Include="Primitives\Plane\Edge2D.cs" />
     <Compile Include="EnumStorage.cs" />
     <Compile Include="FastBitmap.cs" />
     <Compile Include="Form1.cs">
@@ -60,13 +60,13 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\IPrimitive.cs" />
+    <Compile Include="Primitives\Plane\IPrimitive.cs" />
     <Compile Include="MatrixFactory.cs" />
     <Compile Include="Meshes\MeshBuilder.cs" />
-    <Compile Include="Primitives\Point2D.cs" />
-    <Compile Include="Primitives\Polygon.cs" />
+    <Compile Include="Primitives\ITransformable.cs" />
+    <Compile Include="Primitives\Plane\Point2D.cs" />
+    <Compile Include="Primitives\Plane\Polygon.cs" />
     <Compile Include="Primitives\Edge3D.cs" />
-    <Compile Include="Primitives\IPrimitive3D.cs" />
     <Compile Include="Primitives\Point3D.cs" />
     <Compile Include="Primitives\Mesh.cs" />
     <Compile Include="Primitives\Triangle3D.cs" />

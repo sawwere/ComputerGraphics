@@ -13,8 +13,6 @@ namespace Tools.Primitives
         public bool isVisible = true;
         private Point3D[] points;
 
-        private Edge3D boundingBox; // TODO
-
         /// <summary>
         /// Нормаль данного треугольника
         /// </summary>
@@ -51,14 +49,6 @@ namespace Tools.Primitives
             points = new Point3D[3];
             for (int i = 0; i < 3; i++)
                 points[i] = ps.ElementAt(i);
-            //boundingBox = new Edge3D(new Point3D(0,0,0), new Point3D(0, 0, 0), Color.Black);
-            //boundingBox.Origin.X = points.Min(p => p.X);
-            //boundingBox.Origin.Y = points.Min(p => p.Y);
-            //boundingBox.Origin.Z = points.Min(p => p.Z);
-
-            //boundingBox.Destination.X = points.Max(p => p.X);
-            //boundingBox.Destination.Y = points.Max(p => p.Y);
-            //boundingBox.Destination.Z = points.Max(p => p.Z);
         }
 
         public Triangle3D(Point3D p1, Point3D p2, Point3D p3)

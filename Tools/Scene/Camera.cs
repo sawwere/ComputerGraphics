@@ -7,7 +7,7 @@ using Tools.Primitives;
 
 namespace Tools.Scene
 {
-    public class Camera
+    public struct Camera
     {
         public Point3D position { get; set; }
         public Point3D forward { get; set; }

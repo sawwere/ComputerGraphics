@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tools.Primitives
 {
-    public class Mesh
+    public class Mesh : ITransformable
     {
         private List<Triangle3D> polygons;
 
@@ -26,7 +26,7 @@ namespace Tools.Primitives
             }
         }
 
-        public Mesh Copy()
+        public Mesh Clone()
         {
             Mesh res = new Mesh();
             foreach (Triangle3D f in polygons)

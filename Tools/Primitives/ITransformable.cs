@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Tools.Primitives
 {
-    interface IPrimitive3D
+    public interface ITransformable
     {
-        System.Drawing.Color Color { get; set; }
-
-        float X { get; }
-        float Y { get; }
-        float Z { get; }
+        void Translate(Point3D vec);
+        void Scale(Point3D vec);
+        void Rotate(Point3D vec);
     }
 }

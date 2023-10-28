@@ -101,13 +101,13 @@ namespace Tools
         /// Копия данного объекта, к которой применены операции трансформирования
         /// </summary>
         /// <returns>КОПИЯ данного объекта</returns>
-        public ITransformable GetTransformed()
+        public Mesh GetTransformed()
         {
             var res = Local.Clone();
             res.Rotate(Transform.rotation);
             res.Scale(Transform.scale);
             res.Translate(Transform.position);
-            return (Mesh)res;
+            return res;
         }
 
         /// <summary>

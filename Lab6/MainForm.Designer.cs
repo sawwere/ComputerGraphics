@@ -81,6 +81,7 @@ namespace Lab6
             this.label5 = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonFunction = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.numericUpDown30 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown26 = new System.Windows.Forms.NumericUpDown();
@@ -132,7 +133,6 @@ namespace Lab6
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
             this.inspector = new Lab6.Inspector();
-            this.buttonFunction = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
@@ -892,6 +892,20 @@ namespace Lab6
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Построение моделей";
             // 
+            // buttonFunction
+            // 
+            this.buttonFunction.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFunction.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFunction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonFunction.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.buttonFunction.Location = new System.Drawing.Point(253, 159);
+            this.buttonFunction.Name = "buttonFunction";
+            this.buttonFunction.Size = new System.Drawing.Size(115, 30);
+            this.buttonFunction.TabIndex = 39;
+            this.buttonFunction.Text = "Построить";
+            this.buttonFunction.UseVisualStyleBackColor = false;
+            this.buttonFunction.Click += new System.EventHandler(this.buttonFunction_Click);
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -1343,15 +1357,16 @@ namespace Lab6
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Открыть";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton2
             // 
@@ -1510,20 +1525,6 @@ namespace Lab6
             this.inspector.Name = "inspector";
             this.inspector.Size = new System.Drawing.Size(375, 173);
             this.inspector.TabIndex = 44;
-            // 
-            // buttonFunction
-            // 
-            this.buttonFunction.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonFunction.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
-            this.buttonFunction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonFunction.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
-            this.buttonFunction.Location = new System.Drawing.Point(253, 159);
-            this.buttonFunction.Name = "buttonFunction";
-            this.buttonFunction.Size = new System.Drawing.Size(115, 30);
-            this.buttonFunction.TabIndex = 39;
-            this.buttonFunction.Text = "Построить";
-            this.buttonFunction.UseVisualStyleBackColor = false;
-            this.buttonFunction.Click += new System.EventHandler(this.buttonFunction_Click);
             // 
             // MainForm
             // 

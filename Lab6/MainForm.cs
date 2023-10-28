@@ -12,6 +12,7 @@ using Tools.FastBitmap;
 using Tools.Primitives;
 using Tools;
 using Tools.Scene;
+using Tools.Meshes;
 
 namespace Lab6
 {
@@ -489,6 +490,12 @@ namespace Lab6
 
             }
             Render();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO
+            MeshBuilder.SaveToFile("", figure.GetTransformed());
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Tools.Primitives
             }
         }
 
-        public Mesh Clone()
+        public ITransformable Clone()
         {
             Mesh res = new Mesh();
             foreach (Triangle3D f in polygons)

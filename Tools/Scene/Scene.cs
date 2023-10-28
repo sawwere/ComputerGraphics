@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Tools.Scene
@@ -61,6 +63,14 @@ namespace Tools.Scene
         public SceneObject GetObject(Guid id)
         {
             return sceneObjects[id];
+        }
+
+        public void Render(Graphics g, Projection pr = 0, Pen pen = null)
+        {
+            foreach (SceneObject obj in sceneObjects.Values)
+            {
+                obj.GetTransformed().Draw(g, pr, pen);
+            }
         }
     }
 }

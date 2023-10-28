@@ -49,5 +49,23 @@ namespace Tools.Meshes
         {
             
         }
+
+        //TODO
+        public static Mesh BuildRotationFigure(List<Point2D> points)
+        {
+
+            Mesh mesh = new Mesh();
+                
+            return mesh;
+        }
+
+        //TODO
+        public static Mesh BuildFunctionFigure(List<Point2D> points)
+        {
+
+            Mesh mesh = new Mesh();
+
+            return mesh;
+        }
     }
 }

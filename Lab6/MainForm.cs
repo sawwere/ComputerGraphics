@@ -167,10 +167,7 @@ namespace Lab6
             stopWatch.Start();
             Color backgroundColor = Color.Gray;
             g.Clear(backgroundColor);
-            foreach (var kv in scene.GetAllSceneObjects())
-            {
-                kv.Value.Tranform.Draw(g, projection);
-            }
+            scene.Render(g, projection);
 
             DrawAxesLines();
             pictureBox1.Refresh();
@@ -192,50 +189,44 @@ namespace Lab6
             float dx = float.Parse(textBoxDX.Text);
             float dy = float.Parse(textBoxDY.Text);
             float dz = float.Parse(textBoxDZ.Text);
-            figure.Translate(dx, dy, dz);
+            figure.Transform.Translate(new Point3D(dx, dy, dz));
 
             //SCALE
             float kx = (float)numericUpDown4.Value;
             float ky = (float)numericUpDown5.Value;
             float kz = (float)numericUpDown6.Value;
-            float o_x = figure.Tranform.Center.X;
-            float o_y = figure.Tranform.Center.Y;
-            float o_z = figure.Tranform.Center.Z;
-            figure.Translate(-o_x, -o_y, -o_z);
-            figure.Scale(kx, ky, kz);
-            figure.Translate(o_x, o_y, o_z);
+            figure.Transform.Translate(-1 * figure.Transform.position);
+            figure.Transform.Scale(new Point3D(kx, ky, kz));
+            figure.Transform.Translate(figure.Transform.position);
 
             //ROTATE
-            float old_x = figure.Tranform.Center.X;
-            float old_y = figure.Tranform.Center.Y;
-            float old_z = figure.Tranform.Center.Z;
-            figure.Translate(-old_x, -old_y, -old_z);
+            figure.Transform.Translate(-1 * figure.Transform.position);
 
             float rX = float.Parse(textBoxRX.Text);
             float rY = float.Parse(textBoxRY.Text);
             float rZ = float.Parse(textBoxRZ.Text);
-            figure.Rotate(rX, rY, rZ);
+            figure.Transform.Rotate(new Point3D(rX, rY, rZ));
 
-            figure.Translate(old_x, old_y, old_z);
+            figure.Transform.Translate(figure.Transform.position);
 
             Render();
         }
 
         private void buttonReflectZ_Click(object sender, EventArgs e)     
         {
-            figure.Tranform.reflectY();
+            figure.Transform.reflectY();
             Render();
         }
 
         private void buttonReflectX_Click(object sender, EventArgs e)
         {
-            figure.Tranform.reflectZ();
+            figure.Transform.reflectZ();
             Render();
         }
 
         private void buttonReflectY_Click(object sender, EventArgs e)
         {
-            figure.Tranform.reflectX();
+            figure.Transform.reflectX();
             Render();
         }
 
@@ -289,7 +280,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Translate(deltaAxis, 0, 0);
+                        figure.Transform.Translate(new Point3D(deltaAxis, 0, 0));
                         break;
                     }
                 case DeltaAxis.Y:
@@ -297,7 +288,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.Y - startAxisValue;
                         startAxisValue = p.Y;
-                        figure.Translate(0, -deltaAxis, 0);
+                        figure.Transform.Translate(new Point3D(0, -deltaAxis, 0));
                         break;
                     }
                 case DeltaAxis.Z:
@@ -305,7 +296,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Translate(0, 0, deltaAxis);
+                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis));
                         break;
                     }
                 default:
@@ -387,6 +378,7 @@ namespace Lab6
             line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);                   
 
             float angle = (float)numericUpDown16.Value;
+            //Ничего не делает, выключил от греха подальше
             figure.RotateAroundAxis(angle, Axis.CUSTOM, line_1);
 
 

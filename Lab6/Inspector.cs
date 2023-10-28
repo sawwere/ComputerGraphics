@@ -24,17 +24,17 @@ namespace Lab6
                 return;
             }
             textBoxName.Text = sceneObject.Name;
-            textBoxPosX.Text = sceneObject.position.X.ToString("0.000");
-            textBoxPosY.Text = sceneObject.position.Y.ToString("0.000");
-            textBoxPosZ.Text = sceneObject.position.Z.ToString("0.000");
+            textBoxPosX.Text = sceneObject.Transform.position.X.ToString("0.000");
+            textBoxPosY.Text = sceneObject.Transform.position.Y.ToString("0.000");
+            textBoxPosZ.Text = sceneObject.Transform.position.Z.ToString("0.000");
 
-            textBoxRotationX.Text = sceneObject.rotation.X.ToString("0.000");
-            textBoxRotationY.Text = sceneObject.rotation.Y.ToString("0.000");
-            textBoxRotationZ.Text = sceneObject.rotation.Z.ToString("0.000");
+            textBoxRotationX.Text = sceneObject.Transform.rotation.X.ToString("0.000");
+            textBoxRotationY.Text = sceneObject.Transform.rotation.Y.ToString("0.000");
+            textBoxRotationZ.Text = sceneObject.Transform.rotation.Z.ToString("0.000");
 
-            textBoxScaleX.Text = sceneObject.scale.X.ToString("0.000");
-            textBoxScaleY.Text = sceneObject.scale.Y.ToString("0.000");
-            textBoxScaleZ.Text = sceneObject.scale.Z.ToString("0.000");
+            textBoxScaleX.Text = sceneObject.Transform.scale.X.ToString("0.000");
+            textBoxScaleY.Text = sceneObject.Transform.scale.Y.ToString("0.000");
+            textBoxScaleZ.Text = sceneObject.Transform.scale.Z.ToString("0.000");
         }
 
         public Inspector()
@@ -53,9 +53,9 @@ namespace Lab6
             { 
                 return; 
             }
-            sceneObject.Translate(new Point3D(-sceneObject.position.X, -sceneObject.position.Y, -sceneObject.position.Z));
-            sceneObject.Rotate(new Point3D(-sceneObject.rotation.X, -sceneObject.rotation.Y, -sceneObject.rotation.Z));
-            sceneObject.Scale(new Point3D(1 /sceneObject.scale.X, 1 / sceneObject.scale.Y, 1 / sceneObject.scale.Z));
+            sceneObject.Transform.Translate(new Point3D(-sceneObject.Transform.position.X, -sceneObject.Transform.position.Y, -sceneObject.Transform.position.Z));
+            sceneObject.Transform.Rotate(new Point3D(-sceneObject.Transform.rotation.X, -sceneObject.Transform.rotation.Y, -sceneObject.Transform.rotation.Z));
+            sceneObject.Transform.Scale(new Point3D(1 /sceneObject.Transform.scale.X, 1 / sceneObject.Transform.scale.Y, 1 / sceneObject.Transform.scale.Z));
 
             (Parent as MainForm).Render(); //TODO
         }

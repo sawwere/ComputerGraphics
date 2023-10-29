@@ -196,11 +196,12 @@ namespace Lab6
             float kx = (float)numericUpDown4.Value;
             float ky = (float)numericUpDown5.Value;
             float kz = (float)numericUpDown6.Value;
+            Point3D oldPos = figure.Transform.position;
             figure.Transform.Translate(-1 * figure.Transform.position);
             figure.Transform.Scale(new Point3D(kx, ky, kz));
-            figure.Transform.Translate(figure.Transform.position);
+            figure.Transform.Translate(oldPos);
 
-            //ROTATE
+            ////ROTATE
             figure.Transform.Translate(-1 * figure.Transform.position);
 
             float rX = float.Parse(textBoxRX.Text);
@@ -208,7 +209,7 @@ namespace Lab6
             float rZ = float.Parse(textBoxRZ.Text);
             figure.Transform.Rotate(new Point3D(rX, rY, rZ));
 
-            figure.Transform.Translate(figure.Transform.position);
+            figure.Transform.Translate(oldPos);
 
             Render();
         }
@@ -343,8 +344,37 @@ namespace Lab6
 
         private void buttonFunction_Click(object sender, EventArgs e)
         {
-            //TODO
-            //figure.Local = "создание фигуры графика"
+            Func<float, float, float> func;
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    func = (x,y) => (float)(10 * Math.Sin(x) + 10 * Math.Sin(y));
+                    break; 
+                case 1:
+                    func = (x, y) => (float)(x + y);
+                    break;
+                case 2:
+                    func = (x, y) => (float)(x * x) / 100;
+                    break;
+                case 3:
+                    func = (x, y) => (float)(Math.Sign(x) * 10);
+                    break;
+                default:
+                    func = (x, y) => (float)(0);
+                    break;
+            }
+            Mesh mesh;
+            Point3D point;
+            (mesh, point) = MeshBuilder.BuildFunctionFigure((int)numericUpDown28.Value, (int)numericUpDown29.Value,
+                (int)numericUpDown27.Value, (int)numericUpDown26.Value, (int)numericUpDown30.Value, func);
+            
+            figure = new SceneObject(mesh);
+            figure.Name = "x+y";
+            figure.Transform.Translate(-1 * point);
+            scene.AddObject(figure);
+
+            UpdateHierarchy();
+            Render();
         }
 
         private void ResetHierarchy()

@@ -921,19 +921,19 @@ namespace Lab6
             this.numericUpDown30.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDown30.ForeColor = System.Drawing.Color.SeaShell;
             this.numericUpDown30.Location = new System.Drawing.Point(176, 167);
-            this.numericUpDown30.Maximum = new decimal(new int[] {
-            300,
+            this.numericUpDown30.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});
-            this.numericUpDown30.Minimum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            -2147483648});
             this.numericUpDown30.Name = "numericUpDown30";
             this.numericUpDown30.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown30.TabIndex = 37;
+            this.numericUpDown30.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // numericUpDown26
             // 
@@ -954,6 +954,11 @@ namespace Lab6
             this.numericUpDown26.Name = "numericUpDown26";
             this.numericUpDown26.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown26.TabIndex = 36;
+            this.numericUpDown26.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // label18
             // 
@@ -994,6 +999,11 @@ namespace Lab6
             this.numericUpDown27.Name = "numericUpDown27";
             this.numericUpDown27.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown27.TabIndex = 33;
+            this.numericUpDown27.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // numericUpDown28
             // 
@@ -1014,6 +1024,11 @@ namespace Lab6
             this.numericUpDown28.Name = "numericUpDown28";
             this.numericUpDown28.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown28.TabIndex = 29;
+            this.numericUpDown28.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // numericUpDown29
             // 
@@ -1034,6 +1049,11 @@ namespace Lab6
             this.numericUpDown29.Name = "numericUpDown29";
             this.numericUpDown29.Size = new System.Drawing.Size(61, 22);
             this.numericUpDown29.TabIndex = 32;
+            this.numericUpDown29.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             // 
             // label20
             // 
@@ -1062,10 +1082,13 @@ namespace Lab6
             this.comboBox1.ForeColor = System.Drawing.Color.SeaShell;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "x^2 + y^2"});
+            "z(x,y) = 10sin(x) + 10sin(y)",
+            "z(x,y) = x + y",
+            "z(x,y) = (x^2)/100",
+            "z(x,y) = 10 * sign(x)"});
             this.comboBox1.Location = new System.Drawing.Point(176, 67);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(115, 28);
+            this.comboBox1.Size = new System.Drawing.Size(192, 28);
             this.comboBox1.TabIndex = 22;
             // 
             // buttonRotateFigure
@@ -1357,14 +1380,14 @@ namespace Lab6
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.openToolStripMenuItem.Text = "Открыть";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 

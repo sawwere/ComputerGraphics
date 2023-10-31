@@ -525,7 +525,26 @@ namespace Lab6
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO
-            MeshBuilder.SaveToFile("", figure.GetTransformed());
+            var path = figure.Name + ".stl";
+            
+
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.Title = "Save as...";
+            sfd.CheckPathExists = true;
+            sfd.Filter = "STL Files(*.stl)|*.stl";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    MeshBuilder.SaveToFile(sfd.FileName, figure.GetTransformed(), figure.Name);
+                }
+                catch
+                {
+                    MessageBox.Show("Error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

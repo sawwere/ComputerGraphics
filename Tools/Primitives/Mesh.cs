@@ -15,6 +15,10 @@ namespace Tools.Primitives
             private set;
         }
 
+        public List<Triangle3D> get_poligons()
+        {
+            return polygons;
+        }
 
         public Mesh(List<Triangle3D> list = null)
         {

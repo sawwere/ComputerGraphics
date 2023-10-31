@@ -45,9 +45,26 @@ namespace Tools.Meshes
             return res;
         }
 
-        public static void SaveToFile(string path, Mesh mesh)
+        public static void SaveToFile(string path, Mesh mesh,string name)
         {
-            
+            using (var fr=new StreamWriter(path, false))
+            {
+                fr.WriteLine("solid "+name);
+                
+                var p=mesh.get_poligons();
+                for (int i = 0; i <p.Count ; i++)
+                {
+                    //var points = p[i][0].X;
+                    fr.WriteLine("facet normal 0.0 0.0 0.0");
+                    fr.WriteLine("  outer loop");
+                    fr.WriteLine("    vertex "+p[i][0].X+" "+p[i][0].Y+" "+p[i][0].Z);
+                    fr.WriteLine("    vertex " + p[i][1].X + " " + p[i][1].Y + " " + p[i][1].Z);
+                    fr.WriteLine("    vertex " + p[i][2].X + " " + p[i][2].Y + " " + p[i][2].Z);
+                    fr.WriteLine("  endloop");
+                    fr.WriteLine("endfacet");
+                }
+                fr.WriteLine("endsolid " + name);
+            }
         }
 
         //TODO

@@ -334,11 +334,26 @@ namespace Lab6
         {
             if (rotationFigure.ShowDialog() == DialogResult.OK)
             {
-                var list = rotationFigure.GetPoints();
+                var list = rotationFigure.GetPoints();                
                 Axis axis = rotationFigure.RotaionAxis;
                 int steps = rotationFigure.Steps;
                 //TODO
                 //figure.Local = "создание фигуры вращения"
+                Mesh mesh;
+                List<Point3D> points = new List<Point3D>();
+                foreach (var p in list)
+                {
+                    points.Add(new Point3D(p.X, p.Y, 0));
+                }
+
+                mesh = MeshBuilder.BuildRotationFigure(points, axis, steps);
+
+                figure = new SceneObject(mesh);
+                figure.Name = "Rotated figure";
+                scene.AddObject(figure);
+
+                UpdateHierarchy();
+                Render();
             }
         }
 

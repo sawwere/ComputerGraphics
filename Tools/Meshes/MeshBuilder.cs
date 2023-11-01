@@ -8,6 +8,12 @@ using System.IO;
 using Tools.Primitives;
 using System.Globalization;
 
+
+using Tools.FastBitmap;
+using Tools.Primitives;
+using Tools;
+using Tools.Scene;
+using Tools.Meshes;
 namespace Tools.Meshes
 {
     public static class MeshBuilder
@@ -68,11 +74,49 @@ namespace Tools.Meshes
         }
 
         //TODO
-        public static Mesh BuildRotationFigure(List<Point2D> points)
+        public static Mesh BuildRotationFigure(List<Point3D> points, Axis axis, int steps)
         {
-
             Mesh mesh = new Mesh();
-                
+            var polygons = new List<Triangle3D>();
+            List<Point3D> rotatedPoints = new List<Point3D>();
+            float angle = 360f / steps;
+            foreach (var p in points)
+            {
+                rotatedPoints.Add(new Point3D(p.X, p.Y, p.Z));
+            }
+            for (int i = 0; i < steps; ++i)
+            {
+               
+                for (int h=0; h<rotatedPoints.Count; h++) { rotatedPoints[h].Rotate(angle, axis); }
+                    
+
+                for (int j = 1; j < rotatedPoints.Count; ++j)
+                {
+
+                    polygons.Add(new Triangle3D(new List<Point3D>()
+                        {
+                                rotatedPoints[j - 1],
+                                points[j - 1],
+                                points[j]
+                        }));
+                    polygons.Add(new Triangle3D(new List<Point3D>()
+                        {
+                                rotatedPoints[j - 1],
+                                points[j],
+                                rotatedPoints[j]
+                        }));
+                }
+
+                //for (int h = 0; h < points.Count; h++) { points[h].Rotate(angle, axis); }
+                //rotatedPoints.Clear();
+                points.Clear();
+                foreach (var p in rotatedPoints)
+                {
+                    points.Add(p);
+                }
+                //points = new List<Point3D>();
+            }
+            mesh = new Mesh(polygons);
             return mesh;
         }
 

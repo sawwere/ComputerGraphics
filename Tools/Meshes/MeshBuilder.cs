@@ -80,15 +80,14 @@ namespace Tools.Meshes
             var polygons = new List<Triangle3D>();
             List<Point3D> rotatedPoints = new List<Point3D>();
             float angle = 360f / steps;
-            foreach (var p in points)
-            {
-                rotatedPoints.Add(new Point3D(p.X, p.Y, p.Z));
-            }
             for (int i = 0; i < steps; ++i)
             {
-               
-                for (int h=0; h<rotatedPoints.Count; h++) { rotatedPoints[h].Rotate(angle, axis); }
-                    
+                rotatedPoints = new List<Point3D>();
+                foreach (var p in points)
+                {
+                    p.Rotate(angle, axis);
+                    rotatedPoints.Add(new Point3D(p.X, p.Y, p.Z));
+                }
 
                 for (int j = 1; j < rotatedPoints.Count; ++j)
                 {

@@ -18,7 +18,7 @@ namespace Tools.Primitives
 
         public Color Color { get; set; }
 
-        public Edge2D ProjectedEdge(Projection pr)
+        public Edge2D ProjectedEdge(Projection pr, Scene.Camera camera)
         {
             var p1 = new PointF(0, 0);
             var p2 = new PointF(0, 0);
@@ -41,8 +41,8 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective();
-                    p2 = Destination.GetPerspective();
+                    p1 = Origin.GetPerspective(camera);
+                    p2 = Destination.GetPerspective(camera);
                     break;
             }
             return new Edge2D(new Point2D(p1), new Point2D(p2));
@@ -68,7 +68,7 @@ namespace Tools.Primitives
             return Origin + t * (Destination - Origin);
         }
 
-        public void Draw(Graphics g, Projection pr)
+        public void Draw(Graphics g, Scene.Camera camera, Projection pr)
         {
             var p1 = new PointF(0, 0);
             var p2 = new PointF(0, 0);
@@ -91,11 +91,11 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective();
-                    p2 = Destination.GetPerspective();
+                    p1 = Origin.GetPerspective(camera);
+                    p2 = Destination.GetPerspective(camera);
                     break;
             }
-            //Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");
+            Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");
             g.DrawLine(new Pen(Color, 2), p1, p2);
         }
     }

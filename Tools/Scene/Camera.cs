@@ -7,12 +7,19 @@ using Tools.Primitives;
 
 namespace Tools.Scene
 {
-    public struct Camera
+    public class Camera
     {
-        public Point3D position { get; set; }
-        public Point3D forward { get; set; }
-        public Camera(Point3D pos, Point3D forward)
+        public Point3D position;
+        public Point3D forward;
+
+        public int width { get; set; }
+        public int height { get; set; }
+        public float fovy;
+        public Camera(int w, int h, Point3D pos, Point3D forward)
         {
+            width = w;
+            height = h;
+            fovy = 90;
             position = pos;
             this.forward = forward;
         }

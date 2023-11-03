@@ -115,18 +115,18 @@ namespace Tools.Primitives
             return res;
         }
 
-        public List<PointF> GetPerspective()
+        public List<PointF> GetPerspective(Scene.Camera camera)
         {
             List<PointF> res = new List<PointF>();
 
             foreach (Point3D p in points)
             {
-                res.Add(p.GetPerspective());
+                res.Add(p.GetPerspective(camera));
             }
             return res;
         }
 
-        public void Draw(Graphics g, Projection pr = 0, Pen pen = null)
+        public void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;
@@ -148,7 +148,7 @@ namespace Tools.Primitives
                     pts = GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    pts = GetPerspective();
+                    pts = GetPerspective(camera);
                     break;
             }
 

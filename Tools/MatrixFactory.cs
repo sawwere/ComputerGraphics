@@ -13,13 +13,22 @@ namespace Tools
         /// <summary>
         /// Матриица перехода к перспективной проекции
         /// </summary>
-        public static float[][] MatrixPerspective(float k)
+        public static float[][] MatrixPerspective(Scene.Camera camera)
         {
+            float aspectRatio = camera.width / (float)camera.height;
+            float n = 1;
+            float f = 10;
+            //var res = new float[4][]
+            //{ new float[4] {1,  0,  0,  0},
+            //  new float[4] {0,  1,  0,  0},
+            //  new float[4] {0,  0,  1,  -1/k},
+            //  new float[4] {0,  0,  0,  1}
+            //};
             var res = new float[4][]
-            { new float[4] {1,  0,  0,  0},
-              new float[4] {0,  1,  0,  0},
-              new float[4] {0,  0,  1,  -1/k},
-              new float[4] {0,  0,  0,  1}
+            { new float[4] {(float)(1/(Math.Tan(camera.fovy / 2) * aspectRatio)),  0,  0,  0},
+              new float[4] {0, (float)(1 / Math.Tan(camera.fovy / 2)),  0,  0},
+              new float[4] {0,  0,  (f+n)/(f-n),  -2*f*n/(f-n)},
+              new float[4] {0,  0,  1, 0}
             };
             return res;
         }

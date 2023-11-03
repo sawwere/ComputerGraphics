@@ -98,19 +98,21 @@ namespace Lab6
             g.ScaleTransform(1, -1);
             scene = new Scene();
 
-            camera = new Camera(new Point3D(0, 0, -1000), new Point3D(0, 0, 0));
+            camera = new Camera(600, 600, new Point3D(0, 0, -3), new Point3D(0, 0, 0));
             scene.camera = camera;
 
-            figure = new SceneObject(Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl"));
+            var mesh = new Mesh();
+            mesh.make_hexahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
 
 
 
-            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(200, 0, 0), Color.Red);
-            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 200, 0), Color.Green);
-            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 200), Color.Blue);
+            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(1, 0, 0), Color.Red);
+            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 1, 0), Color.Green);
+            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 1), Color.Blue);
             comboBoxProjection.SelectedIndex = 0;
         }
 
@@ -146,9 +148,9 @@ namespace Lab6
 
         private void DrawAxesLines()
         {
-            axisLineX.Draw(g, projection);
-            axisLineY.Draw(g, projection);
-            axisLineZ.Draw(g, projection);
+            axisLineX.Draw(g, scene.camera, projection);
+            axisLineY.Draw(g, scene.camera, projection);
+            axisLineZ.Draw(g, scene.camera, projection);
             float x_1 = (float)numericUpDown12.Value;
             float y_1 = (float)numericUpDown11.Value;
             float z_1 = (float)numericUpDown10.Value;
@@ -159,7 +161,7 @@ namespace Lab6
 
 
             line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);
-            line_1.Draw(g, projection);
+            line_1.Draw(g, scene.camera, projection);
         }
 
         public void Render()
@@ -239,21 +241,21 @@ namespace Lab6
                 return;
             }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = axisLineX.ProjectedEdge(projection);
+            var prx = axisLineX.ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
-            prx = axisLineY.ProjectedEdge(projection);
+            prx = axisLineY.ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
-            prx = axisLineZ.ProjectedEdge(projection);
+            prx = axisLineZ.ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
@@ -314,6 +316,9 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+
+            scene.camera.width = pictureBox1.Width;
+            scene.camera.height = pictureBox1.Height;
             Render();
         }        
 
@@ -504,32 +509,32 @@ namespace Lab6
             {
                 case 'a':
                     {
-                        camera.position.Translate(1, 0, 0);
+                        scene.camera.position.Translate(0.5f, 0, 0);
                         break;
                     }
                 case 'd':
                     {
-                        camera.position.Translate(-1, 0, 0);
+                        scene.camera.position.Translate(-0.5f, 0, 0);
                         break;
                     }
                 case 'w':
                     {
-                        camera.position.Translate(0, 0, 1);
+                        scene.camera.position.Translate(0, 0, 0.5f);
                         break;
                     }
                 case 's':
                     {
-                        camera.position.Translate(0, 0, -1);
+                        scene.camera.position.Translate(0, 0, -0.5f);
                         break;
                     }
                 case 'z':
                     {
-                        camera.position.Translate(0, -1, 0);
+                        scene.camera.position.Translate(0, -0.5f, 0);
                         break;
                     }
                 case 'x':
                     {
-                        camera.position.Translate(0, 1, 0);
+                        scene.camera.position.Translate(0, 0.5f, 0);
                         break;
                     }
 

@@ -24,7 +24,7 @@ namespace Tools.Scene
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
             lights = new List<Light>();
-            camera = new Camera(new Primitives.Point3D(0,0,-1000), new Primitives.Point3D(0,0,1));
+            camera = new Camera(600, 600, new Primitives.Point3D(0,0,-1000), new Primitives.Point3D(0,0,1));
         }
 
         public Dictionary<Guid, SceneObject> GetAllSceneObjects()
@@ -69,7 +69,12 @@ namespace Tools.Scene
         {
             foreach (SceneObject obj in sceneObjects.Values)
             {
-                obj.GetTransformed().Draw(g, pr, pen);
+                Tools.Primitives.Mesh m = obj.GetTransformed();
+                if (pr == Projection.PERSPECTIVE)
+                {
+                    m.Translate(-1 * camera.position);
+                }
+                m.Draw(g, camera, pr, pen);
             }
         }
     }

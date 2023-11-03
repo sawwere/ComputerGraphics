@@ -85,7 +85,7 @@ namespace Tools.Primitives
             }
         }
 
-        public void make_hexahedron(float size = 50)
+        public void make_hexahedron(float size = 1)
         {
             polygons = new List<Triangle3D> {
                 new Triangle3D( new Point3D(size, -size, size), new Point3D(size, -size, -size), new Point3D(size, size, -size)),
@@ -219,12 +219,12 @@ namespace Tools.Primitives
 
 
 
-        public void Draw(Graphics g, Projection pr = 0, Pen pen = null)
+        public void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             foreach (Triangle3D t in polygons)
             {
                 if (t.isVisible)
-                    t.Draw(g, pr, pen);
+                    t.Draw(g, camera, pr, pen);
             }
         }
         public void reflectX()

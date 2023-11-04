@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tools.Primitives
 {
-    public class Triangle3D
+    public class Triangle3D: Primitive
     {
 
         public bool isVisible = true;
@@ -61,6 +61,16 @@ namespace Tools.Primitives
             Initializze(p);
         }
 
+        public override Primitive Clone()
+        {
+            var list = new List<Point3D>();
+            foreach (Point3D p in points)
+            {
+                list.Add(p);
+            }
+            return new Triangle3D(list);
+        }
+
         public void reflectX()
         {
             for (int i = 0; i < points.Length; i++)
@@ -77,22 +87,32 @@ namespace Tools.Primitives
                 points[i].ReflectZ();
         }
 
-        public void Translate(float x, float y, float z)
-        {
-            for (int i = 0; i < points.Length; i++)
-                points[i].Translate(x, y, z);
-        }
-
-        public void Rotate(double angle, Axis a, Edge3D line = null)
+        public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
         {
             for (int i = 0; i < points.Length; i++)
                 points[i].Rotate(angle, a, line);
         }
 
-        public void Scale(float kx, float ky, float kz)
+        public override void Translate(Point3D vec)
         {
             for (int i = 0; i < points.Length; i++)
-                points[i].Scale(kx, ky, kz);
+                points[i].Translate(vec.X, vec.Y, vec.Z);
+        }
+
+        public override void Rotate(Point3D vec)
+        {
+            for (int i = 0; i < points.Length; i++)
+            { 
+                points[i].Rotate(vec.X, Axis.AXIS_X);
+                points[i].Rotate(vec.Y, Axis.AXIS_Y);
+                points[i].Rotate(vec.Z, Axis.AXIS_Z);
+            }
+        }
+
+        public override void Scale(Point3D vec)
+        {
+            for (int i = 0; i < points.Length; i++)
+                points[i].Scale(vec.X, vec.Y, vec.Z);
         }
 
         public List<PointF> GetIsometric()
@@ -126,7 +146,7 @@ namespace Tools.Primitives
             return res;
         }
 
-        public void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             if (pen == null)
                 pen = Pens.Black;

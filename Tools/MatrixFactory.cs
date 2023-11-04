@@ -27,7 +27,7 @@ namespace Tools
             var res = new float[4][]
             { new float[4] {(float)(1/(Math.Tan(camera.fovy / 2) * aspectRatio)),  0,  0,  0},
               new float[4] {0, (float)(1 / Math.Tan(camera.fovy / 2)),  0,  0},
-              new float[4] {0,  0,  (f+n)/(f-n),  -2*f*n/(f-n)},
+              new float[4] {0,  0,  (f+n)/(f-n),  2*f*n/(f-n)},
               new float[4] {0,  0,  1, 0}
             };
             return res;

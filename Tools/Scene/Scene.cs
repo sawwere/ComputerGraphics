@@ -29,12 +29,20 @@ namespace Tools.Scene
 
         public Dictionary<Guid, SceneObject> GetAllSceneObjects()
         {
-            return sceneObjects;
+            var res = new Dictionary<Guid, SceneObject>();
+            foreach (var pair in sceneObjects)
+                if (!pair.Value.Name.StartsWith("_axis"))
+                    res[pair.Key] = pair.Value;
+            return res;
         }
 
         public void Clear()
         {
-            sceneObjects.Clear();
+            var res = new Dictionary<Guid, SceneObject>();
+            foreach (var pair in sceneObjects)
+                if (pair.Value.Name.StartsWith("_axis"))
+                    res[pair.Key] = pair.Value;
+            sceneObjects = res;
         }
 
         public int Count()
@@ -69,8 +77,9 @@ namespace Tools.Scene
         {
             foreach (SceneObject obj in sceneObjects.Values)
             {
-                Tools.Primitives.Mesh m = obj.GetTransformed();
-                if (pr == Projection.PERSPECTIVE)
+                Tools.Primitives.Primitive m = obj.GetTransformed();
+                //TODO move figure in all projections ??
+                //if (pr == Projection.PERSPECTIVE)
                 {
                     m.Translate(-1 * camera.position);
                 }

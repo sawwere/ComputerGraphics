@@ -181,11 +181,11 @@ namespace Tools.Primitives
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             if (a == Axis.AXIS_X)
-                return new PointF(c[0][1], c[0][2]);
+                return new PointF(c[0][1] * 100, c[0][2] * 100);
             else if (a == Axis.AXIS_Y)
-                return new PointF(c[0][0], c[0][2]);
+                return new PointF(c[0][0] * 100, c[0][2] * 100);
             else
-                return new PointF(c[0][0], c[0][1]);
+                return new PointF(c[0][0] * 100, c[0][1] * 100);
         }
 
         public PointF GetIsometric()

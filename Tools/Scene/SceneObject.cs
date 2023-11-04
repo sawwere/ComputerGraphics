@@ -82,16 +82,16 @@ namespace Tools
     {
         public Guid Id { get; private set; }
         public string Name { get; set; }
-        public Mesh Local { get; private set; }
+        public Primitive Local { get; private set; }
 
         /// <summary>
         /// Используется для манипуляции положением, вращением и масштабированием объекта
         /// </summary>
         public Transform Transform { get; private set; }
 
-        public SceneObject(Mesh init)
+        public SceneObject(Primitive init, string name = "")
         {
-            Name = string.Empty;
+            Name = name;
             Local = init;
             Transform  = new Transform();
             Id = Guid.NewGuid();
@@ -101,7 +101,7 @@ namespace Tools
         /// Копия данного объекта, к которой применены операции трансформирования
         /// </summary>
         /// <returns>КОПИЯ данного объекта</returns>
-        public Mesh GetTransformed()
+        public Primitive GetTransformed()
         {
             var res = Local.Clone();
             res.Rotate(Transform.rotation);
@@ -115,7 +115,7 @@ namespace Tools
         /// </summary>
         public void RotateAroundAxis(float angle, Axis axis, Edge3D edge = null)
         {
-            //Local.Rotate(angle, axis, edge); 
+            //Local.RotateAroundAxis(angle, axis, edge); 
         }
     }
 }

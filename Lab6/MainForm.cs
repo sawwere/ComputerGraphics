@@ -98,7 +98,7 @@ namespace Lab6
             g.ScaleTransform(1, -1);
             scene = new Scene();
 
-            camera = new Camera(600, 600, new Point3D(0, 0, -3), new Point3D(0, 0, 0));
+            camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3), new Point3D(0, 0, 1));
             scene.camera = camera;
 
             var mesh = new Mesh();
@@ -110,9 +110,16 @@ namespace Lab6
 
 
 
-            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(1, 0, 0), Color.Red);
-            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 1, 0), Color.Green);
-            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 1), Color.Blue);
+
+
+            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
+            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 2, 0), Color.Green);
+            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, -2), Color.Blue);
+            line_1 = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 0), Color.Purple);
+            scene.AddObject(new SceneObject(axisLineX, "_axisLineX"));
+            scene.AddObject(new SceneObject(axisLineY, "_axisLineY"));
+            scene.AddObject(new SceneObject(axisLineZ, "_axisLineZ"));
+            scene.AddObject(new SceneObject(line_1, "_axisLineRotation"));
             comboBoxProjection.SelectedIndex = 0;
         }
 
@@ -146,24 +153,6 @@ namespace Lab6
             }
         }
 
-        private void DrawAxesLines()
-        {
-            axisLineX.Draw(g, scene.camera, projection);
-            axisLineY.Draw(g, scene.camera, projection);
-            axisLineZ.Draw(g, scene.camera, projection);
-            float x_1 = (float)numericUpDown12.Value;
-            float y_1 = (float)numericUpDown11.Value;
-            float z_1 = (float)numericUpDown10.Value;
-
-            float x_2 = (float)numericUpDown15.Value;
-            float y_2 = (float)numericUpDown14.Value;
-            float z_2 = (float)numericUpDown13.Value;
-
-
-            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);
-            line_1.Draw(g, scene.camera, projection);
-        }
-
         public void Render()
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -172,7 +161,6 @@ namespace Lab6
             g.Clear(backgroundColor);
             scene.Render(g, projection);
 
-            DrawAxesLines();
             pictureBox1.Refresh();
             stopWatch.Stop();
             inspector.GetUpdate(figure);
@@ -509,12 +497,12 @@ namespace Lab6
             {
                 case 'a':
                     {
-                        scene.camera.position.Translate(0.5f, 0, 0);
+                        scene.camera.position.Translate(-0.5f, 0, 0);
                         break;
                     }
                 case 'd':
                     {
-                        scene.camera.position.Translate(-0.5f, 0, 0);
+                        scene.camera.position.Translate(0.5f, 0, 0);
                         break;
                     }
                 case 'w':
@@ -544,6 +532,8 @@ namespace Lab6
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(figure.Local is Mesh))
+                return;
             //TODO
             var path = figure.Name + ".stl";
             
@@ -558,7 +548,7 @@ namespace Lab6
             {
                 try
                 {
-                    MeshBuilder.SaveToFile(sfd.FileName, figure.GetTransformed(), figure.Name);
+                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(), figure.Name);
                 }
                 catch
                 {

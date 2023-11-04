@@ -7,10 +7,10 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public class Edge3D
+    public class Edge3D: Primitive
     {
-        public Point3D Origin { get; set; }
-        public Point3D Destination { get; set; }
+        public Point3D Origin;
+        public Point3D Destination;
 
         public float X { get { return Destination.X; } }
         public float Y { get { return Destination.Y; } }
@@ -45,6 +45,7 @@ namespace Tools.Primitives
                     p2 = Destination.GetPerspective(camera);
                     break;
             }
+            //Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");
             return new Edge2D(new Point2D(p1), new Point2D(p2));
         }
 
@@ -53,6 +54,12 @@ namespace Tools.Primitives
             Origin = org;
             Destination = dest;
             Color = color;
+        }
+
+        public override Primitive Clone()
+        {
+            Edge3D res = new Edge3D(Origin, Destination, Color);
+            return res;
         }
 
         public int Intesect(Triangle3D triangle, ref float t)
@@ -68,7 +75,35 @@ namespace Tools.Primitives
             return Origin + t * (Destination - Origin);
         }
 
-        public void Draw(Graphics g, Scene.Camera camera, Projection pr)
+        public override void Translate(Point3D vec)
+        {
+            Origin.Translate(vec.X, vec.Y, vec.Z);
+            Destination.Translate(vec.X, vec.Y, vec.Z);
+        }
+
+        public override void Rotate(Point3D vec)
+        {
+            Origin.Rotate(vec.X, Axis.AXIS_X);
+            Origin.Rotate(vec.Y, Axis.AXIS_Y);
+            Origin.Rotate(vec.Z, Axis.AXIS_Z);
+
+            Destination.Rotate(vec.X, Axis.AXIS_X);
+            Destination.Rotate(vec.Y, Axis.AXIS_Y);
+            Destination.Rotate(vec.Z, Axis.AXIS_Z);
+        }
+
+        public override void Scale(Point3D vec)
+        {
+            Origin.Scale(vec.X, vec.Y, vec.Z);
+            Destination.Scale(vec.X, vec.Y, vec.Z);
+        }
+        public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
+        {
+            Origin.Rotate(angle, a, line);
+            Destination.Rotate(angle, a, line);
+        }
+
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             var p1 = new PointF(0, 0);
             var p2 = new PointF(0, 0);
@@ -95,7 +130,6 @@ namespace Tools.Primitives
                     p2 = Destination.GetPerspective(camera);
                     break;
             }
-            Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");
             g.DrawLine(new Pen(Color, 2), p1, p2);
         }
     }

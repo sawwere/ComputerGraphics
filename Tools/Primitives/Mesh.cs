@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tools.Primitives
 {
-    public class Mesh
+    public class Mesh: Primitive
     {
         private List<Triangle3D> polygons;
 
@@ -30,7 +30,7 @@ namespace Tools.Primitives
             }
         }
 
-        public Mesh Clone()
+        public override Primitive Clone()
         {
             Mesh res = new Mesh();
             foreach (Triangle3D f in polygons)
@@ -51,37 +51,35 @@ namespace Tools.Primitives
             Center = (1f / polygons.Count) * Center;
         }
 
-        public void Translate(Point3D vec)
+        public override void Translate(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Translate(vec.X, vec.Y, vec.Z);
+                f.Translate(vec);
             }
         }
 
-        public void Rotate(Point3D vec)
+        public override void Rotate(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Rotate(vec.X, Axis.AXIS_X);
-                f.Rotate(vec.Y, Axis.AXIS_Y);
-                f.Rotate(vec.Z, Axis.AXIS_Z);
+                f.Rotate(vec);
             }
         }
 
-        public void Scale(Point3D vec)
+        public override void Scale(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Scale(vec.X, vec.Y, vec.Z);
+                f.Scale(vec);
             }
         }
 
-        public void Rotate(double angle, Axis a, Edge3D line = null)
+        public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Rotate(angle, a, line);
+                f.RotateAroundAxis(angle, a, line);
             }
         }
 
@@ -219,7 +217,7 @@ namespace Tools.Primitives
 
 
 
-        public void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             foreach (Triangle3D t in polygons)
             {

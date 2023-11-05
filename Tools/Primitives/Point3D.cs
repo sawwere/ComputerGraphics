@@ -29,6 +29,11 @@ namespace Tools.Primitives
             Color = Color.Black;
         }
 
+        public Point3D Clone()
+        {
+            return new Point3D(X, Y, Z);
+        }
+
         public void ReflectX()
         {
             X = -X;
@@ -159,8 +164,8 @@ namespace Tools.Primitives
 
         public PointF GetPerspective(Scene.Camera camera)
         {
-            if (Math.Abs(Z - camera.position.Z) < 1e-10)
-                return new PointF(X * 1000, Y * 1000);
+            //if (Math.Abs(Z - camera.position.Z) < 1e-10)
+            //    return new PointF(X * 1000, Y * 1000);
 
             float[][] xyz = new float[1][]
             {

@@ -101,7 +101,11 @@ namespace Lab6
             camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3), new Point3D(0, 0, 1));
             scene.camera = camera;
 
-            var mesh = new Mesh();
+            var polygons = new List<Triangle3D> {
+                 new Triangle3D( new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1))
+                ,new Triangle3D( new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1))
+            };
+            var mesh = new Mesh(polygons);
             mesh.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
@@ -121,6 +125,7 @@ namespace Lab6
             scene.AddObject(new SceneObject(axisLineZ, "_axisLineZ"));
             scene.AddObject(new SceneObject(line_1, "_axisLineRotation"));
             comboBoxProjection.SelectedIndex = 0;
+            comboBoxProjection.Select();
         }
 
         private void AddMeshToScene()
@@ -159,7 +164,8 @@ namespace Lab6
             stopWatch.Start();
             Color backgroundColor = Color.Gray;
             g.Clear(backgroundColor);
-            scene.Render(g, projection);
+            //scene.Render(g, projection);
+            pictureBox1.Image = scene.RasterizedRender(projection);
 
             pictureBox1.Refresh();
             stopWatch.Stop();

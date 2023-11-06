@@ -15,6 +15,7 @@ namespace Tools
         /// </summary>
         public static float[][] MatrixPerspective(Scene.Camera camera)
         {
+            float k = 10;
             float aspectRatio = camera.width / (float)camera.height;
             float n = 1;
             float f = 10;

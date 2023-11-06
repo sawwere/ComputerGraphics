@@ -37,6 +37,8 @@ namespace Tools.Meshes
                 }
             }
             Mesh res = new Mesh(triangles);
+            Console.WriteLine(res.Center.Y);
+            res.Translate(-1* res.Center);
             return res;
         }
 

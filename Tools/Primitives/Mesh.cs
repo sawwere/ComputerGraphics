@@ -297,12 +297,32 @@ namespace Tools.Primitives
                 (projectedLeft, projectedRight) = (projectedRight, projectedLeft);
                 (pLeft, pRight) = (pRight, pLeft);
             }
-            //TODO
 
-            //for (int y = (int)projected0.Y; y < mid; y++)
-            //{
-            //    DrawGradientLines2(y, P0, projected0, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
-            //}
+            //TODO
+            bool flag = false; // отсекаем наложением вещественных координат в один пиксель
+            for (int y = (int)projected0.Y; y < mid && !flag; y++)
+            {
+
+                float leftBound = (int)Interpolate(projected0.Y, projected0.X, projectedLeft.Y, projectedLeft.X, y);
+                float rightBound = (int)Interpolate(projected0.Y, projected0.X, projectedRight.Y, projectedRight.X, y);
+
+                var zLeft = Interpolate(projected0.Y, P0.Z, projectedLeft.Y, pLeft.Z, y);
+                var zRight = Interpolate(projected0.Y, P0.Z, projectedRight.Y, pRight.Z, y);
+
+                for (int x = (int)leftBound; x <= rightBound; x++)
+                {
+                    int xx = x + width / 2;
+                    int yy = -y + height / 2;
+                    if (xx < 0 || xx > width || yy < 0 || yy > height || (xx + width * yy) < 0 || (xx + width * yy) > (buff.Length - 1))
+                        continue;
+                    float tempZ = Interpolate(leftBound, zLeft, rightBound, zRight, x);
+                    if (tempZ < buff[xx + width * yy])
+                    {
+                        buff[xx + yy * width] = tempZ;
+                    }
+                }
+                //DrawGradientLines2(y, P0, projected0, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
+            }
 
 
             projectedLeft = projected1;
@@ -318,10 +338,30 @@ namespace Tools.Primitives
                 (projectedLeft, projectedRight) = (projectedRight, projectedLeft);
                 (pLeft, pRight) = (pRight, pLeft);
             }
-            for (int y = (int)projected2.Y; y >= mid; y--)
+            flag = false;
+            for (int y = (int)projected2.Y; y >= mid && !flag; y--)
             {
-                DrawGradientLines2(y, P2, projected2, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
+                var leftBound = Interpolate(projected2.Y, projected2.X, projectedLeft.Y, projectedLeft.X, y);
+                var rightBound = Interpolate(projected2.Y, projected2.X, projectedRight.Y, projectedRight.X, y);
+                var zLeft = Interpolate(projected2.Y, P2.Z, projectedLeft.Y, pLeft.Z, y);
+                var zRight = Interpolate(projected2.Y, P2.Z, projectedRight.Y, pRight.Z, y);
+
+
+                for (int x = (int)leftBound; x <= rightBound; x++)
+                {
+                    int xx = x + width / 2;
+                    int yy = -y + height / 2;
+                    if (xx < 0 || xx > width || yy < 0 || yy > height || (xx + width * yy) < 0 || (xx + width * yy) > (buff.Length - 1))
+                        continue;
+                    float tempZ = Interpolate(leftBound, zLeft, rightBound, zRight, x);
+                    if (tempZ < buff[xx + width * yy])
+                    {
+                        buff[xx + yy * width] = tempZ;
+                    }
+                }
+                //DrawGradientLines2(y, P2, projected2, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
             }
+
         }
 
         private void DrawGradientLines2(int y, Point3D middle, PointF projectedMiddle, 
@@ -334,11 +374,7 @@ namespace Tools.Primitives
 
             var zLeft =  Interpolate(projectedMiddle.Y, middle.Z, projectedLeft.Y, left.Z, y);
             var zRight = Interpolate(projectedMiddle.Y, middle.Z, projectedRight.Y, right.Z, y);
-            //if (rightBound < leftBound)
-            //{
-            //    Console.WriteLine(projectedLeft.X - projectedRight.X);
-            //}
-
+            
             for (int x = (int)leftBound; x < rightBound; x++)
             {
                 int xx = x + width / 2;
@@ -356,7 +392,7 @@ namespace Tools.Primitives
         float Interpolate(float x0, float y0, float x1, float y1, float i)
         {
             if (Math.Abs(x0 - x1) < 1e-8)
-                return (y0 + y1) / 2;
+                return (y0 + y1 ) / 2;
             return y0 + ((y1 - y0) * (i - x0)) / (x1 - x0);
         }
     }

@@ -101,10 +101,10 @@ namespace Lab6
             camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3), new Point3D(0, 0, 1));
             scene.camera = camera;
 
-            var polygons = new List<Triangle3D> {
-                 new Triangle3D( new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1))
-                ,new Triangle3D( new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1))
-            };
+            var polygons = new List<Triangle3D>();
+            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
+
+            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
             var mesh = new Mesh(polygons);
             mesh.make_hexahedron();
             figure = new SceneObject(mesh);

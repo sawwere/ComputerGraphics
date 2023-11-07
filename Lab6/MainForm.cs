@@ -162,7 +162,7 @@ namespace Lab6
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
-            Color backgroundColor = Color.Gray;
+            Color backgroundColor = Color.LightGray;
             g.Clear(backgroundColor);
             //scene.Render(g, projection);
             pictureBox1.Image = scene.RasterizedRender(projection);

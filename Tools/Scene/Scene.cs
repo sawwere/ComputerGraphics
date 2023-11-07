@@ -95,28 +95,32 @@ namespace Tools.Scene
                     {
                         Primitive m = obj.GetTransformed();
                         m.Translate(-1 * camera.position);
-                        (m as Mesh).calculateZBuffer(camera, fs.Width, fs.Height, ref buff);
+                        (m as Mesh).calculateZBuffer(camera, buff);
                     }
-                    var maxZ = buff.Where(x => x < float.MaxValue).Max();
-                    var minZ = buff.Where(x => x > float.MinValue).Min();
-                    for (int x = 0; x < fs.Width; ++x)
-                        for (int y = 0; y < fs.Height; ++y)
-                        {
-                            var cd = buff[x + fs.Width * y];
-                            if (buff[x + fs.Width * y] < float.MaxValue)
+                    var filtered = buff.Where(x => x < float.MaxValue && x > float.MinValue);
+                    if (filtered.Count() > 0)
+                    {
+                        var maxZ = filtered.Max();
+                        var minZ = filtered.Min();
+                        for (int x = 0; x < fs.Width; ++x)
+                            for (int y = 0; y < fs.Height; ++y)
                             {
+                                var cd = buff[x + fs.Width * y];
+                                if (buff[x + fs.Width * y] < float.MaxValue)
+                                {
 
-                                Color c = Color.FromArgb(
-                                    (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                    (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                    (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]));
-                                fs[x, y] = c;
+                                    Color c = Color.FromArgb(
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]));
+                                    fs[x, y] = c;
+                                }
+                                else
+                                {
+                                    fs[x, y] = Color.LightGray;
+                                }
                             }
-                            else
-                            {
-                                fs[x, y] = Color.White;
-                            }
-                        }
+                    }
                 }
             }
             return bitmap;

@@ -254,17 +254,23 @@ namespace Tools.Primitives
             UpdateCenter();
         }
 
-        public void calculateZBuffer(Scene.Camera camera, int width, int height, ref float[] buf)
+
+        //==============================================
+        //
+        // Z-BUFFER
+        //
+        //==============================================
+
+        public void calculateZBuffer(Scene.Camera camera, float[] buf)
         {
             foreach (var f in polygons)
             {
-                DrawPolygon(camera, f[0], f[1], f[2], width, height, buf);
-                //help(camera, f[0], f[1], f[2], buf, width, height);
+                RasterizePolygon(camera, f[0], f[1], f[2], buf);
             }
 
         }
 
-        private void DrawPolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, int width, int height, float[] buff)
+        private void RasterizePolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, float[] buff)
         {
             PointF projected0 = P0.GetPerspective(camera);
             projected0.Y = (int)projected0.Y;
@@ -287,61 +293,44 @@ namespace Tools.Primitives
                 (projected0, projected1) = (projected1, projected0);
                 (P0, P1) = (P1, P0);
             }
-
-            PointF projectedLeft = projected1;
-            PointF projectedRight = projected2;
-            Point3D pLeft = P1;
-            Point3D pRight = P2;
+            Point3D left = new Point3D(projected1.X, projected1.Y, P1.Z);
+            Point3D right = new Point3D(projected2.X, projected2.Y, P2.Z);
             Edge2D edge = new Edge2D(projected0.X, projected0.Y, projected1.X, projected1.Y, Color.Black);
-            
-
             var pp = new Point2D(projected2);
-            float crossx1 = pp.CompareToEdge2(edge);
-            if (crossx1 < 0)
+            if (pp.CompareToEdge2(edge) < 0)
             {
-                (projectedLeft, projectedRight) = (projectedRight, projectedLeft);
-                (pLeft, pRight) = (pRight, pLeft);
+                (left, right) = (right, left);
             }
             float mid = projected1.Y;
-            for (int y = (int)projected0.Y; y < mid; y++)
+            for (int y = (int)projected0.Y; y <= mid; y++)
             {
-                DrawGradientLines2(y, P0, projected0, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
+                DrawGradientLines(y, P0.Z, projected0, left, right, camera.width, camera.height, buff);
             }
 
-
-            projectedLeft = projected1;
-            projectedRight = projected0;
-            pLeft = P1;
-            pRight = P0;
-
+            left = new Point3D(projected1.X, projected1.Y, P1.Z);
+            right = new Point3D(projected0.X, projected0.Y, P0.Z);
             edge = new Edge2D(projected2.X, projected2.Y, projected1.X, projected1.Y, Color.Black);
             pp = new Point2D(projected0);
-            crossx1 = pp.CompareToEdge2(edge);
-            if (crossx1 > 0)
+            if (pp.CompareToEdge2(edge) > 0)
             {
-                (projectedLeft, projectedRight) = (projectedRight, projectedLeft);
-                (pLeft, pRight) = (pRight, pLeft);
+                (left, right) = (right, left);
             }
             for (int y = (int)projected2.Y; y >= mid; y--)
             {
-                DrawGradientLines2(y, P2, projected2, pLeft, projectedLeft, pRight, projectedRight, width, height, buff);
+                DrawGradientLines(y, P2.Z, projected2, left, right, camera.width, camera.height, buff);
             }
-
         }
-
-        private void DrawGradientLines2(int y, Point3D middle, PointF projectedMiddle,
-            Point3D left, PointF projectedLeft,
-            Point3D right, PointF projectedRight,
+        private void DrawGradientLines(int y, float middleZ, PointF middle, Point3D left, Point3D right,
             int width, int height, float[] buff)
         {
-            var leftBound = (int)Interpolate(projectedMiddle.Y, projectedMiddle.X, projectedLeft.Y, projectedLeft.X, y);
-            var rightBound = (int)Interpolate(projectedMiddle.Y, projectedMiddle.X, projectedRight.Y, projectedRight.X, y);
+            var leftBound = (int)Interpolate(middle.Y, middle.X, left.Y, left.X, y);
+            var rightBound = (int)Interpolate(middle.Y, middle.X, right.Y, right.X, y);
             if (leftBound > rightBound)
             {
                 return;
             }
-            var zLeft = Interpolate(projectedMiddle.Y, middle.Z, projectedLeft.Y, left.Z, y);
-            var zRight = Interpolate(projectedMiddle.Y, middle.Z, projectedRight.Y, right.Z, y);
+            var zLeft = Interpolate(middle.Y, middleZ, left.Y, left.Z, y);
+            var zRight = Interpolate(middle.Y, middleZ, right.Y, right.Z, y);
 
             for (int x = (int)leftBound; x <= rightBound; x++)
             {
@@ -356,12 +345,11 @@ namespace Tools.Primitives
                 }
             }
         }
-
      
         float Interpolate(float x0, float y0, float x1, float y1, float i)
         {
             if (Math.Abs(x0 - x1) < 1e-8)
-                return (y0);
+                return (y0 + y1) / 2;
             return y0 + ((y1 - y0) * (i - x0)) / (x1 - x0);
         }
     }

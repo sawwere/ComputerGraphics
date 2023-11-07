@@ -11,8 +11,16 @@ namespace Tools.Primitives
 
         public Point3D Center
         {
-            get;
-            private set;
+            get
+            {
+                var res = new Point3D(0, 0, 0);
+                foreach (Triangle3D f in polygons)
+                {
+                    res += f.Center;
+                }
+                res = (1f / polygons.Count) * res;
+                return res;
+            }
         }
 
         public List<Triangle3D> get_poligons()
@@ -23,7 +31,6 @@ namespace Tools.Primitives
         public Mesh(List<Triangle3D> list = null)
         {
             polygons = new List<Triangle3D>();
-            Center = new Point3D(0, 0, 0);
             if (list != null)
             {
                 polygons.AddRange(list);
@@ -39,16 +46,6 @@ namespace Tools.Primitives
                 res.polygons.Last();
             }
             return res;
-        }
-
-        private void UpdateCenter()
-        {
-            Center = new Point3D(0, 0, 0);
-            foreach (Triangle3D f in polygons)
-            {
-                Center += f.Center;
-            }
-            Center = (1f / polygons.Count) * Center;
         }
 
         public void Translate(Point3D vec)
@@ -232,7 +229,6 @@ namespace Tools.Primitives
             if (polygons != null)
                 foreach (var f in polygons)
                     f.reflectX();
-            UpdateCenter();
         }
 
         public void reflectY()
@@ -240,7 +236,6 @@ namespace Tools.Primitives
             if (polygons != null)
                 foreach (var f in polygons)
                     f.reflectY();
-            UpdateCenter();
         }
 
         public void reflectZ()
@@ -248,7 +243,6 @@ namespace Tools.Primitives
             if (polygons != null)
                 foreach (var f in polygons)
                     f.reflectZ();
-            UpdateCenter();
         }
     }
 }

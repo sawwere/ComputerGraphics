@@ -110,6 +110,14 @@ namespace Tools
             return res;
         }
 
+        public Primitive GetCamerated(Scene.Camera camera)
+        {
+            var res = GetTransformed();
+            res.Rotate(-1 * camera.rotation);
+            res.Translate(-1 * camera.position);
+            return res;
+        }
+
         /// <summary>
         /// Не надо вызывать эту функцию!!!
         /// </summary>

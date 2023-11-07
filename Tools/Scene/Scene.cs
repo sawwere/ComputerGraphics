@@ -10,29 +10,51 @@ namespace Tools.Scene
 {
     public class Scene
     {
+        public Dictionary<string, SceneObject> systemObjects;
         private Dictionary<Guid, SceneObject> sceneObjects;
         public List<Light> lights;
         public Camera camera;
+        
 
         public Scene(Dictionary<Guid, SceneObject> objects, List<Light> lights, Camera camera)
         {
             sceneObjects = objects;
             this.lights = lights;
             this.camera = camera;
+
+            systemObjects = new Dictionary<string, SceneObject>();
+            var axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
+            var axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 2, 0), Color.Green);
+            var axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, -2), Color.Blue);
+            var line_1 = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 0), Color.Purple);
+            systemObjects.Add("axisLineX", new SceneObject(axisLineX, "axisLineX"));
+            systemObjects.Add("axisLineY", new SceneObject(axisLineY, "axisLineY"));
+            systemObjects.Add("axisLineZ", new SceneObject(axisLineZ, "axisLineZ"));
+            systemObjects.Add("axisLineRotation", new SceneObject(line_1, "axisLineRotation"));
         }
 
         public Scene()
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
             lights = new List<Light>();
-            camera = new Camera(600, 600, new Primitives.Point3D(0,0,-1000), new Primitives.Point3D(0,0,1));
+            camera = new Camera(600, 600, new Point3D(0, 0, -3), new Point3D(0, 0, 0), new Point3D(0,0,1));
+
+            systemObjects = new Dictionary<string, SceneObject>();
+            var axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
+            var axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 2, 0), Color.Green);
+            var axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, -2), Color.Blue);
+            var line_1 = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 0), Color.Purple);
+            systemObjects.Add("axisLineX", new SceneObject(axisLineX, "axisLineX"));
+            systemObjects.Add("axisLineY", new SceneObject(axisLineY, "axisLineY"));
+            systemObjects.Add("axisLineZ", new SceneObject(axisLineZ, "axisLineZ"));
+            systemObjects.Add("axisLineRotation", new SceneObject(line_1, "axisLineRotation"));
         }
 
         public Dictionary<Guid, SceneObject> GetAllSceneObjects()
         {
             var res = new Dictionary<Guid, SceneObject>();
             foreach (var pair in sceneObjects)
-                if (!pair.Value.Name.StartsWith("_axis"))
+                //if (!pair.Value.Name.StartsWith("_axis"))
                     res[pair.Key] = pair.Value;
             return res;
         }
@@ -41,7 +63,7 @@ namespace Tools.Scene
         {
             var res = new Dictionary<Guid, SceneObject>();
             foreach (var pair in sceneObjects)
-                if (pair.Value.Name.StartsWith("_axis"))
+                //if (pair.Value.Name.StartsWith("_axis"))
                     res[pair.Key] = pair.Value;
             sceneObjects = res;
         }
@@ -126,8 +148,17 @@ namespace Tools.Scene
             return bitmap;
         }
 
-        public void Render(Graphics g, Projection pr = 0, Pen pen = null)
+        public void Render(Graphics g, Projection pr = 0)
         {
+            foreach (SceneObject obj in systemObjects.Values)
+            {
+                Tools.Primitives.Primitive m = obj.GetTransformed();
+                {
+                    m.Translate(-1 * camera.position);
+                }
+                m.Draw(g, camera, pr);
+            }
+
             foreach (SceneObject obj in sceneObjects.Values)
             {
                 Tools.Primitives.Primitive m = obj.GetTransformed();
@@ -136,7 +167,7 @@ namespace Tools.Scene
                 {
                     m.Translate(-1 * camera.position);
                 }
-                m.Draw(g, camera, pr, pen);
+                m.Draw(g, camera, pr);
             }
         }
     }

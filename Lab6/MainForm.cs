@@ -24,9 +24,6 @@ namespace Lab6
 
         Graphics g;
         Projection projection = Projection.ORTHOGR_X;
-        Edge3D axisLineX;
-        Edge3D axisLineY;
-        Edge3D axisLineZ;
         Edge3D line_1;
 
         private float startAxisValue = 0;
@@ -98,7 +95,8 @@ namespace Lab6
             g.ScaleTransform(1, -1);
             scene = new Scene();
 
-            camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3), new Point3D(0, 0, 1));
+            camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3),
+                new Point3D(0, 0, 0), new Point3D(0, 0, 1));
             scene.camera = camera;
 
             var polygons = new List<Triangle3D>();
@@ -112,20 +110,9 @@ namespace Lab6
             scene.AddObject(figure);
             UpdateHierarchy();
 
-
-
-
-
-            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
-            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 2, 0), Color.Green);
-            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, -2), Color.Blue);
-            line_1 = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 0), Color.Purple);
-            scene.AddObject(new SceneObject(axisLineX, "_axisLineX"));
-            scene.AddObject(new SceneObject(axisLineY, "_axisLineY"));
-            scene.AddObject(new SceneObject(axisLineZ, "_axisLineZ"));
-            scene.AddObject(new SceneObject(line_1, "_axisLineRotation"));
             comboBoxProjection.SelectedIndex = 0;
-            comboBoxProjection.Select();
+            comboBoxRenderMode.SelectedIndex = 0;
+            buttonApplyTransform.Select();
         }
 
         private void AddMeshToScene()
@@ -164,8 +151,15 @@ namespace Lab6
             stopWatch.Start();
             Color backgroundColor = Color.LightGray;
             g.Clear(backgroundColor);
-            //scene.Render(g, projection);
-            pictureBox1.Image = scene.RasterizedRender(projection);
+            switch  (comboBoxRenderMode.SelectedIndex)
+            {
+                case 0:
+                    scene.Render(g, projection);
+                    break;
+                case 2:
+                    pictureBox1.Image = scene.RasterizedRender(projection);
+                    break;
+            }
 
             pictureBox1.Refresh();
             stopWatch.Stop();
@@ -235,21 +229,21 @@ namespace Lab6
                 return;
             }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = axisLineX.ProjectedEdge(projection, scene.camera);
+            var prx = (scene.systemObjects["axisLineX"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
-            prx = axisLineY.ProjectedEdge(projection, scene.camera);
+            prx = (scene.systemObjects["axisLineY"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
-            prx = axisLineZ.ProjectedEdge(projection, scene.camera);
+            prx = (scene.systemObjects["axisLineZ"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
@@ -278,7 +272,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(deltaAxis, 0, 0));
+                        figure.Transform.Translate(new Point3D(deltaAxis / 100, 0, 0));
                         break;
                     }
                 case DeltaAxis.Y:
@@ -286,7 +280,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.Y - startAxisValue;
                         startAxisValue = p.Y;
-                        figure.Transform.Translate(new Point3D(0, -deltaAxis, 0));
+                        figure.Transform.Translate(new Point3D(0, -deltaAxis / 100, 0));
                         break;
                     }
                 case DeltaAxis.Z:
@@ -294,7 +288,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis));
+                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis / 100));
                         break;
                     }
                 default:

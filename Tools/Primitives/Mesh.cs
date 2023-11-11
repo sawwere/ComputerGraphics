@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Tools.Primitives
 {
-    public class Mesh
+    public class Mesh : Primitive
     {
+        public Color color = Color.Gray;
         private List<Triangle3D> polygons;
 
         public Point3D Center
@@ -37,7 +39,7 @@ namespace Tools.Primitives
             }
         }
 
-        public Mesh Clone()
+        public override Primitive Clone()
         {
             Mesh res = new Mesh();
             foreach (Triangle3D f in polygons)
@@ -48,41 +50,39 @@ namespace Tools.Primitives
             return res;
         }
 
-        public void Translate(Point3D vec)
+        public override void Translate(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Translate(vec.X, vec.Y, vec.Z);
+                f.Translate(vec);
             }
         }
 
-        public void Rotate(Point3D vec)
+        public override void Rotate(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Rotate(vec.X, Axis.AXIS_X);
-                f.Rotate(vec.Y, Axis.AXIS_Y);
-                f.Rotate(vec.Z, Axis.AXIS_Z);
+                f.Rotate(vec);
             }
         }
 
-        public void Scale(Point3D vec)
+        public override void Scale(Point3D vec)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Scale(vec.X, vec.Y, vec.Z);
+                f.Scale(vec);
             }
         }
 
-        public void Rotate(double angle, Axis a, Edge3D line = null)
+        public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
         {
             foreach (Triangle3D f in polygons)
             {
-                f.Rotate(angle, a, line);
+                f.RotateAroundAxis(angle, a, line);
             }
         }
 
-        public void make_hexahedron(float size = 50)
+        public void make_hexahedron(float size = 1)
         {
             polygons = new List<Triangle3D> {
                 new Triangle3D( new Point3D(size, -size, size), new Point3D(size, -size, -size), new Point3D(size, size, -size)),
@@ -94,7 +94,7 @@ namespace Tools.Primitives
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, size), new Point3D(-size, -size, size)),
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, -size, size), new Point3D(size, -size, size)),
 
-                new Triangle3D( new Point3D(size, size, size), new Point3D(size, size, size), new Point3D(size, size, -size)),
+                new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, -size), new Point3D(size, size, -size)),
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, -size), new Point3D(-size, size, size)),
 
                 new Triangle3D( new Point3D(size, -size, -size), new Point3D(-size, -size, -size), new Point3D(-size, size, -size)),
@@ -104,7 +104,7 @@ namespace Tools.Primitives
                 new Triangle3D( new Point3D(-size, -size, size), new Point3D(size, -size, -size), new Point3D(size, -size, size))
             };
         }
-        public void make_tetrahedron(float size = 50)
+        public void make_tetrahedron(float size = 1)
         {
             polygons = new List<Triangle3D>
             {
@@ -115,7 +115,7 @@ namespace Tools.Primitives
             };
         }
 
-        public void make_octahedron(float size = 50)
+        public void make_octahedron(float size = 1)
         {
             polygons = new List<Triangle3D>
             {
@@ -129,7 +129,7 @@ namespace Tools.Primitives
                 new Triangle3D(new Point3D(0,-size,0),new Point3D(0,0,-size),new Point3D(size,0,0))
             };
         }
-        public void make_icosahedron(float size = 50)
+        public void make_icosahedron(float size = 1)
         {
             float p = (float)(1 + System.Math.Sqrt(5)) / 2;//phi
             polygons = new List<Triangle3D>
@@ -158,7 +158,7 @@ namespace Tools.Primitives
             };
         }
 
-        public void make_dodecahedron(float size = 50)
+        public void make_dodecahedron(float size = 1)
         {
             float p = (float)(1 + System.Math.Sqrt(5)) / 2;//phi
             float p1 = 1 / p;//  1/phi
@@ -214,14 +214,12 @@ namespace Tools.Primitives
             };
         }
 
-
-
-        public void Draw(Graphics g, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
         {
             foreach (Triangle3D t in polygons)
             {
                 if (t.isVisible)
-                    t.Draw(g, pr, pen);
+                    t.Draw(g, camera, pr, pen);
             }
         }
         public void reflectX()
@@ -243,6 +241,108 @@ namespace Tools.Primitives
             if (polygons != null)
                 foreach (var f in polygons)
                     f.reflectZ();
+        }
+
+
+        //==============================================
+        //
+        // Z-BUFFER
+        //
+        //==============================================
+
+        public void CalculateZBuffer(Scene.Camera camera, float[] buf)
+        {
+            foreach (var f in polygons)
+            {
+                RasterizePolygon(camera, f[0], f[1], f[2], buf);
+            }
+
+        }
+
+        private void RasterizePolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, float[] buff)
+        {
+            PointF projected0 = P0.GetPerspective(camera);
+            projected0.Y = (int)projected0.Y;
+            PointF projected1 = P1.GetPerspective(camera);
+            projected1.Y = (int)projected1.Y;
+            PointF projected2 = P2.GetPerspective(camera);
+            projected2.Y = (int)projected2.Y;
+            if (projected0.Y > projected1.Y)
+            {
+                (projected0, projected1) = (projected1, projected0);
+                (P0, P1) = (P1, P0);
+            }
+            if (projected1.Y > projected2.Y)
+            {
+                (projected1, projected2) = (projected2, projected1);
+                (P1, P2) = (P2, P1);
+            }
+            if (projected0.Y > projected1.Y)
+            {
+                (projected0, projected1) = (projected1, projected0);
+                (P0, P1) = (P1, P0);
+            }
+            Point3D left = new Point3D(projected1.X, projected1.Y, P1.Z);
+            Point3D right = new Point3D(projected2.X, projected2.Y, P2.Z);
+            Edge2D edge = new Edge2D(projected0.X, projected0.Y, projected1.X, projected1.Y, Color.Black);
+            var pp = new Point2D(projected2);
+            if (pp.CompareToEdge2(edge) < 0)
+            {
+                (left, right) = (right, left);
+            }
+            float mid = projected1.Y;
+            for (int y = (int)projected0.Y; y <= mid; y++)
+            {
+                DrawGradientLines(y, P0.Z, projected0, left, right, camera, buff);
+            }
+
+            left = new Point3D(projected1.X, projected1.Y, P1.Z);
+            right = new Point3D(projected0.X, projected0.Y, P0.Z);
+            edge = new Edge2D(projected2.X, projected2.Y, projected1.X, projected1.Y, Color.Black);
+            pp = new Point2D(projected0);
+            if (pp.CompareToEdge2(edge) > 0)
+            {
+                (left, right) = (right, left);
+            }
+            for (int y = (int)projected2.Y; y >= mid; y--)
+            {
+                DrawGradientLines(y, P2.Z, projected2, left, right, camera, buff);
+            }
+        }
+        private void DrawGradientLines(int y, float middleZ, PointF middle, Point3D left, Point3D right,
+            Scene.Camera camera, float[] buff)
+        {
+            var leftBound = (int)Interpolate(middle.Y, middle.X, left.Y, left.X, y);
+            var rightBound = (int)Interpolate(middle.Y, middle.X, right.Y, right.X, y);
+            if (leftBound > rightBound)
+            {
+                return;
+            }
+            var zLeft = Interpolate(middle.Y, middleZ, left.Y, left.Z, y);
+            var zRight = Interpolate(middle.Y, middleZ, right.Y, right.Z, y);
+
+            for (int x = (int)leftBound; x <= rightBound; x++)
+            {
+                int xx = x + camera.width / 2;
+                int yy = -y + camera.height / 2;
+                if (xx < 0 || xx > camera.width 
+                        || yy < 0 || yy > camera.height 
+                        || (xx + camera.width * yy) < 0 
+                        || (xx + camera.width * yy) > (buff.Length - 1))
+                    continue;
+                float tempZ = Interpolate(leftBound, zLeft, rightBound, zRight, x);
+                if (tempZ < buff[xx + camera.width * yy])
+                {
+                    buff[xx + yy * camera.width] = tempZ;
+                }
+            }
+        }
+     
+        float Interpolate(float x0, float y0, float x1, float y1, float i)
+        {
+            if (Math.Abs(x0 - x1) < 1e-8)
+                return (y0 + y1) / 2;
+            return y0 + ((y1 - y0) * (i - x0)) / (x1 - x0);
         }
     }
 }

@@ -1,19 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 using Tools.Primitives;
-using System.Globalization;
-
-
-using Tools.FastBitmap;
-using Tools.Primitives;
-using Tools;
-using Tools.Scene;
-using Tools.Meshes;
 namespace Tools.Meshes
 {
     public static class MeshBuilder
@@ -48,6 +37,8 @@ namespace Tools.Meshes
                 }
             }
             Mesh res = new Mesh(triangles);
+            Console.WriteLine(res.Center.Y);
+            res.Translate(-1* res.Center);
             return res;
         }
 

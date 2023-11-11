@@ -63,12 +63,12 @@
     <Compile Include="Primitives\Plane\IPrimitive.cs" />
     <Compile Include="MatrixFactory.cs" />
     <Compile Include="Meshes\MeshBuilder.cs" />
-    <Compile Include="Primitives\ITransformable.cs" />
     <Compile Include="Primitives\Plane\Point2D.cs" />
     <Compile Include="Primitives\Plane\Polygon.cs" />
     <Compile Include="Primitives\Edge3D.cs" />
     <Compile Include="Primitives\Point3D.cs" />
     <Compile Include="Primitives\Mesh.cs" />
+    <Compile Include="Primitives\Primitive.cs" />
     <Compile Include="Primitives\Triangle3D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

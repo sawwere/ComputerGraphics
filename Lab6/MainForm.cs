@@ -24,9 +24,6 @@ namespace Lab6
 
         Graphics g;
         Projection projection = Projection.ORTHOGR_X;
-        Edge3D axisLineX;
-        Edge3D axisLineY;
-        Edge3D axisLineZ;
         Edge3D line_1;
 
         private float startAxisValue = 0;
@@ -96,22 +93,25 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
-            scene = new Scene();
+            camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3),
+                new Point3D(0, 0, 0), new Point3D(0, 0, 1));
+            scene = new Scene(camera);
 
-            camera = new Camera(new Point3D(0, 0, -1000), new Point3D(0, 0, 0));
-            scene.camera = camera;
+            var polygons = new List<Triangle3D>();
+            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
 
-            figure = new SceneObject(Tools.Meshes.MeshBuilder.LoadFromFile(@"..//..//..//Tools//Meshes//Гексаэдр.stl"));
+            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
+            var mesh = new Mesh(polygons);
+            mesh.make_hexahedron();
+            figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
             UpdateHierarchy();
 
-
-
-            axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(200, 0, 0), Color.Red);
-            axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 200, 0), Color.Green);
-            axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 200), Color.Blue);
             comboBoxProjection.SelectedIndex = 0;
+            comboBoxRenderMode.SelectedIndex = 0;
+            buttonApplyTransform.Select();
+            Render();
         }
 
         private void AddMeshToScene()
@@ -144,33 +144,22 @@ namespace Lab6
             }
         }
 
-        private void DrawAxesLines()
-        {
-            axisLineX.Draw(g, projection);
-            axisLineY.Draw(g, projection);
-            axisLineZ.Draw(g, projection);
-            float x_1 = (float)numericUpDown12.Value;
-            float y_1 = (float)numericUpDown11.Value;
-            float z_1 = (float)numericUpDown10.Value;
-
-            float x_2 = (float)numericUpDown15.Value;
-            float y_2 = (float)numericUpDown14.Value;
-            float z_2 = (float)numericUpDown13.Value;
-
-
-            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);
-            line_1.Draw(g, projection);
-        }
-
         public void Render()
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
-            Color backgroundColor = Color.Gray;
+            Color backgroundColor = Color.LightGray;
             g.Clear(backgroundColor);
-            scene.Render(g, projection);
+            switch  (comboBoxRenderMode.SelectedIndex)
+            {
+                case 0:
+                    scene.Render(g, projection);
+                    break;
+                case 2:
+                    pictureBox1.Image = scene.RasterizedRender(projection);
+                    break;
+            }
 
-            DrawAxesLines();
             pictureBox1.Refresh();
             stopWatch.Stop();
             inspector.GetUpdate(figure);
@@ -239,21 +228,21 @@ namespace Lab6
                 return;
             }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = axisLineX.ProjectedEdge(projection);
+            var prx = (scene.systemObjects["axisLineX"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
-            prx = axisLineY.ProjectedEdge(projection);
+            prx = (scene.systemObjects["axisLineY"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
-            prx = axisLineZ.ProjectedEdge(projection);
+            prx = (scene.systemObjects["axisLineZ"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
@@ -282,7 +271,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(deltaAxis, 0, 0));
+                        figure.Transform.Translate(new Point3D(deltaAxis / 100, 0, 0));
                         break;
                     }
                 case DeltaAxis.Y:
@@ -290,7 +279,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.Y - startAxisValue;
                         startAxisValue = p.Y;
-                        figure.Transform.Translate(new Point3D(0, -deltaAxis, 0));
+                        figure.Transform.Translate(new Point3D(0, -deltaAxis / 100, 0));
                         break;
                     }
                 case DeltaAxis.Z:
@@ -298,7 +287,7 @@ namespace Lab6
                         var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
                         deltaAxis = p.X - startAxisValue;
                         startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis));
+                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis / 100));
                         break;
                     }
                 default:
@@ -314,6 +303,9 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+
+            scene.Camera.width = pictureBox1.Width;
+            scene.Camera.height = pictureBox1.Height;
             Render();
         }        
 
@@ -504,32 +496,32 @@ namespace Lab6
             {
                 case 'a':
                     {
-                        camera.position.Translate(1, 0, 0);
+                        scene.MoveCamera(new Point3D(-0.5f, 0, 0));
                         break;
                     }
                 case 'd':
                     {
-                        camera.position.Translate(-1, 0, 0);
+                        scene.MoveCamera(new Point3D(0.5f, 0, 0));
                         break;
                     }
                 case 'w':
                     {
-                        camera.position.Translate(0, 0, 1);
+                        scene.MoveCamera(new Point3D(0, 0, 0.5f));
                         break;
                     }
                 case 's':
                     {
-                        camera.position.Translate(0, 0, -1);
+                        scene.MoveCamera(new Point3D(0, 0, -0.5f));
                         break;
                     }
                 case 'z':
                     {
-                        camera.position.Translate(0, -1, 0);
+                        scene.MoveCamera(new Point3D(0, -0.5f, 0));
                         break;
                     }
                 case 'x':
                     {
-                        camera.position.Translate(0, 1, 0);
+                        scene.MoveCamera(new Point3D(0, 0.5f, 0));
                         break;
                     }
 
@@ -539,6 +531,8 @@ namespace Lab6
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(figure.Local is Mesh))
+                return;
             //TODO
             var path = figure.Name + ".stl";
             
@@ -553,7 +547,7 @@ namespace Lab6
             {
                 try
                 {
-                    MeshBuilder.SaveToFile(sfd.FileName, figure.GetTransformed(), figure.Name);
+                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(), figure.Name);
                 }
                 catch
                 {

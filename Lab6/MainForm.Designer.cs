@@ -56,7 +56,7 @@ namespace Lab6
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.comboBoxRenderMode = new System.Windows.Forms.ComboBox();
             this.comboBoxProjection = new System.Windows.Forms.ComboBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonReflectX = new System.Windows.Forms.Button();
@@ -507,7 +507,7 @@ namespace Lab6
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.comboBox5);
+            this.groupBox2.Controls.Add(this.comboBoxRenderMode);
             this.groupBox2.Controls.Add(this.comboBoxProjection);
             this.groupBox2.ForeColor = System.Drawing.Color.SeaShell;
             this.groupBox2.Location = new System.Drawing.Point(396, 33);
@@ -535,22 +535,23 @@ namespace Lab6
             this.label14.TabIndex = 2;
             this.label14.Text = "Проекция:";
             // 
-            // comboBox5
+            // comboBoxRenderMode
             // 
-            this.comboBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox5.ForeColor = System.Drawing.Color.SeaShell;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
+            this.comboBoxRenderMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
+            this.comboBoxRenderMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRenderMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxRenderMode.ForeColor = System.Drawing.Color.SeaShell;
+            this.comboBoxRenderMode.FormattingEnabled = true;
+            this.comboBoxRenderMode.Items.AddRange(new object[] {
+            "Без отсечения",
             "Отсечение нелицевых граней",
             "Алгоритм Z-буфера",
             "Алгоритм закраски Гуро",
             "Текстурирование"});
-            this.comboBox5.Location = new System.Drawing.Point(387, 13);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(121, 21);
-            this.comboBox5.TabIndex = 1;
+            this.comboBoxRenderMode.Location = new System.Drawing.Point(387, 13);
+            this.comboBoxRenderMode.Name = "comboBoxRenderMode";
+            this.comboBoxRenderMode.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxRenderMode.TabIndex = 1;
             // 
             // comboBoxProjection
             // 
@@ -1645,7 +1646,7 @@ namespace Lab6
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button buttonRotateFigure;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox comboBoxRenderMode;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.NumericUpDown numericUpDown30;

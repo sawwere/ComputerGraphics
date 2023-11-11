@@ -29,6 +29,11 @@ namespace Tools.Primitives
             Color = Color.Black;
         }
 
+        public Point3D Clone()
+        {
+            return new Point3D(X, Y, Z);
+        }
+
         public void ReflectX()
         {
             X = -X;
@@ -51,7 +56,7 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixTranslate(dx, dy, dz));
-            c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
+            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             X = c[0][0];
             Y = c[0][1];
@@ -65,7 +70,7 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixRotate(angle, a, line));
-            c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
+            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
@@ -78,7 +83,7 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx, ky, kz));
-            c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
+            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
@@ -157,19 +162,18 @@ namespace Tools.Primitives
             return new { X, Y, Z }.GetHashCode();
         }
 
-        public PointF GetPerspective()
+        public PointF GetPerspective(Scene.Camera camera)
         {
-            float k = 1000;
-            if (Math.Abs(Z - k) < 1e-10)
-                k += 1;
+            //if (Math.Abs(Z - camera.position.Z) < 1e-10)
+            //    return new PointF(X * 1000, Y * 1000);
 
             float[][] xyz = new float[1][]
             {
                 new float[4] { X, Y, Z, 1 }
             };
-            float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixPerspective(k));
+            float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixPerspective(camera));
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
-            return new PointF(c[0][0] , c[0][1] );
+            return new PointF(c[0][0] * 1000 , c[0][1] * 1000);
         }
 
         public PointF GetOrthographic(Axis a)
@@ -182,11 +186,11 @@ namespace Tools.Primitives
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             if (a == Axis.AXIS_X)
-                return new PointF(c[0][1], c[0][2]);
+                return new PointF(c[0][1] * 100, c[0][2] * 100);
             else if (a == Axis.AXIS_Y)
-                return new PointF(c[0][0], c[0][2]);
+                return new PointF(c[0][0] * 100, c[0][2] * 100);
             else
-                return new PointF(c[0][0], c[0][1]);
+                return new PointF(c[0][0] * 100, c[0][1] * 100);
         }
 
         public PointF GetIsometric()
@@ -198,7 +202,7 @@ namespace Tools.Primitives
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixIsometric());
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
-            return new PointF(c[0][0], c[0][1]);
+            return new PointF(c[0][0] * 100, c[0][1] * 100);
         }
     }
 }

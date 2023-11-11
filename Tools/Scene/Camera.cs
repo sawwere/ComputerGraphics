@@ -1,20 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tools.Primitives;
+﻿using Tools.Primitives;
 
 namespace Tools.Scene
 {
-    public struct Camera
+    public class Camera
     {
-        public Point3D position { get; set; }
-        public Point3D forward { get; set; }
-        public Camera(Point3D pos, Point3D forward)
+        public Point3D position 
+        { 
+            get; 
+            private set; 
+        }
+
+        public Point3D rotation 
+        { 
+            get; 
+            private set; 
+        }
+
+        public Point3D forward
         {
+            get;
+            private set;
+        }
+
+        public int width { get; set; }
+        public int height { get; set; }
+        public float fovy;
+        public Camera(int w, int h, Point3D pos, Point3D rotation, Point3D forward)
+        {
+            width = w;
+            height = h;
+            fovy = 90;
             position = pos;
+            this.rotation = rotation;
             this.forward = forward;
+        }
+
+        public void Translate(Point3D vec)
+        {
+            position += vec;
+        }
+
+        public void Rotate(Point3D vec)
+        {
+            rotation += vec;
         }
     }
 }

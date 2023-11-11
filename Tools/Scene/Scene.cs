@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using Tools.Primitives;
 
@@ -30,6 +29,11 @@ namespace Tools.Scene
             systemObjects.Add("axisLineY", new SceneObject(axisLineY, "axisLineY"));
             systemObjects.Add("axisLineZ", new SceneObject(axisLineZ, "axisLineZ"));
             systemObjects.Add("axisLineRotation", new SceneObject(line_1, "axisLineRotation"));
+            foreach (SceneObject obj in systemObjects.Values)
+            {
+                obj.Transform.Translate(-1 * Camera.position);
+                obj.Transform.Rotate(-1 * Camera.rotation);
+            }
         }
 
         public Dictionary<Guid, SceneObject> GetAllSceneObjects()
@@ -60,6 +64,8 @@ namespace Tools.Scene
                 i++;
             }
             obj.Name = figureName.ToString();
+            obj.Transform.Translate(-1 * Camera.position);
+            obj.Transform.Rotate(-1 * Camera.rotation);
             sceneObjects.Add(obj.Id, obj);
         }
 
@@ -92,7 +98,7 @@ namespace Tools.Scene
                 {
                     foreach (SceneObject obj in GetAllSceneObjects().Values)
                     {
-                        Primitive m = obj.GetTransformed(Camera);
+                        Primitive m = obj.GetTransformed();
                         (m as Mesh).CalculateZBuffer(Camera, buff);
                     }
                     var filtered = buff.Where(x => x < float.MaxValue && x > float.MinValue);
@@ -128,18 +134,15 @@ namespace Tools.Scene
         {
             foreach (SceneObject obj in systemObjects.Values)
             {
-                Primitive m = obj.GetTransformed(Camera);
+                Primitive m = obj.GetTransformed();
                 m.Draw(g, Camera, pr);
             }
 
             foreach (SceneObject obj in sceneObjects.Values)
             {
-                Primitive m = obj.GetTransformed(Camera);
+                Primitive m = obj.GetTransformed();
                 //TODO move figure in all projections ??
                 //if (pr == Projection.PERSPECTIVE)
-                {
-                    //m.Translate(-1 * Camera.position);
-                }
                 m.Draw(g, Camera, pr);
             }
         }
@@ -147,11 +150,27 @@ namespace Tools.Scene
         public void MoveCamera(Point3D vec)
         {
             Camera.Translate(vec);
+            foreach (SceneObject obj in systemObjects.Values)
+            {
+                obj.Transform.Translate(-1 * vec);
+            }
+            foreach (SceneObject obj in sceneObjects.Values)
+            {
+                obj.Transform.Translate(-1 * vec);
+            }
         }
 
         public void RotateCamera(Point3D vec)
         {
             Camera.Rotate(vec);
+            foreach (SceneObject obj in systemObjects.Values)
+            {
+                obj.Transform.Rotate(-1 * vec);
+            }
+            foreach (SceneObject obj in sceneObjects.Values)
+            {
+                obj.Transform.Rotate(-1 * vec);
+            }
         }
     }
 }

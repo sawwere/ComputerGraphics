@@ -88,9 +88,7 @@ namespace Tools
                 
         public void RotateAroundAxis(float angle, Edge3D edge = null)
         {
-            /// <summary>
-            /// Не надо вызывать эту функцию!!!
-            /// </summary>
+
         }
 
         /// <summary>
@@ -130,14 +128,11 @@ namespace Tools
         /// Копия данного объекта, к которой применены операции трансформирования
         /// </summary>
         /// <returns>КОПИЯ данного объекта</returns>
-        public Primitive GetTransformed(Scene.Camera camera)
+        public Primitive GetTransformed()
         {
             var res = Local.Clone();
             res.Rotate(Transform.rotation);
             res.Scale(Transform.scale);
-
-            res.Rotate(-1 * camera.rotation);
-            res.Translate(-1 * camera.position);
             res.Translate(Transform.position);
             return res;
         }

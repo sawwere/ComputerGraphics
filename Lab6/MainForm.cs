@@ -228,21 +228,21 @@ namespace Lab6
                 return;
             }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = (scene.systemObjects["axisLineX"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
+            var prx = (scene.systemObjects["axisLineX"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
-            prx = (scene.systemObjects["axisLineY"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
+            prx = (scene.systemObjects["axisLineY"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
-            prx = (scene.systemObjects["axisLineZ"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
+            prx = (scene.systemObjects["axisLineZ"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
@@ -547,7 +547,7 @@ namespace Lab6
             {
                 try
                 {
-                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(scene.Camera), figure.Name);
+                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(), figure.Name);
                 }
                 catch
                 {

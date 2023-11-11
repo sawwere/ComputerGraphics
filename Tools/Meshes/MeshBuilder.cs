@@ -107,6 +107,8 @@ namespace Tools.Meshes
                 //points = new List<Point3D>();
             }
             mesh = new Mesh(polygons);
+            mesh.Translate(-1*mesh.Center);
+
             return mesh;
         }
 

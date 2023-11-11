@@ -137,7 +137,7 @@ namespace Tools
                 g.DrawLine(pen, points[i].X, points[i].Y, points[i + 1].X, points[i + 1].Y);
             }
 
-            g.DrawLine(pen, points[0].X, points[0].Y, points.Last().X, points.Last().Y);
+            //g.DrawLine(pen, points[0].X, points[0].Y, points.Last().X, points.Last().Y);
         }
 
         public (Polygon, Polygon) Split(int left, int right)

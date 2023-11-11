@@ -417,7 +417,7 @@ namespace Lab6
 
             float angle = (float)numericUpDown16.Value;
             //Ничего не делает, выключил от греха подальше
-            figure.RotateAroundAxis(angle, Axis.CUSTOM, line_1);
+            //figure.RotateAroundAxis(angle, Axis.CUSTOM, line_1);
 
 
             Render();

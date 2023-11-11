@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tools;
 
+
+
 namespace Lab6
 {
     public partial class FormRotationFigure : Form
@@ -45,9 +47,29 @@ namespace Lab6
 
         public List<Point2D> GetPoints()
         {
+            float min_x = float.MaxValue;
+            float min_y = float.MaxValue;
             List<Point2D> res = new List<Point2D>();
             for (int i = 0; i < polygon.Count; i++)
                 res.Add(polygon[i]);
+            
+            for (int i = 0; i < res.Count; i++)
+            {
+                if (res[i].X<min_x)
+                {
+                    min_x = res[i].X;
+                }
+                if (res[i].Y < min_y)
+                {
+                    min_y = res[i].Y;
+                }
+            }
+            for (int i = 0; i < res.Count; i++)
+            {
+                res[i].X = res[i].X - min_x;
+                res[i].Y = res[i].Y - min_y;
+            }
+
             return res;
         }
     }

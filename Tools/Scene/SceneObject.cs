@@ -13,16 +13,35 @@ namespace Tools
     public class Transform
     {
         public Point3D forward { get; private set; }
-        public Point3D position { get; set; }
-        public Point3D rotation { get; set; }
-        public Point3D scale { get; set; }
+
+        private Point3D _position;
+        public Point3D position 
+        {
+            get { return _position; }
+            private set { _position = value; changed = true; }
+        }
+        private Point3D _rotation;
+        public Point3D rotation
+        {
+            get { return _rotation; }
+            private set { _rotation = value; changed = true; }
+        }
+        private Point3D _scale;
+        public Point3D scale
+        {
+            get { return _scale; }
+            private set { _scale = value; changed = true; }
+        }
+
+        private bool changed;
 
         public Transform() 
         { 
-            position = new Point3D(0, 0, 0);
-            rotation = new Point3D(0, 0, 0);
-            scale = new Point3D(1, 1, 1);
+            _position = new Point3D(0, 0, 0);
+            _rotation = new Point3D(0, 0, 0);
+            _scale = new Point3D(1, 1, 1);
             forward = new Point3D(0, 0, 1);
+            changed = false;
         }
 
         public void reflectX()
@@ -59,7 +78,7 @@ namespace Tools
         }
 
         /// <summary>
-        /// Поверрнуть трансформ так, чтобы вектор forward указывал на точку target.
+        /// Повернуть трансформ так, чтобы вектор forward указывал на точку target.
         /// </summary>
         /// <param name="target">Object to point towards.</param>
         public void LookAt(Point3D target)
@@ -72,6 +91,16 @@ namespace Tools
             /// <summary>
             /// Не надо вызывать эту функцию!!!
             /// </summary>
+        }
+
+        /// <summary>
+        /// Изменился ли трансформ с момента последнего вызова этой функции
+        /// </summary>
+        public bool HasChanged()
+        {
+            bool res = changed;
+            changed = false;
+            return res;
         }
     }
 
@@ -101,20 +130,15 @@ namespace Tools
         /// Копия данного объекта, к которой применены операции трансформирования
         /// </summary>
         /// <returns>КОПИЯ данного объекта</returns>
-        public Primitive GetTransformed()
+        public Primitive GetTransformed(Scene.Camera camera)
         {
             var res = Local.Clone();
             res.Rotate(Transform.rotation);
             res.Scale(Transform.scale);
-            res.Translate(Transform.position);
-            return res;
-        }
 
-        public Primitive GetCamerated(Scene.Camera camera)
-        {
-            var res = GetTransformed();
             res.Rotate(-1 * camera.rotation);
             res.Translate(-1 * camera.position);
+            res.Translate(Transform.position);
             return res;
         }
 

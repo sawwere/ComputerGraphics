@@ -93,11 +93,9 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
-            scene = new Scene();
-
             camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3),
                 new Point3D(0, 0, 0), new Point3D(0, 0, 1));
-            scene.camera = camera;
+            scene = new Scene(camera);
 
             var polygons = new List<Triangle3D>();
             polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
@@ -113,6 +111,7 @@ namespace Lab6
             comboBoxProjection.SelectedIndex = 0;
             comboBoxRenderMode.SelectedIndex = 0;
             buttonApplyTransform.Select();
+            Render();
         }
 
         private void AddMeshToScene()
@@ -229,21 +228,21 @@ namespace Lab6
                 return;
             }
             var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = (scene.systemObjects["axisLineX"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
+            var prx = (scene.systemObjects["axisLineX"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.X;
                 startAxisValue = p.X;
                 return;
             }
-            prx = (scene.systemObjects["axisLineY"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
+            prx = (scene.systemObjects["axisLineY"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Y;
                 startAxisValue = -p.Y;
                 return;
             }
-            prx = (scene.systemObjects["axisLineZ"].GetCamerated(scene.camera) as Edge3D).ProjectedEdge(projection, scene.camera);
+            prx = (scene.systemObjects["axisLineZ"].GetTransformed(scene.Camera) as Edge3D).ProjectedEdge(projection, scene.Camera);
             if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
             {
                 curDeltaAxis = DeltaAxis.Z;
@@ -305,8 +304,8 @@ namespace Lab6
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
 
-            scene.camera.width = pictureBox1.Width;
-            scene.camera.height = pictureBox1.Height;
+            scene.Camera.width = pictureBox1.Width;
+            scene.Camera.height = pictureBox1.Height;
             Render();
         }        
 
@@ -497,32 +496,32 @@ namespace Lab6
             {
                 case 'a':
                     {
-                        scene.camera.position.Translate(-0.5f, 0, 0);
+                        scene.MoveCamera(new Point3D(-0.5f, 0, 0));
                         break;
                     }
                 case 'd':
                     {
-                        scene.camera.position.Translate(0.5f, 0, 0);
+                        scene.MoveCamera(new Point3D(0.5f, 0, 0));
                         break;
                     }
                 case 'w':
                     {
-                        scene.camera.position.Translate(0, 0, 0.5f);
+                        scene.MoveCamera(new Point3D(0, 0, 0.5f));
                         break;
                     }
                 case 's':
                     {
-                        scene.camera.position.Translate(0, 0, -0.5f);
+                        scene.MoveCamera(new Point3D(0, 0, -0.5f));
                         break;
                     }
                 case 'z':
                     {
-                        scene.camera.position.Translate(0, -0.5f, 0);
+                        scene.MoveCamera(new Point3D(0, -0.5f, 0));
                         break;
                     }
                 case 'x':
                     {
-                        scene.camera.position.Translate(0, 0.5f, 0);
+                        scene.MoveCamera(new Point3D(0, 0.5f, 0));
                         break;
                     }
 
@@ -548,7 +547,7 @@ namespace Lab6
             {
                 try
                 {
-                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(), figure.Name);
+                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(scene.Camera), figure.Name);
                 }
                 catch
                 {

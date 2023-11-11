@@ -13,31 +13,13 @@ namespace Tools.Scene
         public Dictionary<string, SceneObject> systemObjects;
         private Dictionary<Guid, SceneObject> sceneObjects;
         public List<Light> lights;
-        public Camera camera;
+        public Camera Camera { get; private set; }
         
-
-        public Scene(Dictionary<Guid, SceneObject> objects, List<Light> lights, Camera camera)
-        {
-            sceneObjects = objects;
-            this.lights = lights;
-            this.camera = camera;
-
-            systemObjects = new Dictionary<string, SceneObject>();
-            var axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
-            var axisLineY = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 2, 0), Color.Green);
-            var axisLineZ = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, -2), Color.Blue);
-            var line_1 = new Edge3D(new Point3D(0, 0, 0), new Point3D(0, 0, 0), Color.Purple);
-            systemObjects.Add("axisLineX", new SceneObject(axisLineX, "axisLineX"));
-            systemObjects.Add("axisLineY", new SceneObject(axisLineY, "axisLineY"));
-            systemObjects.Add("axisLineZ", new SceneObject(axisLineZ, "axisLineZ"));
-            systemObjects.Add("axisLineRotation", new SceneObject(line_1, "axisLineRotation"));
-        }
-
-        public Scene()
+        public Scene(Camera camera)
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
             lights = new List<Light>();
-            camera = new Camera(600, 600, new Point3D(0, 0, -3), new Point3D(0, 0, 0), new Point3D(0,0,1));
+            Camera = camera;
 
             systemObjects = new Dictionary<string, SceneObject>();
             var axisLineX = new Edge3D(new Point3D(0, 0, 0), new Point3D(2, 0, 0), Color.Red);
@@ -54,18 +36,13 @@ namespace Tools.Scene
         {
             var res = new Dictionary<Guid, SceneObject>();
             foreach (var pair in sceneObjects)
-                //if (!pair.Value.Name.StartsWith("_axis"))
-                    res[pair.Key] = pair.Value;
+                res[pair.Key] = pair.Value;
             return res;
         }
 
         public void Clear()
         {
-            var res = new Dictionary<Guid, SceneObject>();
-            foreach (var pair in sceneObjects)
-                //if (pair.Value.Name.StartsWith("_axis"))
-                    res[pair.Key] = pair.Value;
-            sceneObjects = res;
+            sceneObjects.Clear();
         }
 
         public int Count()
@@ -105,7 +82,7 @@ namespace Tools.Scene
 
         public Bitmap RasterizedRender(Projection pr)
         {
-            var bitmap = new Bitmap(camera.width, camera.height);
+            var bitmap = new Bitmap(Camera.width, Camera.height);
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
                 float[] buff = new float[fs.Width * fs.Height];
@@ -115,9 +92,8 @@ namespace Tools.Scene
                 {
                     foreach (SceneObject obj in GetAllSceneObjects().Values)
                     {
-                        Primitive m = obj.GetTransformed();
-                        m.Translate(-1 * camera.position);
-                        (m as Mesh).calculateZBuffer(camera, buff);
+                        Primitive m = obj.GetTransformed(Camera);
+                        (m as Mesh).CalculateZBuffer(Camera, buff);
                     }
                     var filtered = buff.Where(x => x < float.MaxValue && x > float.MinValue);
                     if (filtered.Count() > 0)
@@ -152,23 +128,30 @@ namespace Tools.Scene
         {
             foreach (SceneObject obj in systemObjects.Values)
             {
-                Tools.Primitives.Primitive m = obj.GetTransformed();
-                {
-                    m.Translate(-1 * camera.position);
-                }
-                m.Draw(g, camera, pr);
+                Primitive m = obj.GetTransformed(Camera);
+                m.Draw(g, Camera, pr);
             }
 
             foreach (SceneObject obj in sceneObjects.Values)
             {
-                Tools.Primitives.Primitive m = obj.GetTransformed();
+                Primitive m = obj.GetTransformed(Camera);
                 //TODO move figure in all projections ??
                 //if (pr == Projection.PERSPECTIVE)
                 {
-                    m.Translate(-1 * camera.position);
+                    //m.Translate(-1 * Camera.position);
                 }
-                m.Draw(g, camera, pr);
+                m.Draw(g, Camera, pr);
             }
+        }
+
+        public void MoveCamera(Point3D vec)
+        {
+            Camera.Translate(vec);
+        }
+
+        public void RotateCamera(Point3D vec)
+        {
+            Camera.Rotate(vec);
         }
     }
 }

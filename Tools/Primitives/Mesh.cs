@@ -30,11 +30,6 @@ namespace Tools.Primitives
             {
                 polygons.AddRange(list);
             }
-            //var rand = new Random();
-            //foreach (Triangle3D f in polygons)
-            //{
-            //    f.color = Color.FromArgb(255, rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
-            //}
         }
 
         public override Primitive Clone()
@@ -261,7 +256,7 @@ namespace Tools.Primitives
         //
         //==============================================
 
-        public void calculateZBuffer(Scene.Camera camera, float[] buf)
+        public void CalculateZBuffer(Scene.Camera camera, float[] buf)
         {
             foreach (var f in polygons)
             {
@@ -304,7 +299,7 @@ namespace Tools.Primitives
             float mid = projected1.Y;
             for (int y = (int)projected0.Y; y <= mid; y++)
             {
-                DrawGradientLines(y, P0.Z, projected0, left, right, camera.width, camera.height, buff);
+                DrawGradientLines(y, P0.Z, projected0, left, right, camera, buff);
             }
 
             left = new Point3D(projected1.X, projected1.Y, P1.Z);
@@ -317,11 +312,11 @@ namespace Tools.Primitives
             }
             for (int y = (int)projected2.Y; y >= mid; y--)
             {
-                DrawGradientLines(y, P2.Z, projected2, left, right, camera.width, camera.height, buff);
+                DrawGradientLines(y, P2.Z, projected2, left, right, camera, buff);
             }
         }
         private void DrawGradientLines(int y, float middleZ, PointF middle, Point3D left, Point3D right,
-            int width, int height, float[] buff)
+            Scene.Camera camera, float[] buff)
         {
             var leftBound = (int)Interpolate(middle.Y, middle.X, left.Y, left.X, y);
             var rightBound = (int)Interpolate(middle.Y, middle.X, right.Y, right.X, y);
@@ -334,14 +329,17 @@ namespace Tools.Primitives
 
             for (int x = (int)leftBound; x <= rightBound; x++)
             {
-                int xx = x + width / 2;
-                int yy = -y + height / 2;
-                if (xx < 0 || xx > width || yy < 0 || yy > height || (xx + width * yy) < 0 || (xx + width * yy) > (buff.Length - 1))
+                int xx = x + camera.width / 2;
+                int yy = -y + camera.height / 2;
+                if (xx < 0 || xx > camera.width 
+                        || yy < 0 || yy > camera.height 
+                        || (xx + camera.width * yy) < 0 
+                        || (xx + camera.width * yy) > (buff.Length - 1))
                     continue;
                 float tempZ = Interpolate(leftBound, zLeft, rightBound, zRight, x);
-                if (tempZ < buff[xx + width * yy])
+                if (tempZ < buff[xx + camera.width * yy])
                 {
-                    buff[xx + yy * width] = tempZ;
+                    buff[xx + yy * camera.width] = tempZ;
                 }
             }
         }

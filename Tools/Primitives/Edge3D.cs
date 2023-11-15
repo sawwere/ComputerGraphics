@@ -41,8 +41,8 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective(camera);
-                    p2 = Destination.GetPerspective(camera);
+                    p1 = Origin.GetPerspectiveProj(camera);
+                    p2 = Destination.GetPerspectiveProj(camera);
                     break;
             }
             //Console.WriteLine($"{p1.X} {p1.Y} {p2.X} {p2.Y}");
@@ -126,8 +126,8 @@ namespace Tools.Primitives
                     p2 = Destination.GetOrthographic(Axis.AXIS_Z);
                     break;
                 default:
-                    p1 = Origin.GetPerspective(camera);
-                    p2 = Destination.GetPerspective(camera);
+                    p1 = Origin.GetPerspectiveProj(camera);
+                    p2 = Destination.GetPerspectiveProj(camera);
                     break;
             }
             g.DrawLine(new Pen(Color, 2), p1, p2);

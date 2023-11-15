@@ -162,7 +162,7 @@ namespace Tools.Primitives
             return new { X, Y, Z }.GetHashCode();
         }
 
-        public PointF GetPerspective(Scene.Camera camera)
+        public Point3D GetPerspective(Scene.Camera camera)
         {
             //if (Math.Abs(Z - camera.position.Z) < 1e-10)
             //    return new PointF(X * 1000, Y * 1000);
@@ -173,7 +173,14 @@ namespace Tools.Primitives
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixPerspective(camera));
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
-            return new PointF(c[0][0] * 1000 , c[0][1] * 1000);
+            return new Point3D(c[0][0], c[0][1], c[0][2]);
+            //return new PointF(c[0][0] * 1000 , c[0][1] * 1000);
+        }
+
+        public PointF GetPerspectiveProj(Scene.Camera camera)
+        {
+            Point3D p = GetPerspective(camera);
+            return new PointF(p.X*1000, p.Y*1000);
         }
 
         public PointF GetOrthographic(Axis a)
@@ -203,6 +210,11 @@ namespace Tools.Primitives
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             return new PointF(c[0][0] * 100, c[0][1] * 100);
+        }
+
+        public override string ToString()
+        { 
+            return $"{X} { Y} { Z}";
         }
     }
 }

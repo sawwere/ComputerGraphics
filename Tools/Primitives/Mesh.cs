@@ -94,7 +94,7 @@ namespace Tools.Primitives
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, size), new Point3D(-size, -size, size)),
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, -size, size), new Point3D(size, -size, size)),
 
-                new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, -size), new Point3D(size, size, -size)),
+                new Triangle3D( new Point3D(size, size, size), new Point3D(size, size, -size), new Point3D(-size, size, -size)),//
                 new Triangle3D( new Point3D(size, size, size), new Point3D(-size, size, -size), new Point3D(-size, size, size)),
 
                 new Triangle3D( new Point3D(size, -size, -size), new Point3D(-size, -size, -size), new Point3D(-size, size, -size)),
@@ -219,7 +219,7 @@ namespace Tools.Primitives
             foreach (Triangle3D t in polygons)
             {
                 t.FindNormal(Center, camera);
-                if (t.isVisible)
+                if (t.IsVisible)
                     t.Draw(g, camera, pr, pen);
             }
         }
@@ -262,11 +262,11 @@ namespace Tools.Primitives
 
         private void RasterizePolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, float[] buff)
         {
-            PointF projected0 = P0.GetPerspective(camera);
+            PointF projected0 = P0.GetPerspectiveProj(camera);
             projected0.Y = (int)projected0.Y;
-            PointF projected1 = P1.GetPerspective(camera);
+            PointF projected1 = P1.GetPerspectiveProj(camera);
             projected1.Y = (int)projected1.Y;
-            PointF projected2 = P2.GetPerspective(camera);
+            PointF projected2 = P2.GetPerspectiveProj(camera);
             projected2.Y = (int)projected2.Y;
             if (projected0.Y > projected1.Y)
             {

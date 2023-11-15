@@ -102,7 +102,7 @@ namespace Lab6
 
             polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
             var mesh = new Mesh(polygons);
-            //mesh.make_hexahedron();
+            mesh.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);

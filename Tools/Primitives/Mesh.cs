@@ -218,6 +218,7 @@ namespace Tools.Primitives
         {
             foreach (Triangle3D t in polygons)
             {
+                t.FindNormal(Center, camera);
                 if (t.isVisible)
                     t.Draw(g, camera, pr, pen);
             }

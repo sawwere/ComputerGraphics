@@ -13,6 +13,8 @@ namespace Tools.Primitives
         public bool isVisible = true;
         private Point3D[] points;
 
+        public bool IsVisible { get; set; }
+
         /// <summary>
         /// Нормаль данного треугольника
         /// </summary>
@@ -175,6 +177,48 @@ namespace Tools.Primitives
             
             g.DrawLines(pen, pts.ToArray());
             g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+        }
+
+        public void FindNormal(Point3D pCenter, Scene.Camera camera)
+        {
+            Point3D first = points[0], second = points[1], third = points[2];
+            var A = first.Y * (second.Z - third.Z) + second.Y * (third.Z - first.Z) + third.Y * (first.Z - second.Z);
+            var B = first.Z * (second.X - third.X) + second.Z * (third.X - first.X) + third.Z * (first.X - second.X);
+            var C = first.X * (second.Y - third.Y) + second.X * (third.Y - first.Y) + third.X * (first.Y - second.Y);
+
+            float[][] Normal =
+            {
+                new float[] {A,B,C}
+            };
+
+
+            float[][] SC =
+            {
+                new float[] { second.X - pCenter.X},
+                new float[] { second.Y - pCenter.Y},
+                new float[] { second.Z - pCenter.Z}
+            };
+
+            float[][] matrix = MatrixFactory.MatrixProduct(Normal, SC);
+
+
+            
+            if (matrix[0][0] > 1E-6)
+            {
+                Normal[0][0] *= -1;
+                Normal[0][1] *= -1;
+                Normal[0][2] *= -1;
+            }
+            
+
+            Point3D P = camera.position;
+            Point3D E = new Point3D(P.X - Center.X, P.Y - Center.Y, P.Z - Center.Z);
+            double angle = Math.Acos((Normal[0][0] * E.X + Normal[0][1] * E.Y + Normal[0][2] * E.Z) /
+                ((Math.Sqrt(Normal[0][0] * Normal[0][0] + Normal[0][1] * Normal[0][1] + Normal[0][2] * Normal[0][2]) *
+                Math.Sqrt(E.X * E.X + E.Y * E.Y + E.Z * E.Z))));
+            angle = angle * 180 / Math.PI;
+
+            IsVisible = angle <= 90;
         }
     }
 }

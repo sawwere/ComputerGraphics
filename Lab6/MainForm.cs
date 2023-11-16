@@ -106,6 +106,7 @@ namespace Lab6
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
+            scene.Light = new Light(scene.Camera.position + new Point3D(0, 0, 0), Color.White);
             UpdateHierarchy();
 
             comboBoxProjection.SelectedIndex = 0;
@@ -157,6 +158,9 @@ namespace Lab6
                     break;
                 case 1:
                     pictureBox1.Image = scene.RasterizedRender(projection);
+                    break;
+                case 2:
+                    pictureBox1.Image = scene.GourodRender(projection);
                     break;
             }
 

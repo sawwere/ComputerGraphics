@@ -20,12 +20,8 @@ namespace Tools.Primitives
         /// </summary>
         public Point3D Norm
         {
-            get 
-            {
-                Point3D a = points[1] - points[0];
-                Point3D n = a.CrossProduct(points[2] - points[0]);
-                return (1.0f / n.Length) * n;
-            }
+            get;
+            private set;
         }
         public Point3D this[int i]
         {
@@ -186,7 +182,7 @@ namespace Tools.Primitives
             var storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
             var norm_normal = storona_1.CrossProduct(storona_2);
             norm_normal = (1 / (norm_normal.Length)) * norm_normal;
-
+            Norm = norm_normal;
             Point3D P = camera.forward;
             //Point3D E = new Point3D(P.X - Center.X, P.Y - Center.Y, P.Z - Center.Z);
             double angle = Math.Acos((norm_normal.X * P.X + norm_normal.Y * P.Y + norm_normal.Z * P.Z) /

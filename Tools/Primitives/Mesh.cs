@@ -272,7 +272,34 @@ namespace Tools.Primitives
         // Gouraud_shading
         //
         //==============================================
-        
+        public void CalculateLambert(Scene.Light light, Scene.Camera camera)
+        {
+            Dictionary<int, Point3D> pointNormal = new Dictionary<int, Point3D>();
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                List<List<int>> adjacentFaces = Faces.Where(x => x.Contains(i)).ToList();
+                Point3D res = new Point3D(0, 0, 0);
+                foreach (var face in adjacentFaces)
+                {
+                    var t = new Triangle3D(Vertexes[face[0]], Vertexes[face[1]], Vertexes[face[2]]);
+                    t.FindNormal(Center, camera);
+                    res += t.Norm;
+                }
+                res = (1.0f / adjacentFaces.Count) * res;
+                pointNormal.Add(i, res);
+            }
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                Vertexes[i].illumination = ModelLambert(Vertexes[i], pointNormal[i], light.position);
+            }
+        }
+
+        private float ModelLambert(Point3D vertex, Point3D normal, Point3D lightPos)
+        {
+            Point3D rayLight = new Point3D(vertex.X - lightPos.X, vertex.Y - lightPos.Y, vertex.Z - lightPos.Z);
+            double cos = rayLight.DotProduct( normal) / (rayLight.Length * normal.Length);
+            return (float)((cos + 1) / 2);//перевод в диапазон [0,1]
+        }
 
         //==============================================
         //
@@ -280,7 +307,7 @@ namespace Tools.Primitives
         //
         //==============================================
 
-        public void CalculateZBuffer(Scene.Camera camera, float[] buf)
+        public void CalculateZBuffer(Scene.Camera camera, Point3D[] buf)
         {
             foreach (var lst in Faces)
             {
@@ -290,7 +317,7 @@ namespace Tools.Primitives
 
         }
 
-        private void RasterizePolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, float[] buff)
+        private void RasterizePolygon(Scene.Camera camera, Point3D P0, Point3D P1, Point3D P2, Point3D[] buff)
         {
             PointF projected0 = P0.GetPerspectiveProj(camera);
             projected0.Y = (int)projected0.Y;
@@ -313,8 +340,8 @@ namespace Tools.Primitives
                 (projected0, projected1) = (projected1, projected0);
                 (P0, P1) = (P1, P0);
             }
-            Point3D left = new Point3D(projected1.X, projected1.Y, P1.Z);
-            Point3D right = new Point3D(projected2.X, projected2.Y, P2.Z);
+            Point3D left = new Point3D(projected1.X, projected1.Y, P1.Z, P1.illumination);
+            Point3D right = new Point3D(projected2.X, projected2.Y, P2.Z, P2.illumination);
             Edge2D edge = new Edge2D(projected0.X, projected0.Y, projected1.X, projected1.Y, Color.Black);
             var pp = new Point2D(projected2);
             if (pp.CompareToEdge2(edge) < 0)
@@ -324,11 +351,11 @@ namespace Tools.Primitives
             float mid = projected1.Y;
             for (int y = (int)projected0.Y; y <= mid; y++)
             {
-                DrawGradientLines(y, P0.Z, projected0, left, right, camera, buff);
+                DrawGradientLines(y, P0.Z, projected0, left, right, camera, buff, P0.illumination);
             }
 
-            left = new Point3D(projected1.X, projected1.Y, P1.Z);
-            right = new Point3D(projected0.X, projected0.Y, P0.Z);
+            left = new Point3D(projected1.X, projected1.Y, P1.Z, P1.illumination);
+            right = new Point3D(projected0.X, projected0.Y, P0.Z, P0.illumination);
             edge = new Edge2D(projected2.X, projected2.Y, projected1.X, projected1.Y, Color.Black);
             pp = new Point2D(projected0);
             if (pp.CompareToEdge2(edge) > 0)
@@ -337,11 +364,11 @@ namespace Tools.Primitives
             }
             for (int y = (int)projected2.Y; y >= mid; y--)
             {
-                DrawGradientLines(y, P2.Z, projected2, left, right, camera, buff);
+                DrawGradientLines(y, P2.Z, projected2, left, right, camera, buff, P2.illumination);
             }
         }
         private void DrawGradientLines(int y, float middleZ, PointF middle, Point3D left, Point3D right,
-            Scene.Camera camera, float[] buff)
+            Scene.Camera camera, Point3D[] buff, float i)
         {
             var leftBound = (int)Interpolate(middle.Y, middle.X, left.Y, left.X, y);
             var rightBound = (int)Interpolate(middle.Y, middle.X, right.Y, right.X, y);
@@ -351,7 +378,8 @@ namespace Tools.Primitives
             }
             var zLeft = Interpolate(middle.Y, middleZ, left.Y, left.Z, y);
             var zRight = Interpolate(middle.Y, middleZ, right.Y, right.Z, y);
-
+            var ilumLeft = Interpolate(middle.Y, i, left.Y, left.illumination, y);
+            var ilumRight = Interpolate(middle.Y, i, right.Y, right.illumination, y);
             for (int x = (int)leftBound; x <= rightBound; x++)
             {
                 int xx = x + camera.Width / 2;
@@ -362,9 +390,10 @@ namespace Tools.Primitives
                         || (xx + camera.Width * yy) > (buff.Length - 1))
                     continue;
                 float tempZ = Interpolate(leftBound, zLeft, rightBound, zRight, x);
-                if (tempZ < buff[xx + camera.Width * yy])
+                float ilum = Interpolate(leftBound, ilumLeft, rightBound, ilumRight, x);
+                if (tempZ < buff[xx + camera.Width * yy].Z)
                 {
-                    buff[xx + yy * camera.Width] = tempZ;
+                    buff[xx + yy * camera.Width] = new Point3D(x, y, tempZ, ilum );
                 }
             }
         }

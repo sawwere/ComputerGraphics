@@ -91,9 +91,9 @@ namespace Tools.Scene
             var bitmap = new Bitmap(Camera.Width, Camera.Height);
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
-                float[] buff = new float[fs.Width * fs.Height];
+                Point3D[] buff = new Point3D[fs.Width * fs.Height];
                 for (int i = 0; i < fs.Width * fs.Height; ++i)
-                    buff[i] = float.MaxValue;
+                    buff[i] = buff[i] = new Point3D(0, 0, float.MaxValue);
                 if (GetAllSceneObjects().Count > 0)
                 {
                     foreach (SceneObject obj in GetAllSceneObjects().Values)
@@ -101,7 +101,7 @@ namespace Tools.Scene
                         Primitive m = obj.GetTransformed();
                         (m as Mesh).CalculateZBuffer(Camera, buff);
                     }
-                    var filtered = buff.Where(x => x < float.MaxValue && x > float.MinValue);
+                    var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue && z > float.MinValue);
                     if (filtered.Count() > 0)
                     {
                         var maxZ = filtered.Max();
@@ -110,13 +110,13 @@ namespace Tools.Scene
                             for (int y = 0; y < fs.Height; ++y)
                             {
                                 var cd = buff[x + fs.Width * y];
-                                if (buff[x + fs.Width * y] < float.MaxValue)
+                                if (buff[x + fs.Width * y].Z < float.MaxValue)
                                 {
 
                                     Color c = Color.FromArgb(
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]));
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z));
                                     fs[x, y] = c;
                                 }
                                 else
@@ -125,6 +125,45 @@ namespace Tools.Scene
                                 }
                             }
                     }
+                }
+            }
+            return bitmap;
+        }
+
+        public Bitmap GourodRender(Projection pr)
+        {
+            var bitmap = new Bitmap(Camera.Width, Camera.Height);
+            using (var fs = new FastBitmap.FastBitmap(bitmap))
+            {
+                Point3D[] buff = new Point3D[fs.Width * fs.Height];
+                for (int i = 0; i < fs.Width * fs.Height; ++i)
+                    buff[i] = new Point3D(0, 0, float.MaxValue);
+                if (GetAllSceneObjects().Count > 0)
+                {
+                    foreach (SceneObject obj in GetAllSceneObjects().Values)
+                    {
+                        Primitive m = obj.GetTransformed();
+                        (m as Mesh).CalculateLambert(Light, Camera);
+                        (m as Mesh).CalculateZBuffer(Camera, buff);
+                        
+                    }
+                    var set = new HashSet<float>();
+                    for (int x = 0; x < fs.Width; ++x)
+                        for (int y = 0; y < fs.Height; ++y)
+                        {
+                            var cd = buff[x + fs.Width * y];
+                            if (buff[x + fs.Width * y].Z < float.MaxValue)
+                            {
+                                set.Add(cd.illumination);
+                                fs[x, y] = Color.FromArgb((int)(255 * cd.illumination), 
+                                    (int)(0 * cd.illumination), 
+                                    (int)(0 * cd.illumination));
+                            }
+                            else
+                            {
+                                fs[x, y] = Color.LightGray;
+                            }
+                        }
                 }
             }
             return bitmap;
@@ -149,6 +188,7 @@ namespace Tools.Scene
         public void MoveCamera(Point3D vec)
         {
             Camera.Translate(vec);
+            Light.position += vec;
             foreach (SceneObject obj in systemObjects.Values)
             {
                 obj.Transform.Translate(-1 * vec);

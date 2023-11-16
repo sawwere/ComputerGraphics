@@ -12,10 +12,6 @@ namespace Tools.Primitives
         public Point3D Origin;
         public Point3D Destination;
 
-        public float X { get { return Destination.X; } }
-        public float Y { get { return Destination.Y; } }
-        public float Z { get { return Destination.Z; } }
-
         public Color Color { get; set; }
 
         public Edge2D ProjectedEdge(Projection pr, Scene.Camera camera)
@@ -58,7 +54,9 @@ namespace Tools.Primitives
 
         public override Primitive Clone()
         {
-            Edge3D res = new Edge3D(Origin, Destination, Color);
+            var no = new Point3D(Origin.X, Origin.Y, Origin.Z);
+            var nd = new Point3D(Destination.X, Destination.Y, Destination.Z);
+            Edge3D res = new Edge3D(no, nd, Color);
             return res;
         }
 

@@ -7,13 +7,13 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public struct Point3D: IEquatable<Point3D>
+    public class Point3D: IEquatable<Point3D>
     {
         public float X;
         public float Y;
         public float Z;
-
-        public PointF TextureCoordinates { get; set; }
+        public float illumination;
+        public PointF TextureCoordinates;
 
         public float Length { get
             {
@@ -26,20 +26,31 @@ namespace Tools.Primitives
             X = x;
             Y = y;
             Z = z;
+            illumination = 1.0f;
             TextureCoordinates = new PointF(1, 1);
         }
 
-        public Point3D(float x, float y, float z, PointF textureCoordinates)
+        public Point3D(float x, float y, float z, float ilum)
         {
             X = x;
             Y = y;
             Z = z;
+            illumination = ilum;
+            TextureCoordinates = new PointF(1, 1);
+        }
+
+        public Point3D(float x, float y, float z, float ilum, PointF textureCoordinates)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            illumination = ilum;
             TextureCoordinates = textureCoordinates;
         }
 
         public Point3D Clone()
         {
-            return new Point3D(X, Y, Z, TextureCoordinates);
+            return new Point3D(X, Y, Z, illumination, TextureCoordinates);
         }
 
         public void ReflectX()

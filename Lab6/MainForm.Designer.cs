@@ -543,7 +543,6 @@ namespace Lab6
             this.comboBoxRenderMode.ForeColor = System.Drawing.Color.SeaShell;
             this.comboBoxRenderMode.FormattingEnabled = true;
             this.comboBoxRenderMode.Items.AddRange(new object[] {
-            "Без отсечения",
             "Отсечение нелицевых граней",
             "Алгоритм Z-буфера",
             "Алгоритм закраски Гуро",
@@ -552,6 +551,7 @@ namespace Lab6
             this.comboBoxRenderMode.Name = "comboBoxRenderMode";
             this.comboBoxRenderMode.Size = new System.Drawing.Size(121, 21);
             this.comboBoxRenderMode.TabIndex = 1;
+            this.comboBoxRenderMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxRenderMode_SelectedIndexChanged);
             // 
             // comboBoxProjection
             // 

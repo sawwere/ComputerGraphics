@@ -48,7 +48,7 @@ namespace Tools.Meshes
             {
                 fr.WriteLine("solid "+name);
                 
-                var p=mesh.get_poligons();
+                var p=mesh.get_polygons();
                 for (int i = 0; i <p.Count ; i++)
                 {
                     //var points = p[i][0].X;
@@ -161,6 +161,25 @@ namespace Tools.Meshes
             Mesh mesh = new Mesh(polygons);
             mesh.Translate(new Point3D(0, 0, -(maxZ - minZ) / 2.0f));
             return (mesh, new Point3D(dx, dy, minZ -(maxZ - minZ) / 2.0f));
+        }
+
+        public static Mesh make_hexahedron(float size = 1)
+        {
+            var Vertexes = new List<Point3D>()
+            {
+                new Point3D(size, -size, size), new Point3D(size, -size, -size), new Point3D(size, size, -size), new Point3D(size, size, size),
+                new Point3D(-size, size, size), new Point3D(-size, size, -size), new Point3D(-size, -size, -size), new Point3D(-size, -size, size)
+            };
+            var Faces = new List<List<int>>()
+            {
+                new List<int>(){ 0, 1, 2}, new List<int>(){ 0, 2, 3}, //right
+                new List<int>(){ 4, 5, 6}, new List<int>(){ 4, 6, 7}, //left
+                new List<int>(){ 3, 4, 7}, new List<int>(){ 3, 7, 0},
+                new List<int>(){ 3, 2, 5}, new List<int>(){ 3, 5, 4}, //up
+                new List<int>(){ 1, 6, 5}, new List<int>(){ 1, 5, 2},
+                new List<int>(){ 7, 6, 1}, new List<int>(){ 7, 1, 0}
+            };
+            return new Mesh(Vertexes, Faces);
         }
     }
 }

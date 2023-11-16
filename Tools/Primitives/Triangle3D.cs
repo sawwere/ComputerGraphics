@@ -199,7 +199,7 @@ namespace Tools.Primitives
             //    ((Math.Sqrt(Normal[0][0] * Normal[0][0] + Normal[0][1] * Normal[0][1] + Normal[0][2] * Normal[0][2]) *
             //    Math.Sqrt(E.X * E.X + E.Y * E.Y + E.Z * E.Z))));
             angle = angle * 180 / Math.PI;
-            Console.WriteLine(norm_normal.ToString() + " " + angle);
+            //Console.WriteLine(norm_normal.ToString() + " " + angle);
             IsVisible = angle > 90;
             //Console.WriteLine(IsVisible);
         }

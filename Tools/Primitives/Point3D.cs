@@ -9,11 +9,11 @@ namespace Tools.Primitives
 {
     public struct Point3D: IEquatable<Point3D>
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        public float X;
+        public float Y;
+        public float Z;
 
-        public Color Color { get; set; }
+        public PointF TextureCoordinates { get; set; }
 
         public float Length { get
             {
@@ -26,12 +26,20 @@ namespace Tools.Primitives
             X = x;
             Y = y;
             Z = z;
-            Color = Color.Black;
+            TextureCoordinates = new PointF(1, 1);
+        }
+
+        public Point3D(float x, float y, float z, PointF textureCoordinates)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            TextureCoordinates = textureCoordinates;
         }
 
         public Point3D Clone()
         {
-            return new Point3D(X, Y, Z);
+            return new Point3D(X, Y, Z, TextureCoordinates);
         }
 
         public void ReflectX()
@@ -56,7 +64,6 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixTranslate(dx, dy, dz));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             X = c[0][0];
             Y = c[0][1];
@@ -70,7 +77,6 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixRotate(angle, a, line));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
@@ -83,7 +89,6 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx, ky, kz));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];

@@ -11,13 +11,13 @@ namespace Tools.Scene
     {
         public Dictionary<string, SceneObject> systemObjects;
         private Dictionary<Guid, SceneObject> sceneObjects;
-        public List<Light> lights;
+        public Light Light;
         public Camera Camera { get; private set; }
         
         public Scene(Camera camera)
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
-            lights = new List<Light>();
+            Light = new Light();
             Camera = camera;
 
             systemObjects = new Dictionary<string, SceneObject>();
@@ -88,7 +88,7 @@ namespace Tools.Scene
 
         public Bitmap RasterizedRender(Projection pr)
         {
-            var bitmap = new Bitmap(Camera.width, Camera.height);
+            var bitmap = new Bitmap(Camera.Width, Camera.Height);
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
                 float[] buff = new float[fs.Width * fs.Height];
@@ -137,7 +137,6 @@ namespace Tools.Scene
                 Primitive m = obj.GetTransformed();
                 m.Draw(g, Camera, pr);
             }
-
             foreach (SceneObject obj in sceneObjects.Values)
             {
                 Primitive m = obj.GetTransformed();

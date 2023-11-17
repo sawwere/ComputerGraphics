@@ -122,7 +122,7 @@ namespace Tools.Primitives
             List<PointF> res = new List<PointF>();
 
             foreach (Point3D p in points)
-                res.Add(p.GetIsometric());
+                res.Add(p.GetIsometricProj());
 
             return res;
         }
@@ -132,7 +132,7 @@ namespace Tools.Primitives
             List<PointF> res = new List<PointF>();
 
             foreach (Point3D p in points)
-                res.Add(p.GetOrthographic(a));
+                res.Add(p.GetOrthographicProj(a));
 
             return res;
         }
@@ -179,29 +179,49 @@ namespace Tools.Primitives
             g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
         }
 
-        public void FindNormal(Point3D pCenter, Scene.Camera camera)
+        public void FindNormal(Point3D pCenter, Scene.Camera camera, Projection pr=0)
         {
-            //Console.WriteLine($"{pCenter.X} {pCenter.Y} {pCenter.Z}");
+
+
             var storona_1 = points[1].GetPerspective(camera) - points[0].GetPerspective(camera);
             var storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
+
+
+            switch (pr)
+            {
+                case Projection.ISOMETRIC:
+                     storona_1 = points[1].GetIsometric() - points[0].GetIsometric();
+                     storona_2 = points[2].GetIsometric() - points[0].GetIsometric();
+                    break;
+                case Projection.ORTHOGR_X:
+                     storona_1 = points[1].GetOrthographic(Axis.AXIS_X) - points[0].GetOrthographic(Axis.AXIS_X);
+                     storona_2 = points[2].GetOrthographic(Axis.AXIS_X) - points[0].GetOrthographic(Axis.AXIS_X);
+                    break;
+                case Projection.ORTHOGR_Y:
+                     storona_1 = points[1].GetOrthographic(Axis.AXIS_Y) - points[0].GetOrthographic(Axis.AXIS_Y);
+                     storona_2 = points[2].GetOrthographic(Axis.AXIS_Y) - points[0].GetOrthographic(Axis.AXIS_Y);
+                    break;
+                case Projection.ORTHOGR_Z:
+                     storona_1 = points[1].GetOrthographic(Axis.AXIS_Z) - points[0].GetOrthographic(Axis.AXIS_Z);
+                     storona_2 = points[2].GetOrthographic(Axis.AXIS_Z) - points[0].GetOrthographic(Axis.AXIS_Z);
+                    break;
+                default:
+                     storona_1 = points[1].GetPerspective(camera) - points[0].GetPerspective(camera);
+                     storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
+                    break;
+            }
+
+
             var norm_normal = storona_1.CrossProduct(storona_2);
             norm_normal = (1 / (norm_normal.Length)) * norm_normal;
 
             Point3D P = camera.forward;
-            //Point3D E = new Point3D(P.X - Center.X, P.Y - Center.Y, P.Z - Center.Z);
             double angle = Math.Acos((norm_normal.X * P.X + norm_normal.Y * P.Y + norm_normal.Z * P.Z) /
             (norm_normal.Length * P.Length
             ));
 
-            //Point3D P = new Point3D(0, 0, 500);
-            //Point3D E = new Point3D(P.X - Center.X, P.Y - Center.Y, P.Z - Center.Z);
-            //double angle = Math.Acos((Normal[0][0] * E.X + Normal[0][1] * E.Y + Normal[0][2] * E.Z) /
-            //    ((Math.Sqrt(Normal[0][0] * Normal[0][0] + Normal[0][1] * Normal[0][1] + Normal[0][2] * Normal[0][2]) *
-            //    Math.Sqrt(E.X * E.X + E.Y * E.Y + E.Z * E.Z))));
             angle = angle * 180 / Math.PI;
-            Console.WriteLine(norm_normal.ToString() + " " + angle);
             IsVisible = angle > 90;
-            //Console.WriteLine(IsVisible);
         }
     }
 }

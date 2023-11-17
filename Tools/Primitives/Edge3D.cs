@@ -25,20 +25,20 @@ namespace Tools.Primitives
             switch (pr)
             {
                 case Projection.ISOMETRIC:
-                    p1 = Origin.GetIsometric();
-                    p2 = Destination.GetIsometric();
+                    p1 = Origin.GetIsometricProj();
+                    p2 = Destination.GetIsometricProj();
                     break;
                 case Projection.ORTHOGR_X:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_X);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_X);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_X);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_X);
                     break;
                 case Projection.ORTHOGR_Y:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_Y);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_Y);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_Y);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_Y);
                     break;
                 case Projection.ORTHOGR_Z:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_Z);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_Z);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_Z);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_Z);
                     break;
                 default:
                     p1 = Origin.GetPerspectiveProj(camera);
@@ -110,20 +110,20 @@ namespace Tools.Primitives
             switch (pr)
             {
                 case Projection.ISOMETRIC:
-                    p1 = Origin.GetIsometric();
-                    p2 = Destination.GetIsometric();
+                    p1 = Origin.GetIsometricProj();
+                    p2 = Destination.GetIsometricProj();
                     break;
                 case Projection.ORTHOGR_X:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_X);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_X);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_X);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_X);
                     break;
                 case Projection.ORTHOGR_Y:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_Y);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_Y);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_Y);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_Y);
                     break;
                 case Projection.ORTHOGR_Z:
-                    p1 = Origin.GetOrthographic(Axis.AXIS_Z);
-                    p2 = Destination.GetOrthographic(Axis.AXIS_Z);
+                    p1 = Origin.GetOrthographicProj(Axis.AXIS_Z);
+                    p2 = Destination.GetOrthographicProj(Axis.AXIS_Z);
                     break;
                 default:
                     p1 = Origin.GetPerspectiveProj(camera);

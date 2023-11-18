@@ -10,11 +10,14 @@
 void CheckOpenGLerror();
 void ShaderLog(unsigned int shader);
 void SetIcon(sf::Window& wnd);
-void Init();
-void InitShader();
-void InitVBO();
-void Draw();
-void Close();
+void Init(int taskCode, int figCode);
+void InitShader(int taskCode);
+void InitVBO(int figCode);
+void Draw(int taskCode, int figCode);
+
+void Release();
+void ReleaseVBO();
+void ReleaseShader();
 
 struct Vertex {
     GLfloat x;

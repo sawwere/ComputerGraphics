@@ -199,7 +199,7 @@ namespace Tools.Primitives
             return new PointF(p.X*1000, p.Y*1000);
         }
 
-        public PointF GetOrthographic(Axis a)
+        public Point3D GetOrthographic(Axis a)
         {
             float[][] xyz = new float[1][]
             {
@@ -209,14 +209,20 @@ namespace Tools.Primitives
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             if (a == Axis.AXIS_X)
-                return new PointF(c[0][1] * 100, c[0][2] * 100);
+                return new Point3D(c[0][1] , c[0][2], 0 );
             else if (a == Axis.AXIS_Y)
-                return new PointF(c[0][0] * 100, c[0][2] * 100);
+                return new Point3D(c[0][0] , c[0][2], 0);
             else
-                return new PointF(c[0][0] * 100, c[0][1] * 100);
+                return new Point3D(c[0][0] , c[0][1], 0);
         }
 
-        public PointF GetIsometric()
+        public PointF GetOrthographicProj(Axis a)
+        {
+            Point3D p = GetOrthographic(a);
+            return new PointF(p.X * 100, p.Y * 100);
+        }
+
+        public Point3D GetIsometric()
         {
             float[][] xyz = new float[1][]
             {
@@ -225,7 +231,13 @@ namespace Tools.Primitives
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixIsometric());
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
-            return new PointF(c[0][0] * 100, c[0][1] * 100);
+            return new Point3D (c[0][0] , c[0][1], c[0][2]);
+        }
+
+        public PointF GetIsometricProj()
+        {
+            Point3D p = GetIsometric();
+            return new PointF(p.X * 100, p.Y * 100);
         }
 
         public override string ToString()

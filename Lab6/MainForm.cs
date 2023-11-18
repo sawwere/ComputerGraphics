@@ -524,6 +524,37 @@ namespace Lab6
                         scene.MoveCamera(new Point3D(0, 0.5f, 0));
                         break;
                     }
+                case 'l':
+                    {
+                        scene.RotateCamera(new Point3D(-0.5f, 0, 0));
+                        break;
+                    }
+                case 'o':
+                    {
+                        scene.RotateCamera(new Point3D(0.5f, 0, 0));
+                        break;
+                    }
+                case ',':
+                    {
+                        scene.RotateCamera(new Point3D(0, 0, 0.5f));
+                        break;
+                    }
+                case '.':
+                    {
+                        scene.RotateCamera(new Point3D(0, 0, -0.5f));
+                        break;
+                    }
+                case ';':
+                    {
+                        scene.RotateCamera(new Point3D(0, -0.5f, 0));
+                        break;
+                    }
+                case 'k':
+                    {
+                        scene.RotateCamera(new Point3D(0, 0.5f, 0));
+                        break;
+                    }
+
 
             }
             Render();

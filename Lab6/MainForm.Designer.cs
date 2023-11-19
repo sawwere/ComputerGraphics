@@ -1153,6 +1153,7 @@ namespace Lab6
             this.groupBox6.TabIndex = 36;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Камера";
+            this.groupBox6.Visible = false;
             // 
             // label36
             // 

@@ -20,7 +20,7 @@ namespace Lab6
 
         public void GetUpdate(SceneObject obj, Tools.Scene.Camera camera)
         {
-            if (sceneObject == null)
+            if (obj == null)
             {
                 return;
             }

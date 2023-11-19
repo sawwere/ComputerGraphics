@@ -132,6 +132,7 @@ namespace Lab6
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonSceneClear = new System.Windows.Forms.Button();
+            this.buttonFloatingHorizon = new System.Windows.Forms.Button();
             this.inspector = new Lab6.Inspector();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
@@ -187,7 +188,7 @@ namespace Lab6
             this.groupBox1.ForeColor = System.Drawing.Color.SeaShell;
             this.groupBox1.Location = new System.Drawing.Point(13, 40);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(375, 207);
+            this.groupBox1.Size = new System.Drawing.Size(375, 152);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tools";
@@ -415,7 +416,7 @@ namespace Lab6
             this.buttonApplyTransform.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
             this.buttonApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonApplyTransform.ForeColor = System.Drawing.Color.SeaShell;
-            this.buttonApplyTransform.Location = new System.Drawing.Point(54, 166);
+            this.buttonApplyTransform.Location = new System.Drawing.Point(58, 106);
             this.buttonApplyTransform.Name = "buttonApplyTransform";
             this.buttonApplyTransform.Size = new System.Drawing.Size(260, 35);
             this.buttonApplyTransform.TabIndex = 16;
@@ -595,7 +596,7 @@ namespace Lab6
             this.groupBox3.Controls.Add(this.buttonReflectX);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox3.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox3.Location = new System.Drawing.Point(13, 253);
+            this.groupBox3.Location = new System.Drawing.Point(13, 198);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(374, 65);
             this.groupBox3.TabIndex = 10;
@@ -648,7 +649,7 @@ namespace Lab6
             this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox4.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox4.Location = new System.Drawing.Point(13, 324);
+            this.groupBox4.Location = new System.Drawing.Point(13, 269);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(375, 211);
             this.groupBox4.TabIndex = 11;
@@ -886,9 +887,9 @@ namespace Lab6
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.groupBox5.ForeColor = System.Drawing.Color.SeaShell;
-            this.groupBox5.Location = new System.Drawing.Point(14, 541);
+            this.groupBox5.Location = new System.Drawing.Point(12, 486);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(375, 201);
+            this.groupBox5.Size = new System.Drawing.Size(375, 214);
             this.groupBox5.TabIndex = 32;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Построение моделей";
@@ -1539,6 +1540,21 @@ namespace Lab6
             this.buttonSceneClear.UseVisualStyleBackColor = false;
             this.buttonSceneClear.Click += new System.EventHandler(this.buttonSceneClear_Click);
             // 
+            // buttonFloatingHorizon
+            // 
+            this.buttonFloatingHorizon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFloatingHorizon.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
+            this.buttonFloatingHorizon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonFloatingHorizon.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonFloatingHorizon.ForeColor = System.Drawing.Color.SeaShell;
+            this.buttonFloatingHorizon.Location = new System.Drawing.Point(12, 720);
+            this.buttonFloatingHorizon.Name = "buttonFloatingHorizon";
+            this.buttonFloatingHorizon.Size = new System.Drawing.Size(375, 35);
+            this.buttonFloatingHorizon.TabIndex = 40;
+            this.buttonFloatingHorizon.Text = "Метод плавающего горизонта";
+            this.buttonFloatingHorizon.UseVisualStyleBackColor = false;
+            this.buttonFloatingHorizon.Click += new System.EventHandler(this.buttonFloatingHorizon_Click);
+            // 
             // inspector
             // 
             this.inspector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1547,7 +1563,7 @@ namespace Lab6
             this.inspector.ForeColor = System.Drawing.Color.SeaShell;
             this.inspector.Location = new System.Drawing.Point(1102, 298);
             this.inspector.Name = "inspector";
-            this.inspector.Size = new System.Drawing.Size(375, 173);
+            this.inspector.Size = new System.Drawing.Size(375, 177);
             this.inspector.TabIndex = 44;
             // 
             // MainForm
@@ -1556,6 +1572,7 @@ namespace Lab6
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1484, 767);
+            this.Controls.Add(this.buttonFloatingHorizon);
             this.Controls.Add(this.inspector);
             this.Controls.Add(this.buttonSceneClear);
             this.Controls.Add(this.toolStrip1);
@@ -1573,6 +1590,7 @@ namespace Lab6
             this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.SeaShell;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "MainForm";
@@ -1715,6 +1733,7 @@ namespace Lab6
         private Inspector inspector;
         private System.Windows.Forms.Button buttonReflectY;
         private System.Windows.Forms.Button buttonFunction;
+        private System.Windows.Forms.Button buttonFloatingHorizon;
     }
 }
 

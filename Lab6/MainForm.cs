@@ -21,6 +21,7 @@ namespace Lab6
     public partial class MainForm : Form
     {
         private FormRotationFigure rotationFigure = new FormRotationFigure();
+        private FormFloatingHorizon floatingHorizon = new FormFloatingHorizon();
 
         Graphics g;
         Projection projection = Projection.ORTHOGR_X;
@@ -39,7 +40,7 @@ namespace Lab6
         private void radioButtonScene_Click(object sender, EventArgs e)
         {
             figure = scene.GetObject((Guid)((RadioButton)sender).Tag);
-            inspector.GetUpdate(figure);
+            inspector.GetUpdate(figure, scene.Camera);
         }
 
         private void AddToHierarchy(string name, Guid id)
@@ -88,6 +89,7 @@ namespace Lab6
         {
             InitializeComponent();
             AddOwnedForm(rotationFigure);
+            AddOwnedForm(floatingHorizon);
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
@@ -169,7 +171,7 @@ namespace Lab6
 
             pictureBox1.Refresh();
             stopWatch.Stop();
-            inspector.GetUpdate(figure);
+            inspector.GetUpdate(figure, scene.Camera);
 
             labelFPS.Text = $"FPS: {(1000.0f / stopWatch.ElapsedMilliseconds)}";
         }
@@ -597,6 +599,11 @@ namespace Lab6
             g = Graphics.FromImage(pictureBox1.Image);
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
+        }
+
+        private void buttonFloatingHorizon_Click(object sender, EventArgs e)
+        {
+            floatingHorizon.Show();
         }
     }
 }

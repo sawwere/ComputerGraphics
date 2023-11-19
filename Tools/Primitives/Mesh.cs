@@ -282,10 +282,8 @@ namespace Tools.Primitives
                 foreach (var face in adjacentFaces)
                 {
                     var t = new Triangle3D(Vertexes[face[0]], Vertexes[face[1]], Vertexes[face[2]]);
-                    var norm = t.FindNormalWorld(Center, camera);
-                    res += norm;
+                    res += t.FindNormalWorld(Center, camera);
                 }
-                //res = (1.0f / adjacentFaces.Count) * res;
                 res.X /= adjacentFaces.Count;
                 res.Y /= adjacentFaces.Count;
                 res.Z /= adjacentFaces.Count;
@@ -296,9 +294,6 @@ namespace Tools.Primitives
             {
                 var cos = ModelLambert(Vertexes[i], pointNormal[i], lightPos);
                 Vertexes[i].illumination = Math.Max(cos, 0);
-                
-
-                Console.WriteLine(Vertexes[i] + " === " + pointNormal[i] + " === " + Vertexes[i].illumination);
             }
         }
 

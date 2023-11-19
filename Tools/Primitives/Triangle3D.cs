@@ -204,24 +204,20 @@ namespace Tools.Primitives
                      storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
                     break;
             }
-
-
             var norm_normal = storona_1.CrossProduct(storona_2);
             
             norm_normal = (1 / (norm_normal.Length)) * norm_normal;
             Norm = norm_normal;
             Point3D P = camera.forward;
             double angle = Math.Acos((norm_normal.X * P.X + norm_normal.Y * P.Y + norm_normal.Z * P.Z) /
-            (norm_normal.Length * P.Length
-            ));
-            if (points[0].Z < 0 && points[1].Z < 0 && points[2].Z < 0)
+            (norm_normal.Length * P.Length));
+            if (points[0].Z < 1 && points[1].Z < 1 && points[2].Z < 1)
             {
                 IsVisible = false;
             }
             else
             {
                 angle = angle * 180 / Math.PI;
-                //Console.WriteLine(norm_normal.ToString() + " " + angle);
                 IsVisible = angle > 90;
             }
         }

@@ -27,7 +27,8 @@ namespace Tools.Scene
         public override void Draw(Graphics g, Camera camera, Projection pr = Projection.PERSPECTIVE, Pen pen = null)
         {
             var prj = position.GetPerspectiveProj(camera);
-            g.DrawEllipse(Pens.Aqua, prj.X, prj.Y, 5, 5);
+            if (position.Z > 0)
+                g.DrawIcon(Tools.Properties.Resources.light, (int)prj.X - 24, (int)prj.Y - 24);
         }
 
         public override void Rotate(Point3D vec)

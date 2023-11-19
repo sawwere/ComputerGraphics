@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormFloatingHorizon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFloatingHorizon.Designer.cs">
+      <DependentUpon>FormFloatingHorizon.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRotationFigure.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +74,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormFloatingHorizon.resx">
+      <DependentUpon>FormFloatingHorizon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormRotationFigure.resx">
       <DependentUpon>FormRotationFigure.cs</DependentUpon>
     </EmbeddedResource>

@@ -29,6 +29,7 @@ namespace Lab6
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRotationFigure));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonBuild = new System.Windows.Forms.Button();
             this.comboBoxAxis = new System.Windows.Forms.ComboBox();
@@ -148,6 +149,7 @@ namespace Lab6
             this.Controls.Add(this.pictureBox1);
             this.ForeColor = System.Drawing.Color.SeaShell;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormRotationFigure";

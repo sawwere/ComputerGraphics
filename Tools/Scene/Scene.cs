@@ -43,6 +43,11 @@ namespace Tools.Scene
             return res;
         }
 
+        private IEnumerable<Primitive> GetAllTransformedMeshes()
+        {
+            return sceneObjects.Select(x => x.Value.GetTransformed()).Where(x=>x is Mesh);
+        }
+
         public void Clear()
         {
             sceneObjects.Clear();
@@ -99,22 +104,20 @@ namespace Tools.Scene
                 Point3D[] buff = new Point3D[fs.Width * fs.Height];
                 for (int i = 0; i < fs.Width * fs.Height; ++i)
                     buff[i] = buff[i] = new Point3D(0, 0, float.MaxValue);
-                if (GetAllSceneObjects().Count > 0)
+                var meshes = GetAllTransformedMeshes();
+                if (meshes.Count() > 0)
                 {
-                    foreach (SceneObject obj in GetAllSceneObjects().Values)
+                    foreach (var obj in meshes)
                     {
-                        Primitive m = obj.GetTransformed();
-                        if (!(m is Mesh))
-                            continue;
-                        (m as Mesh).CalculateZBuffer(Camera, buff);
+                        (obj as Mesh).CalculateZBuffer(Camera, buff);
                     }
-                    var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue && z > float.MinValue);
+                    var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue);
                     if (filtered.Count() > 0)
                     {
                         var maxZ = filtered.Max();
                         var minZ = filtered.Min();
-                        for (int x = 0; x < fs.Width; ++x)
-                            for (int y = 0; y < fs.Height; ++y)
+                        for (int x = 0; x < fs.Width; x++)
+                            for (int y = 0; y < fs.Height; y++)
                             {
                                 var cd = buff[x + fs.Width * y];
                                 if (buff[x + fs.Width * y].Z < float.MaxValue)
@@ -146,27 +149,21 @@ namespace Tools.Scene
                 Point3D[] buff = new Point3D[fs.Width * fs.Height];
                 for (int i = 0; i < fs.Width * fs.Height; ++i)
                     buff[i] = new Point3D(0, 0, float.MaxValue);
-                if (GetAllSceneObjects().Count > 0)
+                var meshes = GetAllTransformedMeshes();
+                if (meshes.Count() > 0)
                 {
-                    foreach (SceneObject obj in GetAllSceneObjects().Values)
+                    foreach (var obj in meshes)
                     {
-                        Primitive m = obj.GetTransformed();
-                        if (!(m is Mesh))
-                            continue;
-                        Console.WriteLine(Light.Transform.position);
-                        Console.WriteLine(Light.Transform.position - obj.Transform.position);
-                        (m as Mesh).CalculateLambert(Light.Transform.position, Camera);
-                        (m as Mesh).CalculateZBuffer(Camera, buff);
+                        (obj as Mesh).CalculateLambert(Light.Transform.position, Camera);
+                        (obj as Mesh).CalculateZBuffer(Camera, buff);
                         
                     }
-                    var set = new HashSet<float>();
-                    for (int x = 0; x < fs.Width; ++x)
-                        for (int y = 0; y < fs.Height; ++y)
+                    for (int x = 0; x < fs.Width; x++)
+                        for (int y = 0; y < fs.Height; y++)
                         {
                             var cd = buff[x + fs.Width * y];
                             if (cd.Z < float.MaxValue)
                             {
-                                set.Add(cd.illumination);
                                 fs[x, y] = Color.FromArgb((int)(255 * cd.illumination), 
                                     (int)(0 * cd.illumination), 
                                     (int)(0 * cd.illumination));

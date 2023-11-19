@@ -107,6 +107,8 @@ namespace Tools
     /// </summary>
     public class SceneObject
     {
+        public System.Drawing.Color Color { get; set; }
+
         public Guid Id { get; private set; }
         public string Name { get; set; }
         public Primitive Local { get; private set; }
@@ -122,6 +124,7 @@ namespace Tools
             Local = init;
             Transform  = new Transform();
             Id = Guid.NewGuid();
+            Color = System.Drawing.Color.Red;
         }
 
         /// <summary>

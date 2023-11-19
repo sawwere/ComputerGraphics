@@ -20,6 +20,10 @@ namespace Lab6
 
         public void GetUpdate(SceneObject obj, Tools.Scene.Camera camera)
         {
+            if (sceneObject == null)
+            {
+                return;
+            }
             sceneObject = obj;
             buttonColor.BackColor = sceneObject.Color;
 
@@ -76,6 +80,10 @@ namespace Lab6
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
+            if (sceneObject == null)
+            {
+                return;
+            }
             if (colorDialog1.ShowDialog() == DialogResult.Cancel)
                 return;
             (sender as Button).BackColor = colorDialog1.Color;

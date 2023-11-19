@@ -12,10 +12,6 @@ namespace Tools.Primitives
 
         public List<List<int>> Faces { get; private set; } = new List<List<int>>();
         
-        /// <summary>
-        /// таблица смежности вершин. ИндексВершины => список смежных с ней
-        /// </summary>
-        public Dictionary<int, List<int>> Adjacency { get; set; } = new Dictionary<int, List<int>>();
         private List<Triangle3D> polygons;
 
         public Point3D Center
@@ -42,11 +38,8 @@ namespace Tools.Primitives
             polygons = new List<Triangle3D>();
             Vertexes = new List<Point3D>();
             Faces = new List<List<int>>();
-            int i = 0;
             foreach (Point3D point in points)
             {
-                i++;
-                Adjacency.Add(i, new List<int>());
                 Vertexes.Add(new Point3D(point.X, point.Y, point.Z));
             }
             foreach (var item in faces)
@@ -69,15 +62,12 @@ namespace Tools.Primitives
                 return;
             }
             List<Point3D> points = new List<Point3D>();
-            int k = 0;
             foreach (var t in list)
             {
                 for (int i = 0; i < 3;i++)
                 {
                     if (!points.Contains(t[i]))
                     {
-                        k++;
-                        Adjacency.Add(k, new List<int>());
                         Vertexes.Add(new Point3D(t[i].X, t[i].Y, t[i].Z));
                         points.Add(t[i]);
                     }

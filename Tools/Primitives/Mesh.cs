@@ -272,7 +272,7 @@ namespace Tools.Primitives
         // Gouraud_shading
         //
         //==============================================
-        public void CalculateLambert(Scene.Light light, Scene.Camera camera)
+        public void CalculateLambert(Point3D lightPos, Scene.Camera camera)
         {
             Dictionary<int, Point3D> pointNormal = new Dictionary<int, Point3D>();
             for (int i = 0; i < Vertexes.Count; i++)
@@ -282,23 +282,32 @@ namespace Tools.Primitives
                 foreach (var face in adjacentFaces)
                 {
                     var t = new Triangle3D(Vertexes[face[0]], Vertexes[face[1]], Vertexes[face[2]]);
-                    t.FindNormal(Center, camera);
-                    res += t.Norm;
+                    var norm = t.FindNormalWorld(Center, camera);
+                    res += norm;
                 }
-                res = (1.0f / adjacentFaces.Count) * res;
+                //res = (1.0f / adjacentFaces.Count) * res;
+                res.X /= adjacentFaces.Count;
+                res.Y /= adjacentFaces.Count;
+                res.Z /= adjacentFaces.Count;
+                res = res.Normalize();
                 pointNormal.Add(i, res);
             }
             for (int i = 0; i < Vertexes.Count; i++)
             {
-                Vertexes[i].illumination = ModelLambert(Vertexes[i], pointNormal[i], light.position);
+                var cos = ModelLambert(Vertexes[i], pointNormal[i], lightPos);
+                Vertexes[i].illumination = Math.Max(cos, 0);
+                
+
+                Console.WriteLine(Vertexes[i] + " === " + pointNormal[i] + " === " + Vertexes[i].illumination);
             }
         }
 
         private float ModelLambert(Point3D vertex, Point3D normal, Point3D lightPos)
         {
-            Point3D rayLight = new Point3D(vertex.X - lightPos.X, vertex.Y - lightPos.Y, vertex.Z - lightPos.Z);
+            Point3D rayLight = new Point3D(lightPos.X - vertex.X, lightPos.Y - vertex.Y, lightPos.Z - vertex.Z);
+            rayLight = rayLight.Normalize();
             double cos = rayLight.DotProduct( normal) / (rayLight.Length * normal.Length);
-            return (float)((cos + 1) / 2);//перевод в диапазон [0,1]
+            return (float)((cos ) );//перевод в диапазон [0,1]?
         }
 
         //==============================================

@@ -98,15 +98,18 @@ namespace Lab6
             scene = new Scene(camera);
 
             var polygons = new List<Triangle3D>();
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
+            polygons.Add(new Triangle3D(new Point3D(1, 1, 1), new Point3D(1, 1, -1), new Point3D(-1, 1, -1)));
 
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
+            polygons.Add(new Triangle3D(new Point3D(1, 1, 1), new Point3D(-1, 1, -1), new Point3D(-1, 1, 1)));
             var mesh = new Mesh(polygons);
             mesh = MeshBuilder.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
-            scene.Light = new Light(scene.Camera.position + new Point3D(0, 0, 0), Color.White);
+            var light = new SceneObject(new Light(new Point3D(0, 0, 0), Color.White), "Light");
+            light.Transform.Translate(new Point3D(0, 0, 50));
+            scene.AddObject(light);
+
             UpdateHierarchy();
 
             comboBoxProjection.SelectedIndex = 0;

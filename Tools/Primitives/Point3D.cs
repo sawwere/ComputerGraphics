@@ -106,6 +106,14 @@ namespace Tools.Primitives
         }
 
         /// <summary>
+        /// Нормированный вектор
+        /// </summary>
+        public Point3D Normalize()
+        {
+            return ( 1 / this.Length) * this;
+        }
+
+        /// <summary>
         /// Расстояние до точки other
         /// </summary>
         public double DistanceTo(Point3D other)

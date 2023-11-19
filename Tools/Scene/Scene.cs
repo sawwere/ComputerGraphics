@@ -11,13 +11,12 @@ namespace Tools.Scene
     {
         public Dictionary<string, SceneObject> systemObjects;
         private Dictionary<Guid, SceneObject> sceneObjects;
-        public Light Light;
+        public SceneObject Light;
         public Camera Camera { get; private set; }
         
         public Scene(Camera camera)
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
-            Light = new Light();
             Camera = camera;
 
             systemObjects = new Dictionary<string, SceneObject>();
@@ -67,6 +66,11 @@ namespace Tools.Scene
             obj.Transform.Translate(-1 * Camera.position);
             obj.Transform.Rotate(-1 * Camera.rotation);
             sceneObjects.Add(obj.Id, obj);
+
+            if (obj.Local is Light)
+            {
+                Light = obj;
+            }
         }
 
         public void RemoveObject(SceneObject obj)
@@ -89,6 +93,7 @@ namespace Tools.Scene
         public Bitmap RasterizedRender(Projection pr)
         {
             var bitmap = new Bitmap(Camera.Width, Camera.Height);
+            
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
                 Point3D[] buff = new Point3D[fs.Width * fs.Height];
@@ -99,6 +104,8 @@ namespace Tools.Scene
                     foreach (SceneObject obj in GetAllSceneObjects().Values)
                     {
                         Primitive m = obj.GetTransformed();
+                        if (!(m is Mesh))
+                            continue;
                         (m as Mesh).CalculateZBuffer(Camera, buff);
                     }
                     var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue && z > float.MinValue);
@@ -132,6 +139,7 @@ namespace Tools.Scene
 
         public Bitmap GourodRender(Projection pr)
         {
+            
             var bitmap = new Bitmap(Camera.Width, Camera.Height);
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
@@ -143,7 +151,11 @@ namespace Tools.Scene
                     foreach (SceneObject obj in GetAllSceneObjects().Values)
                     {
                         Primitive m = obj.GetTransformed();
-                        (m as Mesh).CalculateLambert(Light, Camera);
+                        if (!(m is Mesh))
+                            continue;
+                        Console.WriteLine(Light.Transform.position);
+                        Console.WriteLine(Light.Transform.position - obj.Transform.position);
+                        (m as Mesh).CalculateLambert(Light.Transform.position, Camera);
                         (m as Mesh).CalculateZBuffer(Camera, buff);
                         
                     }
@@ -152,7 +164,7 @@ namespace Tools.Scene
                         for (int y = 0; y < fs.Height; ++y)
                         {
                             var cd = buff[x + fs.Width * y];
-                            if (buff[x + fs.Width * y].Z < float.MaxValue)
+                            if (cd.Z < float.MaxValue)
                             {
                                 set.Add(cd.illumination);
                                 fs[x, y] = Color.FromArgb((int)(255 * cd.illumination), 
@@ -188,7 +200,6 @@ namespace Tools.Scene
         public void MoveCamera(Point3D vec)
         {
             Camera.Translate(vec);
-            Light.position += vec;
             foreach (SceneObject obj in systemObjects.Values)
             {
                 obj.Transform.Translate(-1 * vec);

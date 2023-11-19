@@ -128,7 +128,9 @@ namespace Tools.Primitives
                     p2 = Destination.GetPerspectiveProj(camera);
                     break;
             }
-            g.DrawLine(new Pen(Color, 2), p1, p2);
+
+            if (Origin.Z > 0 && Destination.Z > 0)
+                g.DrawLine(new Pen(Color, 2), p1, p2);
         }
     }
 }

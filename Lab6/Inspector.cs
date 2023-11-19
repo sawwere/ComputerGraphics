@@ -15,22 +15,28 @@ namespace Lab6
     public partial class Inspector : UserControl
     {
         private SceneObject sceneObject;
+        Point3D worldPosition;
+        Point3D worldRotation;
 
-        public void GetUpdate(object obj)
+        public void GetUpdate(SceneObject obj, Tools.Scene.Camera camera)
         {
-            sceneObject = obj as SceneObject;
-            if (sceneObject == null )
+            if (obj == null)
             {
                 return;
             }
-            textBoxName.Text = sceneObject.Name;
-            textBoxPosX.Text = sceneObject.Transform.position.X.ToString("0.000");
-            textBoxPosY.Text = sceneObject.Transform.position.Y.ToString("0.000");
-            textBoxPosZ.Text = sceneObject.Transform.position.Z.ToString("0.000");
+            sceneObject = obj;
+            buttonColor.BackColor = sceneObject.Color;
 
-            textBoxRotationX.Text = sceneObject.Transform.rotation.X.ToString("0.000");
-            textBoxRotationY.Text = sceneObject.Transform.rotation.Y.ToString("0.000");
-            textBoxRotationZ.Text = sceneObject.Transform.rotation.Z.ToString("0.000");
+            worldPosition = sceneObject.Transform.position + camera.position;
+            textBoxName.Text = sceneObject.Name;
+            textBoxPosX.Text = worldPosition.X.ToString("0.000");
+            textBoxPosY.Text = worldPosition.Y.ToString("0.000");
+            textBoxPosZ.Text = worldPosition.Z.ToString("0.000");
+
+            worldRotation = sceneObject.Transform.rotation + camera.rotation;
+            textBoxRotationX.Text = worldRotation.X.ToString("0.000");
+            textBoxRotationY.Text = worldRotation.Y.ToString("0.000");
+            textBoxRotationZ.Text = worldRotation.Z.ToString("0.000");
 
             textBoxScaleX.Text = sceneObject.Transform.scale.X.ToString("0.000");
             textBoxScaleY.Text = sceneObject.Transform.scale.Y.ToString("0.000");
@@ -53,8 +59,8 @@ namespace Lab6
             { 
                 return; 
             }
-            sceneObject.Transform.Translate(new Point3D(-sceneObject.Transform.position.X, -sceneObject.Transform.position.Y, -sceneObject.Transform.position.Z));
-            sceneObject.Transform.Rotate(new Point3D(-sceneObject.Transform.rotation.X, -sceneObject.Transform.rotation.Y, -sceneObject.Transform.rotation.Z));
+            sceneObject.Transform.Translate(-1 * worldPosition);
+            sceneObject.Transform.Rotate(-1 * worldRotation);
             sceneObject.Transform.Scale(new Point3D(1 /sceneObject.Transform.scale.X, 1 / sceneObject.Transform.scale.Y, 1 / sceneObject.Transform.scale.Z));
 
             (Parent as MainForm).Render(); //TODO
@@ -70,6 +76,18 @@ namespace Lab6
         private void textBoxName_KeyUp(object sender, KeyEventArgs e)
         {
             (Parent as MainForm).UpdateHierarchy();
+        }
+
+        private void buttonColor_Click(object sender, EventArgs e)
+        {
+            if (sceneObject == null)
+            {
+                return;
+            }
+            if (colorDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            (sender as Button).BackColor = colorDialog1.Color;
+            sceneObject.Color = colorDialog1.Color;
         }
     }
 }

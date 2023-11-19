@@ -20,12 +20,8 @@ namespace Tools.Primitives
         /// </summary>
         public Point3D Norm
         {
-            get 
-            {
-                Point3D a = points[1] - points[0];
-                Point3D n = a.CrossProduct(points[2] - points[0]);
-                return (1.0f / n.Length) * n;
-            }
+            get;
+            private set;
         }
         public Point3D this[int i]
         {
@@ -181,8 +177,6 @@ namespace Tools.Primitives
 
         public void FindNormal(Point3D pCenter, Scene.Camera camera, Projection pr=0)
         {
-
-
             var storona_1 = points[1].GetPerspective(camera) - points[0].GetPerspective(camera);
             var storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
 
@@ -210,18 +204,30 @@ namespace Tools.Primitives
                      storona_2 = points[2].GetPerspective(camera) - points[0].GetPerspective(camera);
                     break;
             }
-
-
             var norm_normal = storona_1.CrossProduct(storona_2);
+            
             norm_normal = (1 / (norm_normal.Length)) * norm_normal;
-
+            Norm = norm_normal;
             Point3D P = camera.forward;
             double angle = Math.Acos((norm_normal.X * P.X + norm_normal.Y * P.Y + norm_normal.Z * P.Z) /
-            (norm_normal.Length * P.Length
-            ));
+            (norm_normal.Length * P.Length));
+            if (points[0].Z < 1 && points[1].Z < 1 && points[2].Z < 1)
+            {
+                IsVisible = false;
+            }
+            else
+            {
+                angle = angle * 180 / Math.PI;
+                IsVisible = angle > 90;
+            }
+        }
 
-            angle = angle * 180 / Math.PI;
-            IsVisible = angle > 90;
+        public Point3D FindNormalWorld(Point3D pCenter, Scene.Camera camera)
+        {
+            var storona_1 = points[1] - points[0];
+            var storona_2 = points[2] - points[0];
+            var norm_normal = storona_1.CrossProduct(storona_2);
+            return norm_normal.Normalize();
         }
     }
 }

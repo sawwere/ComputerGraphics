@@ -22,13 +22,13 @@ namespace Tools.Scene
             private set;
         }
 
-        public int width { get; set; }
-        public int height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public float fovy;
         public Camera(int w, int h, Point3D pos, Point3D rotation, Point3D forward)
         {
-            width = w;
-            height = h;
+            Width = w;
+            Height = h;
             fovy = 90;
             position = pos;
             this.rotation = rotation;

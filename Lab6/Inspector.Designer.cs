@@ -54,6 +54,9 @@ namespace Lab6
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.buttonToDefault = new System.Windows.Forms.Button();
+            this.buttonColor = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -327,7 +330,7 @@ namespace Lab6
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label2.Location = new System.Drawing.Point(4, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 16);
+            this.label2.Size = new System.Drawing.Size(34, 16);
             this.label2.TabIndex = 57;
             this.label2.Text = "Имя";
             // 
@@ -352,7 +355,7 @@ namespace Lab6
             this.buttonToDefault.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(97)))), ((int)(((byte)(97)))));
             this.buttonToDefault.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonToDefault.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonToDefault.Location = new System.Drawing.Point(62, 129);
+            this.buttonToDefault.Location = new System.Drawing.Point(62, 179);
             this.buttonToDefault.Name = "buttonToDefault";
             this.buttonToDefault.Size = new System.Drawing.Size(260, 36);
             this.buttonToDefault.TabIndex = 59;
@@ -360,12 +363,33 @@ namespace Lab6
             this.buttonToDefault.UseVisualStyleBackColor = false;
             this.buttonToDefault.Click += new System.EventHandler(this.buttonToDefault_Click);
             // 
+            // buttonColor
+            // 
+            this.buttonColor.Location = new System.Drawing.Point(120, 124);
+            this.buttonColor.Name = "buttonColor";
+            this.buttonColor.Size = new System.Drawing.Size(61, 19);
+            this.buttonColor.TabIndex = 60;
+            this.buttonColor.UseVisualStyleBackColor = true;
+            this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.label3.Location = new System.Drawing.Point(4, 126);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 17);
+            this.label3.TabIndex = 61;
+            this.label3.Text = "Цвет";
+            // 
             // Inspector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.buttonColor);
             this.Controls.Add(this.buttonToDefault);
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.label2);
@@ -393,7 +417,7 @@ namespace Lab6
             this.Controls.Add(this.label1);
             this.ForeColor = System.Drawing.Color.SeaShell;
             this.Name = "Inspector";
-            this.Size = new System.Drawing.Size(375, 173);
+            this.Size = new System.Drawing.Size(375, 218);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -426,5 +450,8 @@ namespace Lab6
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Button buttonToDefault;
+        private System.Windows.Forms.Button buttonColor;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Label label3;
     }
 }

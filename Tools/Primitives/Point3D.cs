@@ -7,13 +7,15 @@ using System.Drawing;
 
 namespace Tools.Primitives
 {
-    public struct Point3D: IEquatable<Point3D>
+    public class Point3D: IEquatable<Point3D>
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        private static PointF DEFAULT_TEXTURE_POINT = new PointF(0, 0);
 
-        public Color Color { get; set; }
+        public float X;
+        public float Y;
+        public float Z;
+        public float illumination;
+        public PointF TextureCoordinates;
 
         public float Length { get
             {
@@ -26,12 +28,35 @@ namespace Tools.Primitives
             X = x;
             Y = y;
             Z = z;
-            Color = Color.Black;
+            illumination = 1.0f;
+            TextureCoordinates = new PointF(0, 0);
+            //нужно ли?
+            //TextureCoordinates = DEFAULT_TEXTURE_POINT;
+        }
+
+        public Point3D(float x, float y, float z, float ilum)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            illumination = ilum;
+            TextureCoordinates = new PointF(0, 0);
+            //нужно ли?
+            //TextureCoordinates = DEFAULT_TEXTURE_POINT;
+        }
+
+        public Point3D(float x, float y, float z, float ilum, PointF textureCoordinates)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            illumination = 1.0f;
+            TextureCoordinates = textureCoordinates;
         }
 
         public Point3D Clone()
         {
-            return new Point3D(X, Y, Z);
+            return new Point3D(X, Y, Z, illumination, TextureCoordinates);
         }
 
         public void ReflectX()
@@ -56,7 +81,6 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixTranslate(dx, dy, dz));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
 
             X = c[0][0];
             Y = c[0][1];
@@ -70,7 +94,6 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixRotate(angle, a, line));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
@@ -83,10 +106,17 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx, ky, kz));
-            //c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
+        }
+
+        /// <summary>
+        /// Нормированный вектор
+        /// </summary>
+        public Point3D Normalize()
+        {
+            return ( 1 / this.Length) * this;
         }
 
         /// <summary>
@@ -164,9 +194,6 @@ namespace Tools.Primitives
 
         public Point3D GetPerspective(Scene.Camera camera)
         {
-            //if (Math.Abs(Z - camera.position.Z) < 1e-10)
-            //    return new PointF(X * 1000, Y * 1000);
-
             float[][] xyz = new float[1][]
             {
                 new float[4] { X, Y, Z, 1 }
@@ -174,7 +201,6 @@ namespace Tools.Primitives
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixPerspective(camera));
             c = MatrixFactory.MatrixProduct(c, 1 / c[0][3]);
             return new Point3D(c[0][0], c[0][1], c[0][2]);
-            //return new PointF(c[0][0] * 1000 , c[0][1] * 1000);
         }
 
         public PointF GetPerspectiveProj(Scene.Camera camera)

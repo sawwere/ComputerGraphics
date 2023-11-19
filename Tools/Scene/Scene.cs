@@ -11,13 +11,12 @@ namespace Tools.Scene
     {
         public Dictionary<string, SceneObject> systemObjects;
         private Dictionary<Guid, SceneObject> sceneObjects;
-        public List<Light> lights;
+        public SceneObject Light;
         public Camera Camera { get; private set; }
         
         public Scene(Camera camera)
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
-            lights = new List<Light>();
             Camera = camera;
 
             systemObjects = new Dictionary<string, SceneObject>();
@@ -44,6 +43,11 @@ namespace Tools.Scene
             return res;
         }
 
+        private IEnumerable<Primitive> GetAllTransformedMeshes()
+        {
+            return sceneObjects.Select(x => x.Value.GetTransformed()).Where(x=>x is Mesh);
+        }
+
         public void Clear()
         {
             sceneObjects.Clear();
@@ -67,6 +71,11 @@ namespace Tools.Scene
             obj.Transform.Translate(-1 * Camera.position);
             obj.Transform.Rotate(-1 * Camera.rotation);
             sceneObjects.Add(obj.Id, obj);
+
+            if (obj.Local is Light)
+            {
+                Light = obj;
+            }
         }
 
         public void RemoveObject(SceneObject obj)
@@ -88,35 +97,36 @@ namespace Tools.Scene
 
         public Bitmap RasterizedRender(Projection pr)
         {
-            var bitmap = new Bitmap(Camera.width, Camera.height);
+            var bitmap = new Bitmap(Camera.Width, Camera.Height);
+            
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
-                float[] buff = new float[fs.Width * fs.Height];
+                Point3D[] buff = new Point3D[fs.Width * fs.Height];
                 for (int i = 0; i < fs.Width * fs.Height; ++i)
-                    buff[i] = float.MaxValue;
-                if (GetAllSceneObjects().Count > 0)
+                    buff[i] = buff[i] = new Point3D(0, 0, float.MaxValue);
+                var meshes = GetAllTransformedMeshes();
+                if (meshes.Count() > 0)
                 {
-                    foreach (SceneObject obj in GetAllSceneObjects().Values)
+                    foreach (var obj in meshes)
                     {
-                        Primitive m = obj.GetTransformed();
-                        (m as Mesh).CalculateZBuffer(Camera, buff);
+                        (obj as Mesh).CalculateZBuffer(Camera, buff);
                     }
-                    var filtered = buff.Where(x => x < float.MaxValue && x > float.MinValue);
+                    var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue);
                     if (filtered.Count() > 0)
                     {
                         var maxZ = filtered.Max();
                         var minZ = filtered.Min();
-                        for (int x = 0; x < fs.Width; ++x)
-                            for (int y = 0; y < fs.Height; ++y)
+                        for (int x = 0; x < fs.Width; x++)
+                            for (int y = 0; y < fs.Height; y++)
                             {
                                 var cd = buff[x + fs.Width * y];
-                                if (buff[x + fs.Width * y] < float.MaxValue)
+                                if (buff[x + fs.Width * y].Z < float.MaxValue)
                                 {
 
                                     Color c = Color.FromArgb(
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]),
-                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y]));
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z),
+                                        (int)Interpolate(minZ, 128, maxZ, 1, buff[x + fs.Width * y].Z));
                                     fs[x, y] = c;
                                 }
                                 else
@@ -130,6 +140,44 @@ namespace Tools.Scene
             return bitmap;
         }
 
+        public Bitmap GourodRender(Projection pr)
+        {
+            
+            var bitmap = new Bitmap(Camera.Width, Camera.Height);
+            using (var fs = new FastBitmap.FastBitmap(bitmap))
+            {
+                Point3D[] buff = new Point3D[fs.Width * fs.Height];
+                for (int i = 0; i < fs.Width * fs.Height; ++i)
+                    buff[i] = new Point3D(0, 0, float.MaxValue);
+                var meshes = GetAllTransformedMeshes();
+                if (meshes.Count() > 0)
+                {
+                    foreach (var obj in meshes)
+                    {
+                        (obj as Mesh).CalculateLambert(Light.Transform.position, Camera);
+                        (obj as Mesh).CalculateZBuffer(Camera, buff);
+                        
+                    }
+                    for (int x = 0; x < fs.Width; x++)
+                        for (int y = 0; y < fs.Height; y++)
+                        {
+                            var cd = buff[x + fs.Width * y];
+                            if (cd.Z < float.MaxValue)
+                            {
+                                fs[x, y] = Color.FromArgb((int)(255 * cd.illumination), 
+                                    (int)(0 * cd.illumination), 
+                                    (int)(0 * cd.illumination));
+                            }
+                            else
+                            {
+                                fs[x, y] = Color.LightGray;
+                            }
+                        }
+                }
+            }
+            return bitmap;
+        }
+
         public void Render(Graphics g, Projection pr = 0)
         {
             foreach (SceneObject obj in systemObjects.Values)
@@ -137,7 +185,6 @@ namespace Tools.Scene
                 Primitive m = obj.GetTransformed();
                 m.Draw(g, Camera, pr);
             }
-
             foreach (SceneObject obj in sceneObjects.Values)
             {
                 Primitive m = obj.GetTransformed();

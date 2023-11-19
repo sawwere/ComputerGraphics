@@ -21,6 +21,7 @@ namespace Lab6
     public partial class MainForm : Form
     {
         private FormRotationFigure rotationFigure = new FormRotationFigure();
+        private FormFloatingHorizon floatingHorizon = new FormFloatingHorizon();
 
         Graphics g;
         Projection projection = Projection.ORTHOGR_X;
@@ -39,7 +40,7 @@ namespace Lab6
         private void radioButtonScene_Click(object sender, EventArgs e)
         {
             figure = scene.GetObject((Guid)((RadioButton)sender).Tag);
-            inspector.GetUpdate(figure);
+            inspector.GetUpdate(figure, scene.Camera);
         }
 
         private void AddToHierarchy(string name, Guid id)
@@ -88,6 +89,7 @@ namespace Lab6
         {
             InitializeComponent();
             AddOwnedForm(rotationFigure);
+            AddOwnedForm(floatingHorizon);
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(pictureBox1.Image);
@@ -98,14 +100,18 @@ namespace Lab6
             scene = new Scene(camera);
 
             var polygons = new List<Triangle3D>();
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
+            polygons.Add(new Triangle3D(new Point3D(1, 1, 1), new Point3D(1, 1, -1), new Point3D(-1, 1, -1)));
 
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
+            polygons.Add(new Triangle3D(new Point3D(1, 1, 1), new Point3D(-1, 1, -1), new Point3D(-1, 1, 1)));
             var mesh = new Mesh(polygons);
-            mesh.make_hexahedron();
+            mesh = MeshBuilder.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
+            var light = new SceneObject(new Light(new Point3D(0, 0, 0), Color.White), "Light");
+            light.Transform.Translate(new Point3D(0, 0, 50));
+            scene.AddObject(light);
+
             UpdateHierarchy();
 
             comboBoxProjection.SelectedIndex = 0;
@@ -155,14 +161,17 @@ namespace Lab6
                 case 0:
                     scene.Render(g, projection);
                     break;
-                case 2:
+                case 1:
                     pictureBox1.Image = scene.RasterizedRender(projection);
+                    break;
+                case 2:
+                    pictureBox1.Image = scene.GourodRender(projection);
                     break;
             }
 
             pictureBox1.Refresh();
             stopWatch.Stop();
-            inspector.GetUpdate(figure);
+            inspector.GetUpdate(figure, scene.Camera);
 
             labelFPS.Text = $"FPS: {(1000.0f / stopWatch.ElapsedMilliseconds)}";
         }
@@ -304,8 +313,8 @@ namespace Lab6
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
 
-            scene.Camera.width = pictureBox1.Width;
-            scene.Camera.height = pictureBox1.Height;
+            scene.Camera.Width = pictureBox1.Width;
+            scene.Camera.Height = pictureBox1.Height;
             Render();
         }        
 
@@ -329,8 +338,6 @@ namespace Lab6
                 var list = rotationFigure.GetPoints();                
                 Axis axis = rotationFigure.RotaionAxis;
                 int steps = rotationFigure.Steps;
-                //TODO
-                //figure.Local = "создание фигуры вращения"
                 Mesh mesh;
                 List<Point3D> points = new List<Point3D>();
                 foreach (var p in list)
@@ -426,7 +433,7 @@ namespace Lab6
         private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Mesh mesh = new Mesh();
-            mesh.make_hexahedron();
+            mesh = MeshBuilder.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
@@ -585,6 +592,18 @@ namespace Lab6
                     MessageBox.Show("Error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void comboBoxRenderMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            g = Graphics.FromImage(pictureBox1.Image);
+            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
+            g.ScaleTransform(1, -1);
+        }
+
+        private void buttonFloatingHorizon_Click(object sender, EventArgs e)
+        {
+            floatingHorizon.Show();
         }
     }
 }

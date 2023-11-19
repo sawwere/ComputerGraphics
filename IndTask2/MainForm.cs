@@ -101,7 +101,7 @@ namespace IndTask2
 
             polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
             var mesh = new Mesh(polygons);
-            mesh.make_hexahedron();
+            mesh = MeshBuilder.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);
@@ -303,8 +303,8 @@ namespace IndTask2
             g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
             g.ScaleTransform(1, -1);
 
-            scene.Camera.width = pictureBox1.Width;
-            scene.Camera.height = pictureBox1.Height;
+            scene.Camera.Width = pictureBox1.Width;
+            scene.Camera.Height = pictureBox1.Height;
             Render();
         }
 
@@ -425,7 +425,7 @@ namespace IndTask2
         private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Mesh mesh = new Mesh();
-            mesh.make_hexahedron();
+            mesh = MeshBuilder.make_hexahedron();
             figure = new SceneObject(mesh);
             figure.Name = "Гексаэдр";
             scene.AddObject(figure);

@@ -129,16 +129,44 @@ void InitVBO(int figCode)
     { 0.0f, 1.0f },
     { 1.0f, 0.0f },
     { 0.0f, -1.0f },
-    { -1.0f, -0.0f }
+    { -1.0f, 0.0f }
     };
 
     // TODO
     // Пятиугольник
-    Vertex pentagon[5];
+    /*Vertex pentagon[5] = {
+    {0.0f,1.0f},
+    {0.9510565f, 0.309017f},
+    {0.58778f, -0.809017f},
+    {-0.58778f, -0.809017f },
+    {-0.9510565f, 0.309017f},
+    };*/
+    //инвертированный у
+    Vertex pentagon[5] = {
+    {0.0f,-1.0f},
+    {0.9510565f, -0.309017f},
+    {0.58778f, 0.809017f},
+    {-0.58778f, 0.809017f },
+    {-0.9510565f, -0.309017f}
+    };
+    //округленный
+    /*Vertex pentagon[5] = {
+    {0.0f,1.0f},
+    {0.9510565f, 0.31f},
+    {0.6f, -0.81f},
+    {-0.6f, -0.6f },
+    {-0.9510565f, 0.31f},
+    };*/
     
      // TODO
      // Веер - набор из треугольников
-     Vertex fan[5];
+    Vertex fan[6] = { {0.0f,0.0f},
+        {0.7f,0.0f},
+        {0.536f,0.45f},
+        {0.122f,0.689f},
+        {-0.35f,0.606f},
+        {-0.658f,0.239f}
+    };
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     switch (figCode)
@@ -188,10 +216,10 @@ void Draw(int taskCode, int figCode)
         glDrawArrays(GL_QUADS, 0, 4);
         break;
     case 2:
-        glDrawArrays(GL_QUADS, 0, 5);//TODO
+        glDrawArrays(GL_POLYGON, 0, 5);
         break;
     case 3:
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
         break;
     default:
         throw std::exception();

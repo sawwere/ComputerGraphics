@@ -20,8 +20,12 @@ void ReleaseVBO();
 void ReleaseShader();
 
 struct Vertex {
-    GLfloat x;
-    GLfloat y;
+	GLfloat x;
+	GLfloat y;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+	GLfloat a;
 };
 
 

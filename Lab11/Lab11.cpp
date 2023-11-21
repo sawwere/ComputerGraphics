@@ -13,10 +13,14 @@ GLint Uniform_color;
 
 const char* VertexShaderSource = R"(
 #version 330 core
-    in vec2 coord;
+    layout (location = 0) in vec2 coord;
+	layout (location = 1) in vec4 vColor;
+
+	out vec4 color;
     void main() 
     {
         gl_Position = vec4(coord, 0.0, 1.0);
+        color = vColor;
     }
 )";
 
@@ -37,6 +41,18 @@ const char* FragShaderSource_uniform = R"(
     {
         color = uniform_color;
     }
+)";
+
+const char* FragShaderSourceGradient = R"(
+#version 330 core
+	out vec4 FragColor;
+
+	in vec4 color;
+
+	void main()
+	{
+		FragColor = vec4(color);
+	}
 )";
 
 void CheckOpenGLerror()
@@ -79,6 +95,11 @@ void InitShader(int taskCode)
         break;
     case 3:
         glShaderSource(fShader, 1, &FragShaderSource_uniform, NULL);
+        glCompileShader(fShader);
+        std::cout << "Uniform Fragment shader compiled\n";
+        break;
+    case 4:
+        glShaderSource(fShader, 1, &FragShaderSourceGradient, NULL);
         glCompileShader(fShader);
         std::cout << "Uniform Fragment shader compiled\n";
         break;
@@ -126,10 +147,10 @@ void InitVBO(int figCode)
 {
     glGenBuffers(1, &VBO);
     Vertex square[4] = {
-    { 0.0f, 1.0f },
-    { 1.0f, 0.0f },
-    { 0.0f, -1.0f },
-    { -1.0f, 0.0f }
+    { 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+    { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f},
+    { 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+    { -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f }
     };
 
     // TODO
@@ -143,11 +164,11 @@ void InitVBO(int figCode)
     };*/
     //инвертированный у
     Vertex pentagon[5] = {
-    {0.0f,-1.0f},
-    {0.9510565f, -0.309017f},
-    {0.58778f, 0.809017f},
-    {-0.58778f, 0.809017f },
-    {-0.9510565f, -0.309017f}
+    {0.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+    {0.9510565f, -0.309017f,0.0f, 1.0f, 0.0f, 1.0f},
+    {0.58778f, 0.809017f,0.0f, 0.0f, 1.0f, 1.0f},
+    {-0.58778f, 0.809017f,1.0f, 1.0f, 0.0f, 1.0f },
+    {-0.9510565f, -0.309017f,1.0f, 0.0f, 1.0f, 1.0f}
     };
     //округленный
     /*Vertex pentagon[5] = {
@@ -160,12 +181,12 @@ void InitVBO(int figCode)
     
      // TODO
      // Веер - набор из треугольников
-    Vertex fan[6] = { {0.0f,0.0f},
-        {0.7f,0.0f},
-        {0.536f,0.45f},
-        {0.122f,0.689f},
-        {-0.35f,0.606f},
-        {-0.658f,0.239f}
+    Vertex fan[6] = { {0.0f,0.0f,0.0f, 1.0f, 1.0f, 1.0f},
+        {0.7f,0.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+        {0.536f,0.45f, 0.0f, 1.0f, 0.0f, 1.0f},
+        {0.122f,0.689f, 0.0f, 0.0f, 1.0f, 1.0f},
+        {-0.35f,0.606f,1.0f, 1.0f, 0.0f, 1.0f},
+        {-0.658f,0.239f, 1.0f, 0.0f, 1.0f, 1.0f}
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -205,10 +226,13 @@ void Draw(int taskCode, int figCode)
         glUniform4f(Uniform_color, 0.75, 0.25, 0.75, 1);
 
     glEnableVertexAttribArray(Attrib_vertex);
+    glEnableVertexAttribArray(1); // Для цвета
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
     switch (figCode)
     {

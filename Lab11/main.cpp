@@ -47,7 +47,7 @@ int main()
             break;
         std::cout << "Enter task number: ";
         std::cin >> taskCode;
-        if (!(taskCode == 2 || taskCode == 3))
+        if (!(taskCode == 2 || taskCode == 3 || taskCode == 4))
             continue;
         Loop(taskCode, figureCode);
     }

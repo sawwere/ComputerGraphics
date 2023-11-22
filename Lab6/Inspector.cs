@@ -27,13 +27,13 @@ namespace Lab6
             sceneObject = obj;
             buttonColor.BackColor = sceneObject.Color;
 
-            worldPosition = sceneObject.Transform.position + camera.position;
+            worldPosition = sceneObject.Transform.position;
             textBoxName.Text = sceneObject.Name;
             textBoxPosX.Text = worldPosition.X.ToString("0.000");
             textBoxPosY.Text = worldPosition.Y.ToString("0.000");
             textBoxPosZ.Text = worldPosition.Z.ToString("0.000");
 
-            worldRotation = sceneObject.Transform.rotation + camera.rotation;
+            worldRotation = sceneObject.Transform.rotation;
             textBoxRotationX.Text = worldRotation.X.ToString("0.000");
             textBoxRotationY.Text = worldRotation.Y.ToString("0.000");
             textBoxRotationZ.Text = worldRotation.Z.ToString("0.000");

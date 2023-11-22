@@ -24,10 +24,10 @@ namespace Tools.Scene
             return new Light(position.Clone(), Color.FromArgb(color.A, color.R, color.G, color.B));
         }
 
-        public override void Draw(Graphics g, Camera camera, Projection pr = Projection.PERSPECTIVE, Pen pen = null)
+        public override void Draw(Graphics g, Camera camera, Projection pr = Projection.PERSPECTIVE)
         {
             var prj = position.GetPerspectiveProj(camera);
-            if (position.Z > 0)
+            if (position.Z > 0 && Math.Abs(prj.Y) < camera.Height && Math.Abs(prj.X) < camera.Width)
                 g.DrawIcon(Tools.Properties.Resources.light, (int)prj.X - 24, (int)prj.Y - 24);
         }
 
@@ -49,6 +49,11 @@ namespace Tools.Scene
         public override void Translate(Point3D vec)
         {
             position += vec;
+        }
+
+        public override void Apply(float[][] transform)
+        {
+            position.Apply(transform);
         }
     }
 }

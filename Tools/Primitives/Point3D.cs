@@ -59,21 +59,6 @@ namespace Tools.Primitives
             return new Point3D(X, Y, Z, illumination, TextureCoordinates);
         }
 
-        public void ReflectX()
-        {
-            X = -X;
-        }
-
-        public void ReflectY()
-        {
-            Y = -Y;
-        }
-
-        public void ReflectZ()
-        {
-            Z = -Z;
-        }
-
         public void Translate(float dx, float dy, float dz)
         {
             float[][] xyz = new float[1][] 
@@ -106,6 +91,18 @@ namespace Tools.Primitives
                 new float[4] { X, Y, Z, 1 }
             };
             float[][] c = MatrixFactory.MatrixProduct(xyz, MatrixFactory.MatrixScale(kx, ky, kz));
+            X = c[0][0];
+            Y = c[0][1];
+            Z = c[0][2];
+        }
+
+        public void Apply(float[][] matr)
+        {
+            float[][] xyz = new float[1][]
+            {
+                new float[4] { X, Y, Z, 1 }
+            };
+            float[][] c = MatrixFactory.MatrixProduct(xyz, matr);
             X = c[0][0];
             Y = c[0][1];
             Z = c[0][2];
@@ -206,7 +203,7 @@ namespace Tools.Primitives
         public PointF GetPerspectiveProj(Scene.Camera camera)
         {
             Point3D p = GetPerspective(camera);
-            return new PointF(p.X*1000, p.Y*1000);
+            return new PointF(p.X*camera.Width, p.Y*camera.Height);
         }
 
         public Point3D GetOrthographic(Axis a)

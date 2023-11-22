@@ -69,22 +69,6 @@ namespace Tools.Primitives
             return new Triangle3D(list);
         }
 
-        public void reflectX()
-        {
-            for (int i = 0; i < points.Length; i++)
-                points[i].ReflectX();
-        }
-        public void reflectY()
-        {
-            for (int i = 0; i < points.Length; i++)
-                points[i].ReflectY();
-        }
-        public void reflectZ()
-        {
-            for (int i = 0; i < points.Length; i++)
-                points[i].ReflectZ();
-        }
-
         public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
         {
             for (int i = 0; i < points.Length; i++)
@@ -144,11 +128,8 @@ namespace Tools.Primitives
             return res;
         }
 
-        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0)
         {
-            if (pen == null)
-                pen = Pens.Black;
-
             List<PointF> pts = new List<PointF>();
 
             switch (pr)
@@ -171,8 +152,8 @@ namespace Tools.Primitives
             }
 
             
-            g.DrawLines(pen, pts.ToArray());
-            g.DrawLine(pen, pts[0], pts[pts.Count - 1]);
+            g.DrawLines(Pens.Black, pts.ToArray());
+            g.DrawLine(Pens.Black, pts[0], pts[pts.Count - 1]);
         }
 
         public void FindNormal(Point3D pCenter, Scene.Camera camera, Projection pr=0)
@@ -228,6 +209,14 @@ namespace Tools.Primitives
             var storona_2 = points[2] - points[0];
             var norm_normal = storona_1.CrossProduct(storona_2);
             return norm_normal.Normalize();
+        }
+
+        public override void Apply(float[][] transform)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i].Apply(transform);
+            }
         }
     }
 }

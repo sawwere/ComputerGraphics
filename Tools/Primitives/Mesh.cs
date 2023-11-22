@@ -131,9 +131,11 @@ namespace Tools.Primitives
 
         public override void RotateAroundAxis(double angle, Axis a, Edge3D line = null)
         {
-            foreach (Triangle3D f in polygons)
+            for (int i = 0; i < Vertexes.Count; i++)
             {
-                f.RotateAroundAxis(angle, a, line);
+                var p = Vertexes[i];
+                p.Rotate(angle, a, line);
+                Vertexes[i] = p;
             }
         }
         public void make_tetrahedron(float size = 1)
@@ -246,14 +248,14 @@ namespace Tools.Primitives
             };
         }
 
-        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0)
         {
             foreach (var lst in Faces)
             {
                 var t = new Triangle3D(Vertexes[lst[0]], Vertexes[lst[1]], Vertexes[lst[2]]);
                 t.FindNormal(Center, camera);
                 if (t.IsVisible)
-                    t.Draw(g, camera, pr, pen);
+                    t.Draw(g, camera, pr);
             }
         }
 
@@ -397,6 +399,14 @@ namespace Tools.Primitives
             if (Math.Abs(x0 - x1) < 1e-8)
                 return (y0 + y1) / 2;
             return y0 + ((y1 - y0) * (i - x0)) / (x1 - x0);
+        }
+
+        public override void Apply(float[][] transform)
+        {
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                Vertexes[i].Apply(transform);
+            }
         }
     }
 }

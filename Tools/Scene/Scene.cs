@@ -28,11 +28,6 @@ namespace Tools.Scene
             systemObjects.Add("axisLineY", new SceneObject(axisLineY, "axisLineY"));
             systemObjects.Add("axisLineZ", new SceneObject(axisLineZ, "axisLineZ"));
             systemObjects.Add("axisLineRotation", new SceneObject(line_1, "axisLineRotation"));
-            foreach (SceneObject obj in systemObjects.Values)
-            {
-                obj.Transform.Translate(-1 * Camera.position);
-                obj.Transform.Rotate(-1 * Camera.rotation);
-            }
         }
 
         public Dictionary<Guid, SceneObject> GetAllSceneObjects()
@@ -45,7 +40,7 @@ namespace Tools.Scene
 
         private IEnumerable<Primitive> GetAllTransformedMeshes()
         {
-            return sceneObjects.Select(x => x.Value.GetTransformed()).Where(x=>x is Mesh);
+            return sceneObjects.Select(x => x.Value.GetTransformed(Camera)).Where(x=>x is Mesh);
         }
 
         public void Clear()
@@ -68,8 +63,6 @@ namespace Tools.Scene
                 i++;
             }
             obj.Name = figureName.ToString();
-            obj.Transform.Translate(-1 * Camera.position);
-            obj.Transform.Rotate(-1 * Camera.rotation);
             sceneObjects.Add(obj.Id, obj);
 
             if (obj.Local is Light)
@@ -88,7 +81,7 @@ namespace Tools.Scene
             return sceneObjects[id];
         }
 
-        float Interpolate(float x0, float y0, float x1, float y1, float i)
+        private float Interpolate(float x0, float y0, float x1, float y1, float i)
         {
             if (Math.Abs(x0 - x1) < 1e-5)
                 return (y0 + y1) / 2;
@@ -150,11 +143,12 @@ namespace Tools.Scene
                 for (int i = 0; i < fs.Width * fs.Height; ++i)
                     buff[i] = new Point3D(0, 0, float.MaxValue);
                 var meshes = GetAllTransformedMeshes();
+                Light transformedLight = (Light)Light.GetTransformed(Camera);
                 if (meshes.Count() > 0)
                 {
                     foreach (var obj in meshes)
                     {
-                        (obj as Mesh).CalculateLambert(Light.Transform.position, Camera);
+                        (obj as Mesh).CalculateLambert(transformedLight.position, Camera);
                         (obj as Mesh).CalculateZBuffer(Camera, buff);
                         
                     }
@@ -182,12 +176,12 @@ namespace Tools.Scene
         {
             foreach (SceneObject obj in systemObjects.Values)
             {
-                Primitive m = obj.GetTransformed();
+                Primitive m = obj.GetTransformed(Camera);
                 m.Draw(g, Camera, pr);
             }
             foreach (SceneObject obj in sceneObjects.Values)
             {
-                Primitive m = obj.GetTransformed();
+                Primitive m = obj.GetTransformed(Camera);
                 //TODO move figure in all projections ??
                 //if (pr == Projection.PERSPECTIVE)
                 m.Draw(g, Camera, pr);
@@ -197,27 +191,13 @@ namespace Tools.Scene
         public void MoveCamera(Point3D vec)
         {
             Camera.Translate(vec);
-            foreach (SceneObject obj in systemObjects.Values)
-            {
-                obj.Transform.Translate(-1 * vec);
-            }
-            foreach (SceneObject obj in sceneObjects.Values)
-            {
-                obj.Transform.Translate(-1 * vec);
-            }
+            //TODO some magic here?
         }
 
         public void RotateCamera(Point3D vec)
         {
             Camera.Rotate(vec);
-            foreach (SceneObject obj in systemObjects.Values)
-            {
-                obj.Transform.Rotate(-1 * vec);
-            }
-            foreach (SceneObject obj in sceneObjects.Values)
-            {
-                obj.Transform.Rotate(-1 * vec);
-            }
+            //TODO some magic here?
         }
     }
 }

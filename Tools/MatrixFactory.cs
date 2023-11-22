@@ -86,6 +86,15 @@ namespace Tools
               new float[4] {tx, ty, tz, 1}
             };
         }
+
+        /// <summary>
+        /// Матриица аффинного преобразования - перенос
+        /// </summary>
+        public static float[][] MatrixTranslate(Point3D vec)
+        {
+            return MatrixTranslate(vec.X, vec.Y, vec.Z);
+        }
+
         /// <summary>
         /// Матриица аффинного преобразования - масштабирование
         /// </summary>
@@ -97,6 +106,14 @@ namespace Tools
               new float[4] {0,  0,  kz,  0},
               new float[4] {0, 0, 0, 1}
             };
+        }
+
+        /// <summary>
+        /// Матриица аффинного преобразования - масштабирование
+        /// </summary>
+        public static float[][] MatrixScale(Point3D vec)
+        {
+            return MatrixScale(vec.X, vec.Y, vec.Z);
         }
         /// <summary>
         /// Матриица аффинного преобразования - поворот
@@ -148,6 +165,16 @@ namespace Tools
                     };
                     break;
             }
+            return res;
+        }
+
+        /// <summary>
+        /// Матриица аффинного преобразования - поворот
+        /// </summary>
+        public static float[][] MatrixRotate(Point3D vec)
+        {
+            float[][] res = MatrixProduct(MatrixRotate(vec.X, Axis.AXIS_X), MatrixRotate(vec.Y, Axis.AXIS_Y));
+            res = MatrixProduct(res, MatrixRotate(vec.Z, Axis.AXIS_Z));
             return res;
         }
 

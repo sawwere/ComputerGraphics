@@ -45,6 +45,13 @@ namespace Tools.Primitives
             return new Edge2D(new Point2D(p1), new Point2D(p2));
         }
 
+        public Edge3D(Point3D org, Point3D dest)
+        {
+            Origin = org;
+            Destination = dest;
+            Color = Color.Black;
+        }
+
         public Edge3D(Point3D org, Point3D dest, Color color)
         {
             Origin = org;
@@ -101,7 +108,7 @@ namespace Tools.Primitives
             Destination.Rotate(angle, a, line);
         }
 
-        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0, Pen pen = null)
+        public override void Draw(Graphics g, Scene.Camera camera, Projection pr = 0)
         {
             var p1 = new PointF(0, 0);
             var p2 = new PointF(0, 0);
@@ -128,9 +135,15 @@ namespace Tools.Primitives
                     p2 = Destination.GetPerspectiveProj(camera);
                     break;
             }
-
-            if (Origin.Z > 0 && Destination.Z > 0)
+            var len = (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y);
+            if (Origin.Z > 0 && Destination.Z > 0 && Math.Abs(p1.Y) < 1000 && Math.Abs(p2.Y) < 1000)
                 g.DrawLine(new Pen(Color, 2), p1, p2);
+        }
+
+        public override void Apply(float[][] transform)
+        {
+            Origin.Apply(transform);
+            Destination.Apply(transform);
         }
     }
 }

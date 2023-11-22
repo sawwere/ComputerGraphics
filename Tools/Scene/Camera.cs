@@ -1,4 +1,5 @@
-﻿using Tools.Primitives;
+﻿using System;
+using Tools.Primitives;
 
 namespace Tools.Scene
 {
@@ -43,6 +44,14 @@ namespace Tools.Scene
         public void Rotate(Point3D vec)
         {
             rotation += vec;
+            if (rotation.X > 90)
+            {
+                rotation.X = 90.0f;
+            } else if (rotation.X < -90.0f)
+            {
+                rotation.X = -90.0f;
+            }
+                
         }
     }
 }

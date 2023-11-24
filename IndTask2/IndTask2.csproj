@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,29 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormRotationFigure.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormRotationFigure.Designer.cs">
-      <DependentUpon>FormRotationFigure.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Inspector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Inspector.Designer.cs">
-      <DependentUpon>Inspector.cs</DependentUpon>
-    </Compile>
+    <Compile Include="FastBitmap.cs" />
+    <Compile Include="Light.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Material.cs" />
+    <Compile Include="MatrixFactory.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Inspector.resx">
-      <DependentUpon>Inspector.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Ray.cs" />
+    <Compile Include="SceneBuilder.cs" />
+    <Compile Include="Sphere.cs" />
+    <Compile Include="Vector3.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

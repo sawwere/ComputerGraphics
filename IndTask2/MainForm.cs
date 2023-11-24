@@ -8,551 +8,253 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Tools.FastBitmap;
-using Tools.Primitives;
-using Tools;
-using Tools.Scene;
-using Tools.Meshes;
-
 
 namespace IndTask2
 {
     public partial class MainForm : Form
     {
-        private FormRotationFigure rotationFigure = new FormRotationFigure();
+        public enum Axis { AXIS_X, AXIS_Y, AXIS_Z };
+        public enum MaterialType { WALL, MIRROR, TRANSPARENT};
 
-        Graphics g;
-        Projection projection = Projection.ORTHOGR_X;
-        Edge3D line_1;
+        public List<Mesh> scene = new List<Mesh>();
 
-        private float startAxisValue = 0;
-        private float deltaAxis = 0;
-        private enum DeltaAxis { X, Y, Z, None };
-        private DeltaAxis curDeltaAxis = DeltaAxis.None;
+        public List<Light> lights = new List<Light>();   // список источников света
 
-        private Scene scene;
-        private Camera camera;
-
-        SceneObject figure = null;
-
-        private void radioButtonScene_Click(object sender, EventArgs e)
-        {
-            figure = scene.GetObject((Guid)((RadioButton)sender).Tag);
-            inspector.GetUpdate(figure);
-        }
-
-        private void AddToHierarchy(string name, Guid id)
-        {
-            RadioButton rb = new RadioButton();
-            rb.Tag = id;
-            rb.Name = name;
-            rb.Checked = false;
-            rb.Text = rb.Name;
-            rb.Width = panelSceneHierarchy.Width - 40;
-            rb.Height = 30;
-            rb.Location = new Point(15, panelSceneHierarchy.Controls.Count * (rb.Height));
-            rb.Click += radioButtonScene_Click;
-            panelSceneHierarchy.Controls.Add(rb);
-        }
-
-        public void UpdateHierarchy()
-        {
-            var selected = 0;
-            if (scene.Count() <= panelSceneHierarchy.Controls.Count)
-            {
-                int i = 0;
-                foreach (RadioButton r in panelSceneHierarchy.Controls)
-                {
-                    if (r.Checked)
-                    {
-                        selected = i;
-                        break;
-                    }
-                    i++;
-                }
-            }
-            else
-            {
-                selected = panelSceneHierarchy.Controls.Count;
-            }
-            panelSceneHierarchy.Controls.Clear();
-            foreach (var pair in scene.GetAllSceneObjects())
-            {
-                AddToHierarchy(pair.Value.Name, pair.Value.Id);
-            }
-            (panelSceneHierarchy.Controls[selected] as RadioButton).Checked = true;
-        }
+        public const float ROOM_SIZE = 1f + 0.0f;
+        public Random rand = new Random();
 
         public MainForm()
         {
             InitializeComponent();
-            AddOwnedForm(rotationFigure);
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(pictureBox1.Image);
-            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
-            g.ScaleTransform(1, -1);
-            camera = new Camera(pictureBox1.Width, pictureBox1.Height, new Point3D(0, 0, -3),
-                new Point3D(0, 0, 0), new Point3D(0, 0, 1));
-            scene = new Scene(camera);
-
-            var polygons = new List<Triangle3D>();
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(1, 1, -1)));
-
-            polygons.Add(new Triangle3D(new Point3D(-1, 1, -1), new Point3D(1, 1, 1), new Point3D(-1, 1, 1)));
-            var mesh = new Mesh(polygons);
-            mesh = MeshBuilder.make_hexahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Гексаэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            comboBoxProjection.SelectedIndex = 0;
-            comboBoxRenderMode.SelectedIndex = 0;
-            buttonApplyTransform.Select();
             Render();
         }
 
-        private void AddMeshToScene()
+        public void Clear()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog1.Filter = "Stl files (*.stl)|*.stl|All files (*.*)|*.*";
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-
-                    try
-                    {
-                        var filename = openFileDialog1.FileName;
-                        figure = new SceneObject(Tools.Meshes.MeshBuilder.LoadFromFile(filename));
-
-                        StringBuilder figureName = new StringBuilder();
-                        figureName.Append(filename.Split('\\').Last().Split('.').First());
-                        figure.Name = figureName.ToString();
-                        scene.AddObject(figure);
-                        UpdateHierarchy();
-
-                        Render();
-                    }
-                    catch
-                    {
-                        DialogResult result = MessageBox.Show("Could not open file",
-                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
+            scene.Clear();
+            lights.Clear();
         }
 
         public void Render()
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            var cameraPos = new Vector3(0, 0, 1);
             stopWatch.Start();
-            Color backgroundColor = Color.LightGray;
-            g.Clear(backgroundColor);
-            switch (comboBoxRenderMode.SelectedIndex)
+
+            var bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            
+            Color[] buffer = new Color[pictureBox1.Width * pictureBox1.Height];
             {
-                case 0:
-                    scene.Render(g, projection);
-                    break;
-                case 2:
-                    pictureBox1.Image = scene.RasterizedRender(projection);
-                    break;
+                Parallel.For(0, pictureBox1.Height, y =>
+                {
+                    for (int x = 0; x < pictureBox1.Width; x++)
+                    {
+                        var xx = Interpolate(0, -1, pictureBox1.Width, 1, x);
+                        var yy = Interpolate(0, 1, pictureBox1.Height, -1, y);
+                        var pixel = new Vector3(xx, yy, 0);
+
+                        Ray r = new Ray(cameraPos.Clone(), pixel);
+                        Vector3 clr = BackwardRayTrace(r, 3);
+                        if (clr.X > 1.0f || clr.Y > 1.0f || clr.Z > 1.0f)
+                        {
+                            clr = clr.Normalize();
+                        }
+                        buffer[x + y * pictureBox1.Width] = Color.FromArgb((int)(255 * clr.X), (int)(255 * clr.Y), (int)(255 * clr.Z));
+                    }
+                });
             }
 
+            using (var fb = new FastBitmap.FastBitmap(bitmap))
+            {
+                
+                for (int y = 0; y < pictureBox1.Height; y++)
+                {
+                    for (int x = 0; x < pictureBox1.Width; x++)
+                    {
+                        fb[x, y] = buffer[x + y * pictureBox1.Width];
+                    }
+                }
+            }
+            pictureBox1.Image = bitmap;
             pictureBox1.Refresh();
-            stopWatch.Stop();
-            inspector.GetUpdate(figure);
+
 
             labelFPS.Text = $"FPS: {(1000.0f / stopWatch.ElapsedMilliseconds)}";
         }
 
-        private void comboBoxProjection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            projection = (Projection)comboBoxProjection.SelectedIndex;
-            Render();
-        }
-
-        private void buttonApplyTransform_Click(object sender, EventArgs e)
-        {
-            //TRANSLATE
-            float dx = float.Parse(textBoxDX.Text);
-            float dy = float.Parse(textBoxDY.Text);
-            float dz = float.Parse(textBoxDZ.Text);
-            figure.Transform.Translate(new Point3D(dx, dy, dz));
-
-            //SCALE
-            float kx = (float)numericUpDown4.Value;
-            float ky = (float)numericUpDown5.Value;
-            float kz = (float)numericUpDown6.Value;
-            Point3D oldPos = figure.Transform.position;
-            figure.Transform.Translate(-1 * figure.Transform.position);
-            figure.Transform.Scale(new Point3D(kx, ky, kz));
-            figure.Transform.Translate(oldPos);
-
-            ////ROTATE
-            figure.Transform.Translate(-1 * figure.Transform.position);
-
-            float rX = float.Parse(textBoxRX.Text);
-            float rY = float.Parse(textBoxRY.Text);
-            float rZ = float.Parse(textBoxRZ.Text);
-            figure.Transform.Rotate(new Point3D(rX, rY, rZ));
-
-            figure.Transform.Translate(oldPos);
-
-            Render();
-        }
-
-        private void buttonReflectZ_Click(object sender, EventArgs e)
-        {
-            figure.Transform.reflectY();
-            Render();
-        }
-
-        private void buttonReflectX_Click(object sender, EventArgs e)
-        {
-            figure.Transform.reflectZ();
-            Render();
-        }
-
-        private void buttonReflectY_Click(object sender, EventArgs e)
-        {
-            figure.Transform.reflectX();
-            Render();
-        }
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (figure == null)
-            {
-                return;
-            }
-            var p = new Point2D(e.X - pictureBox1.Width / 2, -(e.Y - pictureBox1.Height / 2));
-            var prx = (scene.systemObjects["axisLineX"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
-            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
-            {
-                curDeltaAxis = DeltaAxis.X;
-                startAxisValue = p.X;
-                return;
-            }
-            prx = (scene.systemObjects["axisLineY"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
-            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
-            {
-                curDeltaAxis = DeltaAxis.Y;
-                startAxisValue = -p.Y;
-                return;
-            }
-            prx = (scene.systemObjects["axisLineZ"].GetTransformed() as Edge3D).ProjectedEdge(projection, scene.Camera);
-            if (prx.Length > 0.1f && Math.Abs(p.CompareToEdge2(prx)) < 2000)
-            {
-                curDeltaAxis = DeltaAxis.Z;
-                startAxisValue = p.X;
-                return;
-            }
-        }
-
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
-        {
-            startAxisValue = 0;
-            deltaAxis = 0;
-            curDeltaAxis = DeltaAxis.None;
-        }
-
-        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (figure == null)
-            {
-                return;
-            }
-            switch (curDeltaAxis)
-            {
-                case DeltaAxis.X:
-                    {
-                        var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
-                        deltaAxis = p.X - startAxisValue;
-                        startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(deltaAxis / 100, 0, 0));
-                        break;
-                    }
-                case DeltaAxis.Y:
-                    {
-                        var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
-                        deltaAxis = p.Y - startAxisValue;
-                        startAxisValue = p.Y;
-                        figure.Transform.Translate(new Point3D(0, -deltaAxis / 100, 0));
-                        break;
-                    }
-                case DeltaAxis.Z:
-                    {
-                        var p = new Point2D(e.X - pictureBox1.Width / 2, e.Y - pictureBox1.Height / 2);
-                        deltaAxis = p.X - startAxisValue;
-                        startAxisValue = p.X;
-                        figure.Transform.Translate(new Point3D(0, 0, deltaAxis / 100));
-                        break;
-                    }
-                default:
-                    return;
-            }
-            Render();
-        }
         private void pictureBox1_SizeChanged(object sender, EventArgs e)
         {
             if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
                 return;
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(pictureBox1.Image);
-            g.TranslateTransform(pictureBox1.ClientSize.Width / 2, pictureBox1.ClientSize.Height / 2);
-            g.ScaleTransform(1, -1);
-
-            scene.Camera.Width = pictureBox1.Width;
-            scene.Camera.Height = pictureBox1.Height;
             Render();
         }
 
-        private void textBoxDX_TextChanged(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            TextBox tb = sender as TextBox;
-            if (tb.Text == "")
-                tb.Text = "0";
+            Clear();
+            BuildScene();
+            Render();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        public void BuildScene()
         {
-            ResetHierarchy();
-            AddMeshToScene();
-        }
-
-        private void buttonRotateFigure_Click(object sender, EventArgs e)
-        {
-            if (rotationFigure.ShowDialog() == DialogResult.OK)
+            Light l1 = new Light(new Vector3(0f, 0.98f, -0.0f), new Vector3(1f, 1f, 1f));
+            lights.Add(l1);
+            if (checkBoxLight.Checked)
             {
-                var list = rotationFigure.GetPoints();
-                Axis axis = rotationFigure.RotaionAxis;
-                int steps = rotationFigure.Steps;
-                //TODO
-                //figure.Local = "создание фигуры вращения"
-                Mesh mesh;
-                List<Point3D> points = new List<Point3D>();
-                foreach (var p in list)
+                float x = ((float)numericUpDownX.Value / 100);
+                float y = ((float)numericUpDownY.Value / 100);
+                float z = ((float)numericUpDownZ.Value / 100);
+                Light l2 = new Light(new Vector3(x, y, z), new Vector3(1f, 1f, 1f));
+                lights.Add(l2);
+            }
+
+
+            var sb = new SceneBuilder(ROOM_SIZE);
+            sb.AddForwardWall(Color.Pink, checkedListBox1.CheckedIndices.Contains(0));
+
+            sb.AddBackWall(Color.Wheat, checkedListBox1.CheckedIndices.Contains(1));
+
+            sb.AddLeftWall(Color.Red, checkedListBox1.CheckedIndices.Contains(2));
+
+            sb.AddRightWall(Color.Aqua, checkedListBox1.CheckedIndices.Contains(3));
+
+            sb.AddUpperWall(Color.White, checkedListBox1.CheckedIndices.Contains(4));
+
+            sb.AddBottomWall(Color.Yellow, checkedListBox1.CheckedIndices.Contains(5));
+
+            
+
+            sb.AddCube(ROOM_SIZE / 2.6f, Color.Blue, 
+                cubeMirror.Checked ? MaterialType.MIRROR : MaterialType.WALL,
+                new Vector3(ROOM_SIZE / 2, -ROOM_SIZE / 1.5f, -ROOM_SIZE / 1.5f),
+                new Vector3(0, 36, 0),
+                new Vector3(1, 1, 1)
+                );
+
+            sb.AddCube(0.2f, Color.Orange,
+                cubeTransparent.Checked ? MaterialType.TRANSPARENT : MaterialType.WALL,
+                new Vector3(-ROOM_SIZE / 2f, -ROOM_SIZE / 2f, -ROOM_SIZE / 2f),
+                new Vector3(0, 0, 0),
+                new Vector3(1.43f, 3, 1f)
+                );
+
+            sb.AddSphere(new Vector3(-ROOM_SIZE / 2f, ROOM_SIZE / 2f, -ROOM_SIZE / 2f),
+                0.4f,
+                Color.RosyBrown,
+                sphereMirror.Checked ? MaterialType.MIRROR : MaterialType.WALL
+                );
+
+            sb.AddSphere(new Vector3(ROOM_SIZE / 2f, ROOM_SIZE / 2f, -ROOM_SIZE / 2f),
+                0.4f,
+                Color.DarkOrange,
+                sphereTransparent.Checked ? MaterialType.TRANSPARENT : MaterialType.WALL
+                );
+
+            foreach (var m in sb.Get())
+                scene.Add(m);
+        }
+
+        // Видима ли точка пересечения луча с фигурой из источника света
+        public bool isVisible(Vector3 light_point, Vector3 hit_point)
+        {
+            float max_t = (light_point - hit_point).Length;
+            Ray r = new Ray(hit_point, light_point);
+
+            foreach (var fig in scene)
+                if (fig.figureIntersection(r, out float t, out Vector3 n))
+                    if (t < max_t && t > 1e-4f)
+                        return false;
+            return true;
+        }
+
+        float Interpolate(float x0, float y0, float x1, float y1, float i)
+        {
+            if (Math.Abs(x0 - x1) < 1e-8)
+                return (y0 + y1) / 2;
+            return y0 + ((y1 - y0) * (i - x0)) / (x1 - x0);
+        }
+
+        public Vector3 BackwardRayTrace(Ray r, int iter)
+        {
+            float t = 0;
+            bool refract_out_of_figure = false;
+            Vector3 normal = null;
+            //вообще говоря материал изменится, если что-то найдем
+            Material m = Material.Mirror();
+            Vector3 res = new Vector3(0, 0, 0);
+            //ищем ближайшую по направлению луча фигуру и ее материал
+            foreach (var mesh in scene)
+            {
+                if (mesh.figureIntersection(r, out float intersect, out Vector3 n))
                 {
-                    points.Add(new Point3D(p.X, p.Y, 0));
-                }
-
-                mesh = MeshBuilder.BuildRotationFigure(points, axis, steps);
-
-                figure = new SceneObject(mesh);
-                figure.Name = "Rotated figure";
-                scene.AddObject(figure);
-
-                UpdateHierarchy();
-                Render();
-            }
-        }
-
-        private void buttonFunction_Click(object sender, EventArgs e)
-        {
-            Func<float, float, float> func;
-            switch (comboBox1.SelectedIndex)
-            {
-                case 0:
-                    func = (x, y) => (float)(10 * Math.Sin(x) + 10 * Math.Sin(y));
-                    break;
-                case 1:
-                    func = (x, y) => (float)(x + y);
-                    break;
-                case 2:
-                    func = (x, y) => (float)(x * x) / 100;
-                    break;
-                case 3:
-                    func = (x, y) => (float)(Math.Sign(x) * 10);
-                    break;
-                default:
-                    func = (x, y) => (float)(0);
-                    break;
-            }
-            Mesh mesh;
-            Point3D point;
-            (mesh, point) = MeshBuilder.BuildFunctionFigure((int)numericUpDown28.Value, (int)numericUpDown29.Value,
-                (int)numericUpDown27.Value, (int)numericUpDown26.Value, (int)numericUpDown30.Value, func);
-
-            figure = new SceneObject(mesh);
-            figure.Name = "x+y";
-            figure.Transform.Translate(-1 * point);
-            scene.AddObject(figure);
-
-            UpdateHierarchy();
-            Render();
-        }
-
-        private void ResetHierarchy()
-        {
-            scene.Clear();
-            figure = null;
-            panelSceneHierarchy.Controls.Clear();
-        }
-
-        private void sceneAddFromFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddMeshToScene();
-        }
-
-        private void buttonSceneClear_Click(object sender, EventArgs e)
-        {
-            ResetHierarchy();
-            Render();
-        }
-
-        private void buttonRotateAround_Click(object sender, EventArgs e)
-        {
-            float x_1 = (float)numericUpDown12.Value;
-            float y_1 = (float)numericUpDown11.Value;
-            float z_1 = (float)numericUpDown10.Value;
-
-            float x_2 = (float)numericUpDown15.Value;
-            float y_2 = (float)numericUpDown14.Value;
-            float z_2 = (float)numericUpDown13.Value;
-
-
-            line_1 = new Edge3D(new Point3D(x_1, y_1, z_1), new Point3D(x_2, y_2, z_2), Color.Purple);
-
-            float angle = (float)numericUpDown16.Value;
-            //Ничего не делает, выключил от греха подальше
-            //figure.RotateAroundAxis(angle, Axis.CUSTOM, line_1);
-
-
-            Render();
-        }
-
-        private void hexahedronToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Mesh mesh = new Mesh();
-            mesh = MeshBuilder.make_hexahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Гексаэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            Render();
-        }
-
-        private void tetrahedronToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Mesh mesh = new Mesh();
-            mesh.make_tetrahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Тетраэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            Render();
-        }
-
-        private void octahedronToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Mesh mesh = new Mesh();
-            mesh.make_octahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Октаэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            Render();
-        }
-
-        private void icosahedronToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Mesh mesh = new Mesh();
-            mesh.make_icosahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Икосаэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            Render();
-        }
-
-        private void dodecahedronToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Mesh mesh = new Mesh();
-            mesh.make_dodecahedron();
-            figure = new SceneObject(mesh);
-            figure.Name = "Додекаэдр";
-            scene.AddObject(figure);
-            UpdateHierarchy();
-
-            Render();
-        }
-
-        //
-        // CAMERA
-        //
-        private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if ((this.ActiveControl as TextBox) != null)
-            {
-                return;
-            }
-            switch (e.KeyChar)
-            {
-                case 'a':
+                    if (intersect < t || t == 0)
                     {
-                        scene.MoveCamera(new Point3D(-0.5f, 0, 0));
-                        break;
+                        t = intersect;
+                        normal = n;
+                        m = mesh.material.Clone();
                     }
-                case 'd':
-                    {
-                        scene.MoveCamera(new Point3D(0.5f, 0, 0));
-                        break;
-                    }
-                case 'w':
-                    {
-                        scene.MoveCamera(new Point3D(0, 0, 0.5f));
-                        break;
-                    }
-                case 's':
-                    {
-                        scene.MoveCamera(new Point3D(0, 0, -0.5f));
-                        break;
-                    }
-                case 'z':
-                    {
-                        scene.MoveCamera(new Point3D(0, -0.5f, 0));
-                        break;
-                    }
-                case 'x':
-                    {
-                        scene.MoveCamera(new Point3D(0, 0.5f, 0));
-                        break;
-                    }
-
-            }
-            Render();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!(figure.Local is Mesh))
-                return;
-            //TODO
-            var path = figure.Name + ".stl";
-
-
-            SaveFileDialog sfd = new SaveFileDialog();
-
-            sfd.Title = "Save as...";
-            sfd.CheckPathExists = true;
-            sfd.Filter = "STL Files(*.stl)|*.stl";
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    MeshBuilder.SaveToFile(sfd.FileName, (Mesh)figure.GetTransformed(), figure.Name);
-                }
-                catch
-                {
-                    MessageBox.Show("Error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            if (t == 0 || iter < 0)
+            {
+                return new Vector3(0.0f, 0.0f, 0.0f);
+            }
+
+            if (r.dest.DotProduct(normal) > 0)
+            {
+                normal *= -1;
+                refract_out_of_figure = true;
+            }
+            //непосредственно точка пересечения луча и фигуры
+            Vector3 hit_point = r.origin + r.dest * t;
+
+            foreach (Light l in lights)
+            {
+                Vector3 amb = l.color * m.ambient;
+                amb.X *= m.color.X;
+                amb.Y *= m.color.Y;
+                amb.Z *= m.color.Z;
+                res += amb;
+
+                if (isVisible(l.position, hit_point))
+                    res += l.Shading(hit_point, normal, m.color, m.diffuse);
+            }
+
+            if (m.reflection > 0)
+            {
+                Vector3 reflectDir = r.dest - 2 * normal * r.dest.DotProduct(normal);
+                var reflected = new Ray(hit_point, hit_point + reflectDir);
+
+                Vector3 reflectDir2 = r.dest - (2 + 0.01f*((float)rand.NextDouble() - 0.5f)) * normal * r.dest.DotProduct(normal);
+                var reflected2 = reflected = new Ray(hit_point, hit_point + reflectDir2);
+
+                //reflected2.dest = new Vector3(
+                //    reflected2.dest.X + (float)(rand.NextDouble() - 0.5) * 1e-6f,
+                //    reflected2.dest.Y + (float)(rand.NextDouble() - 0.5) * 1e-6f,
+                //    reflected2.dest.Z + (float)(rand.NextDouble() - 0.5) * 1e-6f);
+                res += m.reflection * BackwardRayTrace(reflected, iter - 1);
+                //res += m.reflection * RayTrace(reflected2, iter-1) * 1e-1f;
+            }
+
+            if (m.refraction > 0)
+            {
+                float eta;
+                if (refract_out_of_figure)
+                    eta = m.environment;
+                else
+                    eta = 1 / m.environment;
+
+                Ray refracted_ray = r.Refract(hit_point, normal, eta);
+                if (refracted_ray != null)
+                    res += m.refraction * BackwardRayTrace(refracted_ray, iter - 1/*, m.environment*/);
+            }
+
+            return res;
         }
     }
 }

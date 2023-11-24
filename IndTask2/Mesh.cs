@@ -144,7 +144,7 @@ namespace IndTask2
         }
 
 
-        public virtual bool figureIntersection(Ray r, out float intersectParam, out Vector3 normal)
+        public virtual bool Intersection(Ray r, out float intersectParam, out Vector3 normal)
         {
             intersectParam = 0;
             normal = null;
@@ -155,7 +155,7 @@ namespace IndTask2
                 bool tt = triangle_intersection(r.origin, r.dest, Vertexes[Faces[i][0]], Vertexes[Faces[i][1]], Vertexes[Faces[i][2]], out float param);
                 if ((intersectParam == 0 || param < intersectParam) && tt)
                 {
-                    intersectParam = param - 1e-6f;
+                    intersectParam = param - 1e-4f;
                     side = i;
                 }
             }

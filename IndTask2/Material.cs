@@ -64,7 +64,7 @@ namespace IndTask2
 
         public static Material Transparent()
         {
-            return new Material(0.0f, 0.9f, 0.0f, 0.8f, 1.03f, new Vector3(1, 1, 1));
+            return new Material(0.0f, 0.9f, 0.0f, 0.1f, 1.03f, new Vector3(1, 1, 1));
         }
     }
 }

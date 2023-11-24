@@ -14,19 +14,17 @@ namespace IndTask2
     public partial class MainForm : Form
     {
         public enum Axis { AXIS_X, AXIS_Y, AXIS_Z };
-        public enum MaterialType { WALL, MIRROR, TRANSPARENT};
+        public enum MaterialType { WALL, MIRROR, TRANSPARENT };
 
         public List<Mesh> scene = new List<Mesh>();
 
         public List<Light> lights = new List<Light>();   // список источников света
-
-        public const float ROOM_SIZE = 1f + 0.0f;
+        public const float ROOM_SIZE = 1f;
         public Random rand = new Random();
 
         public MainForm()
         {
             InitializeComponent();
-
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             Render();
         }
@@ -44,7 +42,7 @@ namespace IndTask2
             stopWatch.Start();
 
             var bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            
+
             Color[] buffer = new Color[pictureBox1.Width * pictureBox1.Height];
             {
                 Parallel.For(0, pictureBox1.Height, y =>
@@ -56,7 +54,7 @@ namespace IndTask2
                         var pixel = new Vector3(xx, yy, 0);
 
                         Ray r = new Ray(cameraPos.Clone(), pixel);
-                        Vector3 clr = BackwardRayTrace(r, 3);
+                        Vector3 clr = BackwardRayTrace(r, 4);
                         if (clr.X > 1.0f || clr.Y > 1.0f || clr.Z > 1.0f)
                         {
                             clr = clr.Normalize();
@@ -68,7 +66,7 @@ namespace IndTask2
 
             using (var fb = new FastBitmap.FastBitmap(bitmap))
             {
-                
+
                 for (int y = 0; y < pictureBox1.Height; y++)
                 {
                     for (int x = 0; x < pictureBox1.Width; x++)
@@ -126,9 +124,9 @@ namespace IndTask2
 
             sb.AddBottomWall(Color.Yellow, checkedListBox1.CheckedIndices.Contains(5));
 
-            
 
-            sb.AddCube(ROOM_SIZE / 2.6f, Color.Blue, 
+
+            sb.AddCube(ROOM_SIZE / 2.6f, Color.Blue,
                 cubeMirror.Checked ? MaterialType.MIRROR : MaterialType.WALL,
                 new Vector3(ROOM_SIZE / 2, -ROOM_SIZE / 1.5f, -ROOM_SIZE / 1.5f),
                 new Vector3(0, 36, 0),
@@ -137,7 +135,7 @@ namespace IndTask2
 
             sb.AddCube(0.2f, Color.Orange,
                 cubeTransparent.Checked ? MaterialType.TRANSPARENT : MaterialType.WALL,
-                new Vector3(-ROOM_SIZE / 2f, -ROOM_SIZE / 2f, -ROOM_SIZE / 2f),
+                new Vector3(-ROOM_SIZE / 2f, -ROOM_SIZE / 1.8f, -ROOM_SIZE / 2f),
                 new Vector3(0, 0, 0),
                 new Vector3(1.43f, 3, 1f)
                 );
@@ -165,7 +163,7 @@ namespace IndTask2
             Ray r = new Ray(hit_point, light_point);
 
             foreach (var fig in scene)
-                if (fig.figureIntersection(r, out float t, out Vector3 n))
+                if (fig.Intersection(r, out float t, out Vector3 n))
                     if (t < max_t && t > 1e-4f)
                         return false;
             return true;
@@ -189,7 +187,7 @@ namespace IndTask2
             //ищем ближайшую по направлению луча фигуру и ее материал
             foreach (var mesh in scene)
             {
-                if (mesh.figureIntersection(r, out float intersect, out Vector3 n))
+                if (mesh.Intersection(r, out float intersect, out Vector3 n))
                 {
                     if (intersect < t || t == 0)
                     {
@@ -229,16 +227,15 @@ namespace IndTask2
             {
                 Vector3 reflectDir = r.dest - 2 * normal * r.dest.DotProduct(normal);
                 var reflected = new Ray(hit_point, hit_point + reflectDir);
-
-                Vector3 reflectDir2 = r.dest - (2 + 0.01f*((float)rand.NextDouble() - 0.5f)) * normal * r.dest.DotProduct(normal);
+                // UGA BUGA??
+                Vector3 reflectDir2 = r.dest - (2 + 0.1f * ((float)rand.NextDouble() - 0.5f)) * normal * r.dest.DotProduct(normal);
                 var reflected2 = reflected = new Ray(hit_point, hit_point + reflectDir2);
-
                 //reflected2.dest = new Vector3(
                 //    reflected2.dest.X + (float)(rand.NextDouble() - 0.5) * 1e-6f,
                 //    reflected2.dest.Y + (float)(rand.NextDouble() - 0.5) * 1e-6f,
                 //    reflected2.dest.Z + (float)(rand.NextDouble() - 0.5) * 1e-6f);
                 res += m.reflection * BackwardRayTrace(reflected, iter - 1);
-                //res += m.reflection * RayTrace(reflected2, iter-1) * 1e-1f;
+                res += m.reflection * BackwardRayTrace(reflected2, iter-1) * 1e-1f;
             }
 
             if (m.refraction > 0)
@@ -248,13 +245,14 @@ namespace IndTask2
                     eta = m.environment;
                 else
                     eta = 1 / m.environment;
-
+                hit_point = r.origin + r.dest * (t + 1e-4f);
                 Ray refracted_ray = r.Refract(hit_point, normal, eta);
                 if (refracted_ray != null)
-                    res += m.refraction * BackwardRayTrace(refracted_ray, iter - 1/*, m.environment*/);
+                    res += m.refraction * BackwardRayTrace(refracted_ray, iter - 1);
             }
 
             return res;
         }
     }
+
 }

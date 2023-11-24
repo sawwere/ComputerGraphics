@@ -94,11 +94,6 @@ namespace IndTask2
             this.numericUpDownZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDownZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.numericUpDownZ.ForeColor = System.Drawing.Color.SeaShell;
-            this.numericUpDownZ.Increment = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.numericUpDownZ.Location = new System.Drawing.Point(307, 21);
             this.numericUpDownZ.Minimum = new decimal(new int[] {
             100,
@@ -114,11 +109,6 @@ namespace IndTask2
             this.numericUpDownY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDownY.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.numericUpDownY.ForeColor = System.Drawing.Color.SeaShell;
-            this.numericUpDownY.Increment = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.numericUpDownY.Location = new System.Drawing.Point(215, 22);
             this.numericUpDownY.Minimum = new decimal(new int[] {
             100,
@@ -134,11 +124,6 @@ namespace IndTask2
             this.numericUpDownX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(42)))));
             this.numericUpDownX.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.numericUpDownX.ForeColor = System.Drawing.Color.SeaShell;
-            this.numericUpDownX.Increment = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.numericUpDownX.Location = new System.Drawing.Point(123, 22);
             this.numericUpDownX.Minimum = new decimal(new int[] {
             100,

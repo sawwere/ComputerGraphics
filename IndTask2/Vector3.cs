@@ -64,6 +64,8 @@ namespace IndTask2
         /// </summary>
         public Vector3 Normalize()
         {
+            if (Length == 0)
+                return new Vector3(0, 0, 0);
             return (1 / this.Length) * this;
         }
 
@@ -71,11 +73,6 @@ namespace IndTask2
         {
             return new Vector3(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
         }
-
-        //public static Vector3 operator *(Vector3 p1, Vector3 p2)
-        //{
-        //    return new Vector3(p1.Y * p2.Z - p1.Z * p2.Y, p1.Z * p2.X - p1.X * p2.Z, p1.X * p2.Y - p1.Y * p2.X);
-        //}
 
         public static Vector3 operator *(float t, Vector3 p1)
         {
@@ -86,26 +83,6 @@ namespace IndTask2
         public static Vector3 operator *(Vector3 p1, float t)
         {
             return new Vector3(p1.X * t, p1.Y * t, p1.Z * t);
-        }
-
-        public static Vector3 operator -(Vector3 p1, float t)
-        {
-            return new Vector3(p1.X - t, p1.Y - t, p1.Z - t);
-        }
-
-        public static Vector3 operator -(float t, Vector3 p1)
-        {
-            return new Vector3(t - p1.X, t - p1.Y, t - p1.Z);
-        }
-
-        public static Vector3 operator +(Vector3 p1, float t)
-        {
-            return new Vector3(p1.X + t, p1.Y + t, p1.Z + t);
-        }
-
-        public static Vector3 operator +(float t, Vector3 p1)
-        {
-            return new Vector3(p1.X + t, p1.Y + t, p1.Z + t);
         }
 
         public static Vector3 operator /(Vector3 p1, float t)

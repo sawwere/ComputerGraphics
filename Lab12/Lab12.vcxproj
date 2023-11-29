@@ -127,10 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Lab12.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="task2.cpp" />
+    <ClCompile Include="task3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lab12.h" />
+    <ClInclude Include="ShaderProgram.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -203,6 +203,8 @@ namespace Tools.Primitives
         public PointF GetPerspectiveProj(Scene.Camera camera)
         {
             Point3D p = GetPerspective(camera);
+            if (p.Z > 1)
+                return new PointF(0, 0);
             return new PointF(p.X*camera.Width, p.Y*camera.Height);
         }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
 
 using Tools.FastBitmap;
 using Tools.Primitives;
@@ -31,11 +32,11 @@ namespace Lab6
         private float deltaAxis = 0;
         private enum DeltaAxis { X, Y, Z, None };
         private DeltaAxis curDeltaAxis = DeltaAxis.None;
-
         private Scene scene;
         private Camera camera;
 
         SceneObject figure = null;
+        Bitmap texture = new Bitmap("../../texture5.jpg");
 
         private void radioButtonScene_Click(object sender, EventArgs e)
         {
@@ -118,6 +119,9 @@ namespace Lab6
             comboBoxRenderMode.SelectedIndex = 0;
             buttonApplyTransform.Select();
             Render();
+
+            
+        
         }
 
         private void AddMeshToScene()
@@ -166,6 +170,9 @@ namespace Lab6
                     break;
                 case 2:
                     pictureBox1.Image = scene.GourodRender(projection);
+                    break;
+                case 3:
+                    pictureBox1.Image = scene.show_texture(pictureBox1, g, texture);
                     break;
             }
 
@@ -605,5 +612,5 @@ namespace Lab6
         {
             floatingHorizon.Show();
         }
-    }
+	}
 }

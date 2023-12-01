@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using Tools.Primitives;
@@ -13,7 +14,11 @@ namespace Tools.Scene
         private Dictionary<Guid, SceneObject> sceneObjects;
         public SceneObject Light;
         public Camera Camera { get; private set; }
-        
+
+
+
+
+
         public Scene(Camera camera)
         {
             sceneObjects = new Dictionary<Guid, SceneObject>();
@@ -40,7 +45,7 @@ namespace Tools.Scene
 
         private IEnumerable<Primitive> GetAllTransformedMeshes()
         {
-            return sceneObjects.Select(x => x.Value.GetTransformed(Camera)).Where(x=>x is Mesh);
+            return sceneObjects.Select(x => x.Value.GetTransformed(Camera)).Where(x => x is Mesh);
         }
 
         public void Clear()
@@ -50,14 +55,14 @@ namespace Tools.Scene
 
         public int Count()
         {
-             return sceneObjects.Count;
+            return sceneObjects.Count;
         }
 
         public void AddObject(SceneObject obj)
         {
             StringBuilder figureName = new StringBuilder(obj.Name);
             int i = 1;
-            while (sceneObjects.Any(x=>x.Value.Name==figureName.ToString()))
+            while (sceneObjects.Any(x => x.Value.Name == figureName.ToString()))
             {
                 figureName.Append(i);
                 i++;
@@ -91,7 +96,6 @@ namespace Tools.Scene
         public Bitmap RasterizedRender(Projection pr)
         {
             var bitmap = new Bitmap(Camera.Width, Camera.Height);
-            
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
                 Point3D[] buff = new Point3D[fs.Width * fs.Height];
@@ -104,7 +108,7 @@ namespace Tools.Scene
                     {
                         (obj as Mesh).CalculateZBuffer(Camera, buff);
                     }
-                    var filtered = buff.Select(x=>x.Z).Where(z => z < float.MaxValue);
+                    var filtered = buff.Select(x => x.Z).Where(z => z < float.MaxValue);
                     if (filtered.Count() > 0)
                     {
                         var maxZ = filtered.Max();
@@ -135,7 +139,7 @@ namespace Tools.Scene
 
         public Bitmap GourodRender(Projection pr)
         {
-            
+
             var bitmap = new Bitmap(Camera.Width, Camera.Height);
             using (var fs = new FastBitmap.FastBitmap(bitmap))
             {
@@ -150,7 +154,7 @@ namespace Tools.Scene
                     {
                         (obj as Mesh).CalculateLambert(transformedLight.position, Camera);
                         (obj as Mesh).CalculateZBuffer(Camera, buff);
-                        
+
                     }
                     for (int x = 0; x < fs.Width; x++)
                         for (int y = 0; y < fs.Height; y++)
@@ -158,8 +162,8 @@ namespace Tools.Scene
                             var cd = buff[x + fs.Width * y];
                             if (cd.Z < float.MaxValue)
                             {
-                                fs[x, y] = Color.FromArgb((int)(255 * cd.illumination), 
-                                    (int)(0 * cd.illumination), 
+                                fs[x, y] = Color.FromArgb((int)(255 * cd.illumination),
+                                    (int)(0 * cd.illumination),
                                     (int)(0 * cd.illumination));
                             }
                             else
@@ -199,5 +203,91 @@ namespace Tools.Scene
             Camera.Rotate(vec);
             //TODO some magic here?
         }
+        
+        public Bitmap show_texture(System.Windows.Forms.PictureBox pictureBox1, Graphics g, Bitmap texture)
+        {
+            float[,] zBuffer;
+            Color[,] frameBuffer;
+            zBuffer = new float[pictureBox1.Width, pictureBox1.Height];
+            frameBuffer = new Color[pictureBox1.Width, pictureBox1.Height];
+
+            for (int x = 0; x < pictureBox1.Width; x++)
+            {
+                for (int y = 0; y < pictureBox1.Height; y++)
+                {
+                    zBuffer[x, y] = float.MaxValue;
+                    frameBuffer[x, y] = pictureBox1.BackColor;
+                }
+            }
+            g.Clear(pictureBox1.BackColor);
+            var map = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+
+            
+            var meshes = GetAllTransformedMeshes();
+            if (meshes.Count() > 0)
+            {
+                foreach (var obj in meshes)
+                {
+                    (obj as Mesh).texturing(map, Camera, texture, zBuffer, frameBuffer);
+                }               
+                
+            }
+
+            for (int i = 0; i < pictureBox1.Width; i++)
+                for (int j = 0; j < pictureBox1.Height; j++)
+                    map.SetPixel(i, j, frameBuffer[i, j]);
+            return map;
+        }
+        /*
+        public byte[] rgbValuesTexture; // for picturebox and texture
+        public byte[] rgbValues;
+        public BitmapData bmpDataTexture; // for picturebox and texture
+        public IntPtr ptr; // pointer to the rgbValues
+        public int bytes; // length of rgbValues
+        public Bitmap texture;
+        public BitmapData bmpData;
+        public Bitmap bmp;
+
+        
+        public Bitmap show_texture()
+        {
+            if (bmp != null)
+                bmp.Dispose();
+            rgbValues = getRGBValues(out bmp, out bmpData, out ptr, out bytes);
+            (GetAllTransformedMeshes().First() as Mesh).ApplyTexture(bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture, Camera);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(bmpData);
+            return bmp;
+        }
+
+        public byte[] getRGBValues(out Bitmap bmp, out BitmapData bmpData,
+           out IntPtr ptr, out int bytes)
+        {
+            bmp = new Bitmap(Camera.Width, Camera.Height, PixelFormat.Format24bppRgb);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmpData =
+                bmp.LockBits(rect, ImageLockMode.ReadWrite,
+                bmp.PixelFormat);
+
+            // Get the address of the first line.
+            ptr = bmpData.Scan0;
+            
+            // Declare an array to hold the bytes of the bitmap.
+            bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+            byte[] rgb_values = new byte[bytes];
+
+            // Create rgb array with background color
+            for (int i = 0; i < bytes - 3; i += 3)
+            {
+                rgb_values[i] = 64;
+                rgb_values[i + 1] = 64;
+                rgb_values[i + 2] = 64;
+            }
+
+            return rgb_values;
+        }*/
     }
 }

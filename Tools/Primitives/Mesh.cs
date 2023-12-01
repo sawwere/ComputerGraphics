@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -408,5 +409,328 @@ namespace Tools.Primitives
                 Vertexes[i].Apply(transform);
             }
         }
+        public void texturing(Bitmap map, Scene.Camera camera, Bitmap texture, float[,] zBuffer, Color[,] frameBuffer)
+		{
+            foreach (Triangle3D polygon in get_polygons())
+            {
+                Point3D[] polygonVertex = new Point3D[3];
+                for (int i = 0; i < 3; i++)
+                    polygonVertex[i] = polygon[i].Clone();
+
+                PointF[] textureVertex = new PointF[3];
+                textureVertex[0] = new PointF(0, 0);
+                textureVertex[1] = new PointF(0, 1);
+                textureVertex[2] = new PointF(1, 0);
+                
+                var p1 = polygonVertex[0];
+                p1.X = (int)p1.GetPerspectiveProj(camera).X;
+                p1.Y = (int)p1.GetPerspectiveProj(camera).Y;
+                p1.Z = (int)(p1.Z );
+
+                var p2 = polygonVertex[1];
+                p2.X = (int)p2.GetPerspectiveProj(camera).X;
+                p2.Y = (int)p2.GetPerspectiveProj(camera).Y;
+                p2.Z = (int)(p2.Z );
+
+                var p3 = polygonVertex[2];
+                p3.X = (int)p3.GetPerspectiveProj(camera).X;
+                p3.Y = (int)p3.GetPerspectiveProj(camera).Y;
+                p3.Z = (int)(p3.Z );
+                ConvertToRasterWithTexture(ref p1, ref p2, ref p3, textureVertex[0], textureVertex[1], textureVertex[2], texture, zBuffer, frameBuffer);
+            }
+            
+        }
+
+        private void ConvertToRasterWithTexture(ref Point3D p0, ref Point3D p1, ref Point3D p2, PointF tp0, PointF tp1, PointF tp2, Bitmap texture, float[,] zBuffer, Color[,] frameBuffer)
+        {
+            if (p1.Y < p0.Y)
+            {
+                var temp = p0;
+                p0 = p1;
+                p1 = temp;
+            }
+
+            if (p2.Y < p0.Y)
+            {
+                var temp = p0;
+                p0 = p2;
+                p2 = temp;
+            }
+
+            if (p2.Y < p1.Y)
+            {
+                var temp = p2;
+                p2 = p1;
+                p1 = temp;
+            }
+
+            var x01 = InterpolateList((int)p0.Y, (int)p0.X, (int)p1.Y, (int)p1.X);
+            var x12 = InterpolateList((int)p1.Y, (int)p1.X, (int)p2.Y, (int)p2.X);
+            var x02 = InterpolateList((int)p0.Y, (int)p0.X, (int)p2.Y, (int)p2.X);
+
+            var z01 = InterpolateList((int)p0.Y, (int)p0.Z, (int)p1.Y, (int)p1.Z);
+            var z12 = InterpolateList((int)p1.Y, (int)p1.Z, (int)p2.Y, (int)p2.Z);
+            var z02 = InterpolateList((int)p0.Y, (int)p0.Z, (int)p2.Y, (int)p2.Z);
+
+            var t01 = InterpolateTexture((int)p0.Y, tp0, (int)p1.Y, tp1);
+            var t12 = InterpolateTexture((int)p1.Y, tp1, (int)p2.Y, tp2);
+            var t02 = InterpolateTexture((int)p0.Y, tp0, (int)p2.Y, tp2);
+
+            x01.Remove(x01.Last());
+            List<int> x012 = new List<int>();
+            x012.AddRange(x01);
+            x012.AddRange(x12);
+
+            z01.Remove(z01.Last());
+            List<int> z012 = new List<int>();
+            z012.AddRange(z01);
+            z012.AddRange(z12);
+
+            t01.Remove(t01.Last());
+            List<PointF> t012 = new List<PointF>();
+            t012.AddRange(t01);
+            t012.AddRange(t12);
+
+            var m = x012.Count / 2;
+            List<int> x_left;
+            List<int> x_right;
+
+            List<int> z_left;
+            List<int> z_right;
+
+            List<PointF> lefttexture = new List<PointF>();
+            List<PointF> righttexture = new List<PointF>();
+
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+
+                z_left = z02;
+                z_right = z012;
+
+                lefttexture = t02;
+                righttexture = t012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+
+                z_left = z012;
+                z_right = z02;
+
+                lefttexture = t012;
+                righttexture = t02;
+            }
+
+
+            for (int y = (int)p0.Y; y < (int)p2.Y - 1; y++)
+            {
+                int x_l = x_left[(int)(y - p0.Y)];
+                int x_r = x_right[(int)(y - p0.Y)];
+
+                var z_segment = InterpolateList(x_l, z_left[(int)(y - p0.Y)], x_r, z_right[(int)(y - p0.Y)]);
+                var texture_segment = InterpolateTexture(x_l, lefttexture[(int)(y - p0.Y)], x_r, righttexture[(int)(y - p0.Y)]);
+                for (int x = x_l; x < x_r; x++)
+                {
+                    float depth = z_segment[x - x_l];
+
+                    ApplyZBufferAlgorithmWithTexture(x, y, depth, texture_segment[x - x_l],texture, zBuffer, frameBuffer);
+                }
+            }
+        }
+        private List<int> InterpolateList(int x1, int y1, int x2, int y2)
+        {
+            List<int> res = new List<int>();
+            if (x1 == x2)
+            {
+                res.Add(y2);
+            }
+            double step = (y2 - y1) * 1.0f / (x2 - x1);
+            double y = y1;
+            for (int i = x1; i <= x2; i++)
+            {
+                res.Add((int)y);
+                y += step;
+            }
+            return res;
+        }
+
+        private List<PointF> InterpolateTexture(int x1, PointF t1, int x2, PointF t2)
+        {
+            List<PointF> res = new List<PointF>();
+            if (x1 == x2)
+            {
+                res.Add(t1);
+                res.Add(t1);
+                return res;
+            }
+            PointF step = new PointF((t2.X - t1.X) / (x2 - x1), (t2.Y - t1.Y) / (x2 - x1));
+
+            PointF y = t1;
+            for (int i = x1; i <= x2; i++)
+            {
+                res.Add(y);
+                y.X += step.X;
+                y.Y += step.Y;
+            }
+            return res;
+        }
+
+        public void ApplyZBufferAlgorithmWithTexture(int x, int y, float depth, PointF color, Bitmap texture, float[,] zBuffer, Color [,] frameBuffer)
+        {
+            if ((x + (zBuffer.GetLength(1) / 2) >0)&& ((x + (zBuffer.GetLength(1)/2 ) < zBuffer.GetLength(1)))
+                && (y + (zBuffer.GetLength(0) / 2) > 0) && ((y + (zBuffer.GetLength(0) / 2) < zBuffer.GetLength(0)))) {
+                if (depth < zBuffer[x + (zBuffer.GetLength(1) / 2), y + (zBuffer.GetLength(0) / 2)])
+                {
+                    int tx = (int)(color.X * (texture.Width - 1));
+                    int ty = (int)(color.Y * (texture.Height - 1));
+                    frameBuffer[x + (zBuffer.GetLength(1) / 2), y + (zBuffer.GetLength(0) / 2)] = texture.GetPixel(tx, ty);
+                    zBuffer[x + (zBuffer.GetLength(1) / 2), y + (zBuffer.GetLength(0) / 2)] = depth;
+                }
+            }
+        }
+        /*
+        public void ApplyTexture(BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture, Scene.Camera camera)
+        {
+            foreach (var lst in Faces)
+            {
+                var f = new Triangle3D(Vertexes[lst[0]], Vertexes[lst[1]], Vertexes[lst[2]]);
+                f.FindNormal(Center, camera);
+                if (!f.IsVisible)
+                    continue;
+
+                // 3 vertices
+                Point3D P0 = f[0];
+                Point3D P1 = f[1];
+                Point3D P2 = f[2];
+                DrawTexture(P0, P1, P2, bmpData, rgbValues, texture, bmpDataTexture, rgbValuesTexture, camera);
+            }
+        }
+        
+        private static void DrawTexture(Point3D P0, Point3D P1, Point3D P2, BitmapData bmpData, byte[] rgbValues, Bitmap texture, BitmapData bmpDataTexture, byte[] rgbValuesTexture, Scene.Camera camera)
+        {
+            // Отсортируйте точки так, чтобы y0 <= y1 <= y2D            
+            var points = SortTriangleVertices(P0, P1, P2, camera);//РАСТЕРИЗОВАТЬ ПОЛИГОН то же самое
+            Point3D SortedP0 = points[0], SortedP1 = points[1], SortedP2 = points[2];
+
+            // Вычислите координаты x и U, V текстурных координат ребер треугольника
+            var x01 = NewInterpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP1.Y, SortedP1.X);
+            var u01 = NewInterpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP1.Y, SortedP1.TextureCoordinates.X);
+            var v01 = NewInterpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP1.Y, SortedP1.TextureCoordinates.Y);
+            var x12 = NewInterpolate((int)SortedP1.Y, SortedP1.X, (int)SortedP2.Y, SortedP2.X);
+            var u12 = NewInterpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v12 = NewInterpolate((int)SortedP1.Y, SortedP1.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
+            var x02 = NewInterpolate((int)SortedP0.Y, SortedP0.X, (int)SortedP2.Y, SortedP2.X);
+            var u02 = NewInterpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.X, (int)SortedP2.Y, SortedP2.TextureCoordinates.X);
+            var v02 = NewInterpolate((int)SortedP0.Y, SortedP0.TextureCoordinates.Y, (int)SortedP2.Y, SortedP2.TextureCoordinates.Y);
+
+            // Concatenate the short sides
+            x01 = x01.Take(x01.Length - 1).ToArray(); // remove last element, it's the first in x12
+            var x012 = x01.Concat(x12).ToArray();
+            u01 = u01.Take(u01.Length - 1).ToArray(); // remove last element, it's the first in u12
+            var u012 = u01.Concat(u12).ToArray();
+            v01 = v01.Take(v01.Length - 1).ToArray(); // remove last element, it's the first in v12
+            var v012 = v01.Concat(v12).ToArray();
+
+            // Determine which is left and which is right
+            int m = x012.Length / 2;
+            double[] x_left, x_right, u_left, u_right, v_left, v_right;
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+                u_left = u02;
+                u_right = u012;
+                v_left = v02;
+                v_right = v012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+                u_left = u012;
+                u_right = u02;
+                v_left = v012;
+                v_right = v02;
+            }
+
+            // Рисует горизонтальные сегменты
+            for (int y = (int)SortedP0.Y; y < (int)SortedP2.Y; ++y)
+            {
+                int screen_y = -y + camera.Height / 2;
+                if (screen_y < 0)
+                    break;
+                if (camera.Height <= screen_y)
+                    continue;
+
+                var x_l = x_left[y - (int)SortedP0.Y];
+                var x_r = x_right[y - (int)SortedP0.Y];
+
+                var u_segment = NewInterpolate((int)x_l, u_left[y - (int)SortedP0.Y], (int)x_r, u_right[y - (int)SortedP0.Y]);
+                var v_segment = NewInterpolate((int)x_l, v_left[y - (int)SortedP0.Y], (int)x_r, v_right[y - (int)SortedP0.Y]);
+                for (int x = (int)x_l; x < (int)x_r; ++x)
+                {
+                    int screen_x = x + camera.Width / 2;
+                    if (screen_x < 0)
+                        continue;
+                    if (camera.Width <= screen_x)
+                        break;
+
+                    int texture_u = (int)(u_segment[x - (int)x_l] * (texture.Width - 1));
+                    int texture_v = (int)(v_segment[x - (int)x_l] * (texture.Height - 1));
+
+                    rgbValues[screen_x * 3 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 1 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 1 + texture_v * bmpDataTexture.Stride];
+                    rgbValues[screen_x * 3 + 2 + screen_y * bmpData.Stride] = rgbValuesTexture[texture_u * 3 + 2 + texture_v * bmpDataTexture.Stride];
+                }
+            }
+        }
+
+        private static double[] NewInterpolate(int i0, double d0, int i1, double d1)
+        {
+            if (i0 == i1)
+                return new double[] { d0 };
+            double[] values = new double[i1 - i0 + 1];
+            double a = (d1 - d0) / (i1 - i0);
+            double d = d0;
+
+            int ind = 0;
+            for (int i = i0; i <= i1; ++i)
+            {
+                values[ind++] = d;
+                d += a;
+            }
+
+            return values;
+        }
+
+        private static Point3D[] SortTriangleVertices(Point3D P0, Point3D P1, Point3D P2, Scene.Camera camera)
+        {
+            PointF projected0 = P0.GetPerspectiveProj(camera);
+            projected0.Y = (int)projected0.Y;
+            PointF projected1 = P1.GetPerspectiveProj(camera);
+            projected1.Y = (int)projected1.Y;
+            PointF projected2 = P2.GetPerspectiveProj(camera);
+            projected2.Y = (int)projected2.Y;
+            if (projected0.Y > projected1.Y)
+            {
+                (projected0, projected1) = (projected1, projected0);
+                (P0, P1) = (P1, P0);
+            }
+            if (projected1.Y > projected2.Y)
+            {
+                (projected1, projected2) = (projected2, projected1);
+                (P1, P2) = (P2, P1);
+            }
+            if (projected0.Y > projected1.Y)
+            {
+                (projected0, projected1) = (projected1, projected0);
+                (P0, P1) = (P1, P0);
+            }
+            Point3D[] points = new Point3D[3] {P0,P1,P2 };
+            return points;
+        }*/
     }
 }

@@ -6,59 +6,23 @@
 #include <initializer_list>
 #define deg2rad M_PI /180.0
 
-
-GLuint Program;
-GLint Attrib_vertex;
-GLint Attrib_color;
-GLint Unif_xmove;
-GLint Unif_ymove;
-GLuint VBO_position;
-GLuint VBO_color;
-struct Vertex
+namespace taskname_1
 {
-    GLfloat x;
-    GLfloat y;
-    GLfloat z;
-};
+    GLuint Program;
+    GLint Attrib_vertex;
+    GLint Attrib_color;
+    GLint Unif_xmove;
+    GLint Unif_ymove;
+    GLuint VBO_position;
+    GLuint VBO_color;
+    struct Vertex
+    {
+        GLfloat x;
+        GLfloat y;
+        GLfloat z;
+    };
 
 
-int main() {
-    sf::Window window(sf::VideoMode(600, 600), "My OpenGL window", sf::Style::Default, sf::ContextSettings(24));
-    window.setVerticalSyncEnabled(true);
-
-    window.setActive(true);
-    glewInit();
-
-    Init();
-
-    bool running = true;
-    while (running) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                running = false;
-            }
-            else if (event.type == sf::Event::Resized) {
-                glViewport(0, 0, event.size.width, event.size.height);
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                case (sf::Keyboard::W): moveShape(0, 0.1); break;
-                case (sf::Keyboard::S): moveShape(0, -0.1); break;
-                case (sf::Keyboard::A): moveShape(-0.1, 0); break;
-                case (sf::Keyboard::D): moveShape(0.1, 0); break;
-                default: break;
-                }
-            }
-        }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-}
-
-
-
-void task1() {
-    // Исходный код вершинного шейдера
     const char* VertexShaderSource = R"(
     #version 330 core
     in vec3 coord;
@@ -100,7 +64,6 @@ void task1() {
         moveY += moveYinc;
     }
 
-   
 
 
     // Функция печати лога шейдера
@@ -308,5 +271,40 @@ void task1() {
     void Release() {
         ReleaseShader();
         ReleaseVBO();
+    }
+}
+
+void task1() {
+    sf::Window window(sf::VideoMode(600, 600), "My OpenGL window", sf::Style::Default, sf::ContextSettings(24));
+    window.setVerticalSyncEnabled(true);
+
+    window.setActive(true);
+    glewInit();
+
+    taskname_1::Init();
+
+    bool running = true;
+    while (running) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                running = false;
+            }
+            else if (event.type == sf::Event::Resized) {
+                glViewport(0, 0, event.size.width, event.size.height);
+            }
+            else if (event.type == sf::Event::KeyPressed) {
+                switch (event.key.code) {
+                case (sf::Keyboard::W): taskname_1::moveShape(0, 0.1); break;
+                case (sf::Keyboard::S): taskname_1::moveShape(0, -0.1); break;
+                case (sf::Keyboard::A): taskname_1::moveShape(-0.1, 0); break;
+                case (sf::Keyboard::D): taskname_1::moveShape(0.1, 0); break;
+                default: break;
+                }
+            }
+        }
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        taskname_1::Draw();
+        window.display();
     }
 }

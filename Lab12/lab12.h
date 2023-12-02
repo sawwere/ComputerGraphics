@@ -11,18 +11,6 @@
 
 const float DEGREE_TO_RADIAN = 3.14159265358979323846 / 180.0;
 
-void CheckOpenGLerror();
-void ShaderLog(unsigned int shader);
-void SetIcon(sf::Window& wnd);
-void Init();
-void InitShader();
-void InitVBO();
-void Draw();
-
-void Release();
-void ReleaseVBO();
-void ReleaseShader();
-
 float MixTexture(float old, float value);
 void task1();
 void task2();

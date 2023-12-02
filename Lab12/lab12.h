@@ -26,6 +26,7 @@ void ReleaseShader();
 float MixTexture(float old, float value);
 void task2();
 void task3();
+void task4();
 
 //struct Vertex {
 //	GLfloat x;

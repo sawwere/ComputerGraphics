@@ -19,6 +19,9 @@ int main()
         case 3:
             task3();
             break;
+        case 4:
+            task4();
+            break;
         default:
             continue;;
         }

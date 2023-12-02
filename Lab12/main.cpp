@@ -13,6 +13,9 @@ int main()
         {
         case 0:
             break;
+        case 1:
+            task1();
+            break;
         case 2:
             task2();
             break;

@@ -24,6 +24,7 @@ void ReleaseVBO();
 void ReleaseShader();
 
 float MixTexture(float old, float value);
+void task1();
 void task2();
 void task3();
 void task4();

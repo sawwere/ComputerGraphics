@@ -2,8 +2,9 @@
 #define SHADER_H
 
 #include <GL\glew.h>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML\OpenGL.hpp>
+
+#include <glm/glm.hpp>
 
 #include <string>
 #include <fstream>
@@ -15,7 +16,12 @@ class ShaderProgram
 public:
     unsigned int ID;
 
-    ShaderProgram(const char* vertexPath, const char* fragmentPath)
+    /// <summary>
+    /// Шейдерная программа
+    /// </summary>
+    /// <param name="vertexShaderPath">Путь к файлу вершинного шейдера</param>
+    /// <param name="fragmentPath">Путь к файлу фрагментного шейдера</param>
+    ShaderProgram(const char* vertexShaderPath, const char* fragmentPath)
     {
         std::string vertexCode;
         std::string fragmentCode;
@@ -27,7 +33,7 @@ public:
         try
         {
 
-            vShaderFile.open(vertexPath);
+            vShaderFile.open(vertexShaderPath);
             fShaderFile.open(fragmentPath);
             std::stringstream vShaderStream, fShaderStream;
 
@@ -69,26 +75,81 @@ public:
         glDeleteShader(fragment);
     }
     
-    void use()
+    void Use()
     {
         glUseProgram(ID);
     }
-    // utility uniform functions
-    // ------------------------------------------------------------------------
-    void setBool(const std::string& name, bool value) const
+
+    // set various uniform attributes
+
+    void SetUniformBool(const std::string& name, bool value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
     }
-    // ------------------------------------------------------------------------
-    void setInt(const std::string& name, int value) const
+    
+    void SetUniformInt(const std::string& name, int value) const
     {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
-    // ------------------------------------------------------------------------
-    void setFloat(const std::string& name, float value) const
+    
+    void SetUniformFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
+    // ------------------------------------------------------------------------
+    void SetUniformVec2(const std::string& name, const glm::vec2& value) const
+    {
+        glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void SetUniformVec2(const std::string& name, float x, float y) const
+    {
+        glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+    }
+
+    // ------------------------------------------------------------------------
+    void SetUniformVec3(const std::string& name, const glm::vec3& value) const
+    {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void SetUniformVec3(const std::string& name, float x, float y, float z) const
+    {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+    }
+
+    // ------------------------------------------------------------------------
+    void SetUniformVec4(const std::string& name, const glm::vec4& value) const
+    {
+        glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+    void SetUniformVec4(const std::string& name, float x, float y, float z, float w)
+    {
+        glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+    }
+
+    // ------------------------------------------------------------------------
+    void SetUniformMat2(const std::string& name, const glm::mat2& mat) const
+    {
+        glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    // ------------------------------------------------------------------------
+    void SetUniformMat3(const std::string& name, const glm::mat3& mat) const
+    {
+        glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    // ------------------------------------------------------------------------
+    void SetUniformMat4(const std::string& name, const glm::mat4& mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    void Release()
+    {
+        glUseProgram(0);
+        glDeleteProgram(ID);
+    }
+
 private:
     
     void checkCompileErrors(unsigned int shader, std::string type)

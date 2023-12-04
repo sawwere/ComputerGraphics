@@ -38,7 +38,7 @@ public:
     
 
     //TODO конструктор из obj файла
-    Mesh(const std::string& filePath)
+    Mesh(const char* filePath)
     {
         //собираем вершиы, нормали и текструры и пихаем во второй конструктор
     }
@@ -69,7 +69,7 @@ public:
         }
         glUseProgram(0);
     }
-private:
+protected:
     virtual void InitializeBuffers()
     {
         glGenVertexArrays(1, &VAO);

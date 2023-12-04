@@ -1,10 +1,14 @@
 ﻿#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 
 #include "ShaderProgram.h"
 #include "Mesh.h"
+#include "InstancedMesh.h"
+#include "SceneObject.h"
+#include "Scene.h"
 
 
 
@@ -89,10 +93,28 @@ int main()
     }
     sf::Texture texture1;
     texture1.loadFromFile("Images//texture1.png");
-    std::vector<Texture> textures = std::vector<Texture>();
-    textures.push_back({ 0, "test", texture1 });
-    Mesh mesh = Mesh(vs, indices2, textures);
+    std::vector<Texture> textures1 = std::vector<Texture>();
+    textures1.push_back({ 0, "test", texture1 });
+    Mesh mesh = Mesh(vs, indices2, textures1);
+    SceneObject sun = SceneObject(&mesh, &ourShader);
 
+
+    sf::Texture texture2;
+    texture2.loadFromFile("Images//texture2.png");
+    std::vector<Texture> textures2 = std::vector<Texture>();
+    textures2.push_back({ 0, "test", texture2 });
+    InstansedMesh meshPlanet = InstansedMesh(vs, indices2, textures2, 5000);
+    SceneObject planet = SceneObject(&meshPlanet, &planetShader);
+
+    Scene mainScene = Scene();
+    mainScene.AddSceneObject(sun);
+    mainScene.AddSceneObject(planet);
+    mainScene.AddShaderProgram(ourShader);
+    mainScene.AddShaderProgram(planetShader);
+
+    sf::Time elapsedTime;
+    sf::Clock clock;
+    GLfloat rotationAngle = 0.0f;
     bool running = true;
     while (running)
     {
@@ -109,13 +131,24 @@ int main()
                 glViewport(0, 0, event.size.width, event.size.height);
             }
         }
+        elapsedTime = clock.getElapsedTime();
+        if (elapsedTime > sf::milliseconds(5))
+        {
+            rotationAngle += 0.01f;
+            if (rotationAngle > 360)
+                rotationAngle = 360.0f;
+            elapsedTime = clock.restart();
+        }
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-        mesh.Draw(ourShader);
+        mainScene.Draw(rotationAngle);
 
         window.display();
+
+
+
+        
     }
     window.close();
     return 0;

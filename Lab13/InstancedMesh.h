@@ -12,7 +12,7 @@
 class InstansedMesh : public Mesh
 {
     GLuint buffer;
-    int count;
+    GLuint count;
     glm::mat4* modelMatrices;
 public:
 	
@@ -24,7 +24,7 @@ public:
         InitializeBuffers();
 	}
 
-	InstansedMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures, int count) 
+	InstansedMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures, GLuint count)
 		: Mesh(vertices, indices, textures)
 	{
 		this->count = count;
@@ -37,7 +37,7 @@ public:
 	{
 		shader.Use();
 
-        for (unsigned int i = 0; i < textures.size(); i++)
+        for (GLuint i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i);
 
@@ -45,7 +45,7 @@ public:
             sf::Texture::bind(&textures[i].texture);
 
             glBindVertexArray(VAO);
-            glDrawElementsInstanced(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0, count);
+            glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLuint>(indices.size()), GL_UNSIGNED_INT, 0, count);
             glBindVertexArray(0);
 
             sf::Texture::bind(NULL);
@@ -61,7 +61,7 @@ private:
         srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
         float radius = 30.0;
         float offset = 10.1f;
-        for (unsigned int i = 0; i < count; i++)
+        for (GLuint i = 0; i < count; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             // 1. translation: displace along circle with 'radius' in range [-offset, offset]

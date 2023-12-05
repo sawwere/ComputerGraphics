@@ -55,7 +55,7 @@ public:
     virtual void Draw(ShaderProgram& shader) const
     {
         shader.Use();
-        for (unsigned int i = 0; i < textures.size(); i++)
+        for (GLuint i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i);
 

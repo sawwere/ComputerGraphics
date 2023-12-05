@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "SceneObject.h"
 #include "Camera.h";
+#include "Skybox.h"
 
 class Scene
 {
@@ -12,9 +13,10 @@ public:
 	std::vector<ShaderProgram*> shaders;
 	std::vector<SceneObject*> sceneObjects;
 	Camera camera;
-
+	Skybox skybox;
 	Scene() 
 	{
+		skybox = Skybox();
 
 	}
 
@@ -54,6 +56,7 @@ public:
 			sceneObject->rotation.y = rotationAngle;
 			sceneObject->Draw();
 		}
+		skybox.Draw(view, projection);
 	}
 
 private:

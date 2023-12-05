@@ -14,7 +14,7 @@
 class ShaderProgram
 {
 public:
-    unsigned int ID;
+    GLuint ID;
 
     /// <summary>
     /// Шейдерная программа
@@ -53,7 +53,7 @@ public:
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
 
-        unsigned int vertex, fragment;
+        GLuint vertex, fragment;
 
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
@@ -152,7 +152,7 @@ public:
 
 private:
     
-    void checkCompileErrors(unsigned int shader, std::string type)
+    void checkCompileErrors(GLuint shader, std::string type)
     {
         int success;
         char infoLog[1024];

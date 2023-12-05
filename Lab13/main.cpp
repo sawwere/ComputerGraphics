@@ -33,7 +33,7 @@ int main()
     window.setActive(true);
     glewInit();
     glEnable(GL_DEPTH_TEST);
-    //TODO
+
     ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
     
@@ -103,7 +103,7 @@ int main()
     texture2.loadFromFile("Images//texture2.png");
     std::vector<Texture> textures2 = std::vector<Texture>();
     textures2.push_back({ 0, "test", texture2 });
-    InstansedMesh meshPlanet = InstansedMesh(vs, indices2, textures2, 5000);
+    InstansedMesh meshPlanet = InstansedMesh(vs, indices2, textures2, 11);
     SceneObject planet = SceneObject(&meshPlanet, &planetShader);
 
     Scene mainScene = Scene();
@@ -139,7 +139,7 @@ int main()
                 rotationAngle = 360.0f;
             elapsedTime = clock.restart();
         }
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         mainScene.Draw(rotationAngle);

@@ -14,7 +14,11 @@
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
-
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT / 2.0f;
+bool firstMouse = true;
 
 
 
@@ -37,7 +41,6 @@ int main()
     ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
     
-
     //TODO
     //инициализация объектов
     //SceneObject sun = ...
@@ -129,6 +132,23 @@ int main()
             {
                 // Изменён размер окна, надо поменять и размер области Opengl отрисовки
                 glViewport(0, 0, event.size.width, event.size.height);
+            }
+            else if (event.type == sf::Event::KeyPressed)
+            {
+                switch (event.key.code) {
+                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::A): mainScene.camera.ProcessKeyboard(LEFT, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::D): mainScene.camera.ProcessKeyboard(RIGHT, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::K): mainScene.camera.ProcessKeyboard(DOWNROTATION, elapsedTime.asSeconds()); break;
+                default: break;
+                }
+                elapsedTime = clock.restart();
             }
         }
         elapsedTime = clock.getElapsedTime();

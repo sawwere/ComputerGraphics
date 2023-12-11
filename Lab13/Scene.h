@@ -17,6 +17,7 @@ public:
 	Scene() 
 	{
 		skybox = Skybox();
+		Camera camera();
 
 	}
 
@@ -32,22 +33,16 @@ public:
 
 	void Draw(float rotationAngle)
 	{
-		//TODO 
-		//передача данных в юниформ шейдеров в зависимости от камеры??
-		// заменить, когда появится камера
-		//TODO camera!!!
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)800, 0.1f, 1000.0f);
 
-		glm::vec3 position = glm::vec3(0.0f, 0.0f, 5.0f);
-		glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::mat4 view = glm::lookAt(position, position + front, up);
+		
+
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)800, 0.1f, 1000.0f);
 
 		for (auto& shaderProgram : shaders) 
 		{
 			shaderProgram->Use();
 			shaderProgram->SetUniformMat4("projection", projection);
-			shaderProgram->SetUniformMat4("view", view);
+			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());
 			glUseProgram(0);
 		}
 		
@@ -56,7 +51,7 @@ public:
 			sceneObject->rotation.y = rotationAngle;
 			sceneObject->Draw();
 		}
-		skybox.Draw(view, projection);
+		skybox.Draw(camera.GetViewMatrix(), projection);
 	}
 
 private:

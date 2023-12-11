@@ -17,7 +17,7 @@ class InstansedMesh : public Mesh
 public:
 	
 
-	InstansedMesh(const char* filePath, int count): Mesh(filePath)
+	InstansedMesh(const char* filePath, const char* texturePath, int count): Mesh(filePath, texturePath)
 	{
 		this->count = count;
 
@@ -37,12 +37,11 @@ public:
 	{
 		shader.Use();
 
-        for (GLuint i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i);
+            glActiveTexture(GL_TEXTURE0);
 
-            shader.SetUniformInt("texture1", i);
-            sf::Texture::bind(&textures[i].texture);
+            shader.SetUniformInt("texture1", 0);
+            sf::Texture::bind(&texture.texture);
 
             glBindVertexArray(VAO);
             glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLuint>(indices.size()), GL_UNSIGNED_INT, 0, count);
@@ -74,7 +73,7 @@ private:
             float z = cos(angle) * radius + displacement;
             model = glm::translate(model, glm::vec3(x, y, z));
 
-            model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+            //model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
 
             modelMatrices[i] = model;
         }

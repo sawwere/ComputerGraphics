@@ -40,73 +40,12 @@ int main()
 
     ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
-    
-    //TODO
-    //инициализация объектов
-    //SceneObject sun = ...
-    //SceneObject planet = ...
 
-    //TODO
-    std::vector<Vertex> vs;
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ { 0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ { 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ { 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ {-0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    //
-    vs.push_back({ {-0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ { 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ {-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ {-0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    //==============================================
-    vs.push_back({ {-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ {-0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ {-0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ {-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ { 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ { 0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ { 0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ { 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    //==============================================
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ { 0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ { 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ { 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ {-0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ {-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-
-    vs.push_back({ {-0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    vs.push_back({ { 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f} });
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {1.0f, 0.0f} });
-    vs.push_back({ {-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 0.0f} });
-    vs.push_back({ {-0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f }, {0.0f, 1.0f} });
-    std::vector<GLuint> indices2;
-    for (GLuint i = 0; i < vs.size(); i++)
-    {
-        indices2.push_back(i);
-    }
-    sf::Texture texture1;
-    texture1.loadFromFile("Images//texture1.png");
-    std::vector<Texture> textures1 = std::vector<Texture>();
-    textures1.push_back({ 0, "test", texture1 });
-    Mesh mesh = Mesh(vs, indices2, textures1);
+    Mesh mesh = Mesh("Meshes//whale.obj", "Meshes//whale.jpg");
     SceneObject sun = SceneObject(&mesh, &ourShader);
+    sun.scale = sun.scale * 0.25f;
 
-
-    sf::Texture texture2;
-    texture2.loadFromFile("Images//texture2.png");
-    std::vector<Texture> textures2 = std::vector<Texture>();
-    textures2.push_back({ 0, "test", texture2 });
-    InstansedMesh meshPlanet = InstansedMesh(vs, indices2, textures2, 11);
+    InstansedMesh meshPlanet = InstansedMesh("Meshes//bird.obj", "Meshes//bird.jpg", 11);
     SceneObject planet = SceneObject(&meshPlanet, &planetShader);
 
     Scene mainScene = Scene();

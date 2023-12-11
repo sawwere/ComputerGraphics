@@ -3,12 +3,28 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <initializer_list>
+#include <array>
 #include <vector>
 #include <string>
 
 #include "ShaderProgram.h"
 
 using std::string;
+
+std::vector<string> Split(const string& str, char separator) 
+{
+	std::stringstream ss(str);
+	std::string word;
+	std::vector<std::string> elems;
+	while (std::getline(ss, word, separator))
+	{
+		if (word.empty()) 
+			continue;
+		elems.push_back(word);
+	}
+	return elems;
+}
 
 
 struct Vertex 
@@ -28,26 +44,134 @@ struct Texture
 class Mesh 
 {
 protected:
-    //  render data
     GLuint VAO, VBO, EBO;
 public:
-    // mesh data
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
-    std::vector<Texture> textures;
-    
+    Texture texture;    
 
-    //TODO конструктор из obj файла
-    Mesh(const char* filePath)
+    //TODO indexing
+    Mesh(const char* filePath, const char* texturePath)
     {
-        //собираем вершиы, нормали и текструры и пихаем во второй конструктор
+		try 
+		{
+			std::ifstream reader(filePath);
+
+			if (!reader.is_open()) 
+			{
+				throw std::exception("File cannot be opened");
+			}
+
+			std::vector<glm::vec3> _vertices;
+			std::vector<glm::vec3> _vn;
+			std::vector<glm::vec2> _vt;
+			
+
+			std::vector <std::string> indexAccordance{};
+			std::string line;
+			while (std::getline(reader, line))
+			{
+				std::istringstream iss(line);
+				std::string typeOfElement;
+				iss >> typeOfElement;
+				if (typeOfElement == "v") 
+				{
+					string word;
+					glm::vec3 cv{};
+					for (GLuint i = 0; i < 3; i++)
+					{
+						iss >> word;
+						cv[i] = std::stof(word);
+					}
+					_vertices.push_back(cv);
+				}
+				else if (typeOfElement == "vn") 
+				{
+					string word;
+					glm::vec3 cv{}; 
+					for (GLuint i = 0; i < 3; i++)
+					{
+						iss >> word;
+						cv[i] = std::stof(word);
+					}
+					_vn.push_back(cv);
+				}
+				else if (typeOfElement == "vt") 
+				{
+					string word;
+					glm::vec2 cv{};
+					for (GLuint i = 0; i < 2; i++)
+					{
+						iss >> word;
+						cv[i] = std::stof(word);
+					}
+					_vt.push_back(cv);
+				}
+				else if (typeOfElement == "f") 
+				{
+					auto splitted = Split(line, ' ');
+					auto first = Split(splitted[1], '/');
+					for (int i = 2; i < splitted.size() - 1; i++)
+					{
+						auto cur = Split(splitted[i], '/');
+						auto next = Split(splitted[i+1], '/');
+
+						Vertex vertex0;
+						int positionIndex = std::stoi(first[0]) - 1;
+						vertex0.Position = glm::vec3(_vertices[positionIndex][0], _vertices[positionIndex][1], _vertices[positionIndex][2]);
+						if (first.size() > 1)
+						{
+							int textureIndex = std::stoi(first[1]) - 1;
+							vertex0.TexCoords = glm::vec2(_vt[textureIndex][0], _vt[textureIndex][1]);
+						}
+						vertices.push_back(vertex0);
+						indices.push_back(indices.size());
+
+						Vertex vertex1;
+						positionIndex = std::stoi(cur[0]) - 1;
+						vertex1.Position = glm::vec3(_vertices[positionIndex][0], _vertices[positionIndex][1], _vertices[positionIndex][2]);
+						if (cur.size() > 1)
+						{
+							int textureIndex = std::stoi(cur[1]) - 1;
+							vertex1.TexCoords = glm::vec2(_vt[textureIndex][0], _vt[textureIndex][1]);
+						}
+						vertices.push_back(vertex1);
+						indices.push_back(indices.size());
+
+						Vertex vertex2;
+						positionIndex = std::stoi(next[0]) - 1;
+						vertex2.Position = glm::vec3(_vertices[positionIndex][0], _vertices[positionIndex][1], _vertices[positionIndex][2]);
+						if (next.size() > 1)
+						{
+							int textureIndex = std::stoi(next[1]) - 1;
+							vertex2.TexCoords = glm::vec2(_vt[textureIndex][0], _vt[textureIndex][1]);
+						}
+						vertices.push_back(vertex2);
+						indices.push_back(indices.size());
+					}
+				}
+				else 
+				{
+					continue;
+				}
+			}
+			
+
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+		std::cout << "Total vertices count: " << vertices.size() << std::endl;
+		InitializeBuffers();
+		InitializeTexture(texturePath);
     }
 
     Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures)
     {
         this->vertices = vertices;
         this->indices = indices;
-        this->textures = textures;
+        this->texture = textures[0];
 
         InitializeBuffers();
     }
@@ -55,21 +179,27 @@ public:
     virtual void Draw(ShaderProgram& shader) const
     {
         shader.Use();
-        for (GLuint i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i);
-
-            shader.SetUniformInt("texture1", i);
-            sf::Texture::bind(&textures[i].texture);
-            glBindVertexArray(VAO);
-            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-            glBindVertexArray(0);
+            glActiveTexture(GL_TEXTURE0);
+			shader.SetUniformInt("texture1", 0);
+			sf::Texture::bind(&texture.texture);
+			glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
             sf::Texture::bind(NULL);
             
         }
         glUseProgram(0);
     }
 protected:
+	void InitializeTexture(const char* texturePath)
+	{
+		sf::Texture texture1;
+		texture1.loadFromFile(texturePath);
+		texture1.setRepeated(true);
+		texture = { 0, "testing", texture1 };
+	}
+
     virtual void InitializeBuffers()
     {
         glGenVertexArrays(1, &VAO);
@@ -96,6 +226,8 @@ protected:
 
         glBindVertexArray(0); // Unbind VAO
     }
+
+
 
     void Release()
     {

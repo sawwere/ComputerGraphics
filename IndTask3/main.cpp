@@ -20,7 +20,7 @@ void SetIcon(sf::Window& wnd)
 }
 
 
-void Fill(Scene* scene, ShaderProgram& defaultShader)
+void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedShader)
 {
     int board[100];
     for (int i = 0; i < 100; i++)
@@ -31,6 +31,11 @@ void Fill(Scene* scene, ShaderProgram& defaultShader)
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     (*scene).AddSceneObject(*fir);
 
+    ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
+    InstansedMesh* _targets = new InstansedMesh("Meshes//cube.obj", "Meshes//bird.jpg", 5, board);
+    SceneObject* target = new SceneObject(_targets, targetShader);
+    (*scene).AddShaderProgram(*targetShader);
+    (*scene).AddSceneObject(*target);
 }
 
 int main()
@@ -43,10 +48,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     ShaderProgram defaultShader = ShaderProgram("Shaders//player.vs", "Shaders//sun.frag");
-    ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
+    ShaderProgram procShader = ShaderProgram("Shaders//player.vs", "Shaders//proc.frag");
+    ShaderProgram planetShader = ShaderProgram("Shaders//instanced.vs", "Shaders//proc.frag");
 
     Mesh plane = Mesh("Meshes//cube.obj", "Meshes//grass.jpg");
-    SceneObject ground = SceneObject(&plane, &defaultShader);
+    SceneObject ground = SceneObject(&plane, &procShader);
     ground.scale = { 200.0f, 1.0f, 200.0f };
 
     Mesh mesh = Mesh("Meshes//zeppelin.obj", "Meshes//zeppelin.png");
@@ -55,20 +61,15 @@ int main()
     player.scale = player.scale * 0.025f;
     player.rotation.y = glm::radians(-90.0f);
 
-    //InstansedMesh meshPlanet = InstansedMesh("Meshes//bird.obj", "Meshes//bird.jpg", 11);
-    //SceneObject planet = SceneObject(&meshPlanet, &planetShader);
-
     Scene mainScene = Scene();
     mainScene.AddSceneObject(player);
-    //mainScene.AddSceneObject(planet);
     mainScene.AddSceneObject(ground);
     mainScene.AddShaderProgram(defaultShader);
+    mainScene.AddShaderProgram(procShader);
     mainScene.AddShaderProgram(planetShader);
 
 
-    Fill(&mainScene, defaultShader);
-
-    //mainScene.Fill(defaultShader);
+    Fill(&mainScene, defaultShader, planetShader);
 
     sf::Time elapsedTime;
     sf::Clock clock;
@@ -85,7 +86,6 @@ int main()
             }
             else if (event.type == sf::Event::Resized)
             {
-                // Изменён размер окна, надо поменять и размер области Opengl отрисовки
                 glViewport(0, 0, event.size.width, event.size.height);
                 mainScene.camera.SCREEN_WIDTH = event.size.width;
                 mainScene.camera.SCREEN_HEIGHT = event.size.height;
@@ -109,12 +109,12 @@ int main()
             rotationAngle += 0.01f;
             if (rotationAngle > 360)
                 rotationAngle = 360.0f;
-            elapsedTime = clock.restart();
+            //elapsedTime = clock.restart();
         }
         //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        mainScene.Draw(rotationAngle);
+        mainScene.Draw(clock.getElapsedTime().asSeconds());
 
         window.display();
 

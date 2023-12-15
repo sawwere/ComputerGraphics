@@ -17,19 +17,11 @@ class InstansedMesh : public Mesh
 public:
 	
 
-	InstansedMesh(const char* filePath, const char* texturePath, int count): Mesh(filePath, texturePath)
+	InstansedMesh(const char* filePath, const char* texturePath, int count, int* board): Mesh(filePath, texturePath)
 	{
 		this->count = count;
 
-        InitializeBuffers();
-	}
-
-	InstansedMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures, GLuint count)
-		: Mesh(vertices, indices, textures)
-	{
-		this->count = count;
-
-		InitializeBuffers();
+        InitializeBuffers(board);
 	}
 
 
@@ -52,7 +44,7 @@ public:
 		glUseProgram(0);
 	}
 private:
-    void InitializeBuffers()
+    void InitializeBuffers(int* board)
     {
 		Mesh::InitializeBuffers();
         
@@ -62,19 +54,20 @@ private:
         float offset = 10.1f;
         for (GLuint i = 0; i < count; i++)
         {
+            int ind = rand() % 100;
+            while (board[ind])
+            {
+                ind = rand() % 100;
+            }
+            board[ind] = 1;
+
             glm::mat4 model = glm::mat4(1.0f);
-            // 1. translation: displace along circle with 'radius' in range [-offset, offset]
-            float angle = (float)i / (float)count * 360.0f;
-            float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-            float x = sin(angle) * radius + displacement;
-            displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-            float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-            displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-            float z = cos(angle) * radius + displacement;
+            float x = (ind % 10) * 10 - 50;
+            float y = 15.0f;
+            float z = (ind / 10) * 10 - 50;
+            
             model = glm::translate(model, glm::vec3(x, y, z));
-
-            //model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
-
+            model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
             modelMatrices[i] = model;
         }
 

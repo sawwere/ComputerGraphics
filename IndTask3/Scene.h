@@ -41,13 +41,15 @@ public:
 		sceneObjects.push_back(&so);
 	}
 
-	void Draw(float rotationAngle)
+	void Draw(float elapsedTime)
 	{
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)camera.SCREEN_WIDTH / (float)camera.SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 		for (auto& shaderProgram : shaders) 
 		{
 			shaderProgram->Use();
+			shaderProgram->SetUniformFloat("TIME", elapsedTime);
+
 			shaderProgram->SetUniformMat4("projection", projection);
 			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());
 			shaderProgram->SetUniformVec3("viewPos", camera.Position);
@@ -81,17 +83,9 @@ public:
 		//std::cout << sceneObjects.size() << std::endl;
 		for (auto& sceneObject : sceneObjects) 
 		{
-			//sceneObject->rotation.y = rotationAngle;
 			sceneObject->Draw();
 		}
 		skybox.Draw(camera.GetViewMatrix(), projection);
-	}
-
-	void Fill(ShaderProgram& defaultShader)
-	{
-		
-
-
 	}
 
 private:

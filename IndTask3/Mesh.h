@@ -204,8 +204,8 @@ public:
 
 	~Mesh()
 	{
-		//delete material;
-		//Release();
+		delete material;
+		Release();
 	}
 protected:
 	void InitializeTexture(const char* texturePath)

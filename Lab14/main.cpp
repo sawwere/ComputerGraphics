@@ -41,7 +41,7 @@ int main()
     ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
 
-    Mesh mesh = Mesh("Meshes//whale.obj", "Meshes//whale.jpg");
+    Mesh mesh = Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
     SceneObject sun = SceneObject(&mesh, &ourShader);
     sun.scale = sun.scale * 0.25f;
 
@@ -75,19 +75,18 @@ int main()
             else if (event.type == sf::Event::KeyPressed)
             {
                 switch (event.key.code) {
-                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::A): mainScene.camera.ProcessKeyboard(LEFT, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::D): mainScene.camera.ProcessKeyboard(RIGHT, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::K): mainScene.camera.ProcessKeyboard(DOWNROTATION, elapsedTime.asSeconds()); break;
                 default: break;
                 }
-                elapsedTime = clock.restart();
             }
         }
         elapsedTime = clock.getElapsedTime();

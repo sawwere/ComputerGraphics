@@ -7,6 +7,7 @@ layout (location = 3) in mat4 model;
 out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoord;
+out float DistToCenter;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -20,4 +21,5 @@ void main()
 
     FragPos = vec3(model * vec4(vertexPosition, 1.0));
     Normal = mat3(transpose(inverse(model))) * normal;  
+    DistToCenter = distance(vertexPosition, vec3(0.0, vertexPosition.y, 0.0));
 }

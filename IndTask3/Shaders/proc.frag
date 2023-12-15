@@ -124,6 +124,6 @@ void main()
     result += CalculateDirectionalLight(directionalLight, norm, viewDir);
     result += CalculatePointLight(pointLight, norm, FragPos, viewDir);
     result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
-
-    FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.1f);
+    FragColor = vec4(result, 1.0);
+    //FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.1f);
 }

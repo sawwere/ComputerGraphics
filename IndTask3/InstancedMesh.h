@@ -27,21 +27,16 @@ public:
 
 	virtual void Draw(ShaderProgram& shader) const override
 	{
-		shader.Use();
-
+        shader.Use();
+        material->Use(&shader);
         {
-            glActiveTexture(GL_TEXTURE0);
-
-            shader.SetUniformInt("texture1", 0);
-            sf::Texture::bind(&texture.texture);
-
             glBindVertexArray(VAO);
             glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLuint>(indices.size()), GL_UNSIGNED_INT, 0, count);
             glBindVertexArray(0);
-
             sf::Texture::bind(NULL);
+
         }
-		glUseProgram(0);
+        glUseProgram(0);
 	}
 private:
     void InitializeBuffers(int* board)
@@ -50,8 +45,6 @@ private:
         
         modelMatrices = new glm::mat4[count];
         srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-        float radius = 30.0;
-        float offset = 10.1f;
         for (GLuint i = 0; i < count; i++)
         {
             int ind = rand() % 100;
@@ -61,13 +54,13 @@ private:
             }
             board[ind] = 1;
 
+            float x = (ind % 10 - 5) * 10;
+            float y = 0.0f;
+            float z = (ind / 10 - 5) * 10;
             glm::mat4 model = glm::mat4(1.0f);
-            float x = (ind % 10) * 10 - 50;
-            float y = 15.0f;
-            float z = (ind / 10) * 10 - 50;
-            
+            float angle = rand() % 360;
             model = glm::translate(model, glm::vec3(x, y, z));
-            model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+            model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
             modelMatrices[i] = model;
         }
 

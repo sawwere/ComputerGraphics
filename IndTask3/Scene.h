@@ -12,6 +12,10 @@
 class Scene
 {
 	DirectionalLight directionalLight;
+
+	sf::Time deltaTime;
+	sf::Clock clock;
+	sf::Clock unstopClock;
 public:
 	std::vector<ShaderProgram*> shaders;
 	std::vector<SceneObject*> sceneObjects;
@@ -20,10 +24,17 @@ public:
 
 	SceneObject fir;
 
+	float getDeltaTime()
+	{
+		return deltaTime.asSeconds();
+	}
+
 	Scene() 
 	{
 		skybox = Skybox();
-		camera = Camera({0.0f, 80.0f, 100.0f});
+		camera = Camera({0.0f, 100.0f, 120.0f});
+		clock.restart();
+		unstopClock.restart();
 	}
 
 	void SetDirectionalLight(DirectionalLight dirLight)
@@ -41,14 +52,16 @@ public:
 		sceneObjects.push_back(&so);
 	}
 
-	void Draw(float elapsedTime)
+	void Draw()
 	{
+		deltaTime = clock.restart();
+
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)camera.SCREEN_WIDTH / (float)camera.SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 		for (auto& shaderProgram : shaders) 
 		{
 			shaderProgram->Use();
-			shaderProgram->SetUniformFloat("TIME", elapsedTime);
+			shaderProgram->SetUniformFloat("TIME", unstopClock.getElapsedTime().asSeconds());
 
 			shaderProgram->SetUniformMat4("projection", projection);
 			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());

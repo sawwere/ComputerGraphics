@@ -31,8 +31,8 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     (*scene).AddSceneObject(*fir);
 
-    ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
-    InstansedMesh* _targets = new InstansedMesh("Meshes//cube.obj", "Meshes//bird.jpg", 5, board);
+    ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
+    InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 5, board);
     SceneObject* target = new SceneObject(_targets, targetShader);
     (*scene).AddShaderProgram(*targetShader);
     (*scene).AddSceneObject(*target);
@@ -52,13 +52,13 @@ int main()
     ShaderProgram planetShader = ShaderProgram("Shaders//instanced.vs", "Shaders//proc.frag");
 
     Mesh plane = Mesh("Meshes//cube.obj", "Meshes//grass.jpg");
-    SceneObject ground = SceneObject(&plane, &procShader);
+    SceneObject ground = SceneObject(&plane, &defaultShader);
     ground.scale = { 200.0f, 1.0f, 200.0f };
 
     Mesh mesh = Mesh("Meshes//zeppelin.obj", "Meshes//zeppelin.png");
     Player player = Player(&mesh, &defaultShader);
     player.position.y += 20.0f;
-    player.scale = player.scale * 0.025f;
+    player.scale = player.scale * 0.06f;
     player.rotation.y = glm::radians(-90.0f);
 
     Scene mainScene = Scene();
@@ -71,10 +71,11 @@ int main()
 
     Fill(&mainScene, defaultShader, planetShader);
 
-    sf::Time elapsedTime;
-    sf::Clock clock;
-    GLfloat rotationAngle = 0.0f;
     bool running = true;
+    bool isCamActive = false;
+    bool isCamTouched = false;
+    glm::vec2 mousePos;
+    glm::vec2 mouseDelta;
     while (running)
     {
         sf::Event event;
@@ -90,37 +91,58 @@ int main()
                 mainScene.camera.SCREEN_WIDTH = event.size.width;
                 mainScene.camera.SCREEN_HEIGHT = event.size.height;
             }
+            else if (event.type == sf::Event::MouseWheelMoved)
+            {
+                mainScene.camera.ProcessMouseScroll(event.mouseWheel.delta);
+            }
+            else if (event.type == sf::Event::MouseButtonPressed) {
+
+                switch (event.mouseButton.button)
+                {
+                case sf::Mouse::Right:
+                    isCamActive = true;
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (event.type == sf::Event::MouseMoved)
+            {
+                auto newMousePos = glm::vec2(event.mouseMove.x, event.mouseMove.y);
+                mouseDelta = newMousePos - mousePos;
+                mousePos = newMousePos;
+                if (isCamActive)
+                    mainScene.camera.OnMouseMove(mouseDelta);
+            }
+            else if (event.type == sf::Event::MouseButtonReleased) {
+                switch (event.mouseButton.button)
+                {
+                case sf::Mouse::Right:
+                    isCamActive = false;
+                    break;
+                default:
+                    break;
+                }
+            }
             else if (event.type == sf::Event::KeyPressed)
             {
-                player.OnKeyPress(event.key.code, elapsedTime.asSeconds());
+                player.OnKeyPress(event.key.code, mainScene.getDeltaTime());
                 switch (event.key.code) 
                 {
-                case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::K): mainScene.camera.ProcessKeyboard(DOWNROTATION, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, mainScene.getDeltaTime()); break;
+                case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, mainScene.getDeltaTime()); break;
+                case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, mainScene.getDeltaTime()); break;
+                case (sf::Keyboard::K): mainScene.camera.ProcessKeyboard(DOWNROTATION, mainScene.getDeltaTime()); break;
                 default: break;
                 }
             }
         }
-        elapsedTime = clock.getElapsedTime();
-        if (elapsedTime > sf::milliseconds(4))
-        {
-            rotationAngle += 0.01f;
-            if (rotationAngle > 360)
-                rotationAngle = 360.0f;
-            //elapsedTime = clock.restart();
-        }
         //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        mainScene.Draw(clock.getElapsedTime().asSeconds());
+        mainScene.Draw();
 
         window.display();
-
-
-
-
     }
     window.close();
     return 0;

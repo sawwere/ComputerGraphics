@@ -48,7 +48,7 @@ public:
     Texture texture;    
 
     //TODO indexing
-    Mesh(const char* filePath, const char* texturePath)
+    Mesh(const char* filePath, const char* texturePath, const char* normalMap = nullptr)
     {
 		try 
 		{
@@ -175,17 +175,8 @@ public:
 			std::cout << e.what() << std::endl;
 		}
 		std::cout << "Total vertices count: " << vertices.size() << std::endl;
+		InitializeTexture(texturePath, normalMap);
 		InitializeBuffers();
-		InitializeTexture(texturePath);
-    }
-
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures)
-    {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->texture = textures[0];
-
-        InitializeBuffers();
     }
 
     virtual void Draw(ShaderProgram& shader) const
@@ -208,7 +199,7 @@ public:
 		Release();
 	}
 protected:
-	void InitializeTexture(const char* texturePath)
+	void InitializeTexture(const char* texturePath, const char* normalMap = nullptr)
 	{
 		material = new Material(texturePath);
 

@@ -31,11 +31,18 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     (*scene).AddSceneObject(*fir);
 
-    ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
+    ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
     InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 5, board);
     SceneObject* target = new SceneObject(_targets, targetShader);
     (*scene).AddShaderProgram(*targetShader);
     (*scene).AddSceneObject(*target);
+
+    ShaderProgram* cloudShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
+    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Barn//barn.jpg", 5, board);//"Meshes//Cloud//CloudMedium.obj"
+    SceneObject* clouds = new SceneObject(_clouds, cloudShader);
+    clouds->position.y += 20.0f;
+    (*scene).AddShaderProgram(*cloudShader);
+    (*scene).AddSceneObject(*clouds);
 }
 
 int main()
@@ -46,6 +53,8 @@ int main()
     window.setActive(true);
     glewInit();
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     ShaderProgram defaultShader = ShaderProgram("Shaders//player.vs", "Shaders//sun.frag");
     ShaderProgram procShader = ShaderProgram("Shaders//player.vs", "Shaders//proc.frag");
@@ -57,7 +66,7 @@ int main()
 
     Mesh mesh = Mesh("Meshes//zeppelin.obj", "Meshes//zeppelin.png");
     Player player = Player(&mesh, &defaultShader);
-    player.position.y += 20.0f;
+    player.position.y += 30.0f;
     player.scale = player.scale * 0.06f;
     player.rotation.y = glm::radians(-90.0f);
 
@@ -73,7 +82,6 @@ int main()
 
     bool running = true;
     bool isCamActive = false;
-    bool isCamTouched = false;
     glm::vec2 mousePos;
     glm::vec2 mouseDelta;
     while (running)

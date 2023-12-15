@@ -50,7 +50,7 @@ uniform SpotLight spotLight;
 uniform vec3 viewPos;
 
 uniform float TIME;
-uniform float Stripes = 1.0;
+uniform float Stripes = 0.6;
 
 // Directional light
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -127,5 +127,5 @@ void main()
     result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
     //FragColor = texture(material.diffuse, TexCoord);
-    FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.4f);
+    FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.2f);
 }

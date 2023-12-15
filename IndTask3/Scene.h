@@ -32,7 +32,7 @@ public:
 	Scene() 
 	{
 		skybox = Skybox();
-		camera = Camera({0.0f, 100.0f, 120.0f});
+		camera = Camera({0.0f, 80.0f, 120.0f});
 		clock.restart();
 		unstopClock.restart();
 	}

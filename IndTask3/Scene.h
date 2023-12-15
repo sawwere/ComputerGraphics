@@ -17,13 +17,13 @@ public:
 	std::vector<SceneObject*> sceneObjects;
 	Camera camera;
 	Skybox skybox;
-	
+
+	SceneObject fir;
 
 	Scene() 
 	{
 		skybox = Skybox();
-		Camera camera();
-
+		camera = Camera({0.0f, 80.0f, 100.0f});
 	}
 
 	void SetDirectionalLight(DirectionalLight dirLight)
@@ -43,7 +43,7 @@ public:
 
 	void Draw(float rotationAngle)
 	{
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)800, 0.1f, 1000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)camera.SCREEN_WIDTH / (float)camera.SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 		for (auto& shaderProgram : shaders) 
 		{
@@ -51,7 +51,6 @@ public:
 			shaderProgram->SetUniformMat4("projection", projection);
 			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());
 			shaderProgram->SetUniformVec3("viewPos", camera.Position);
-
 
 			shaderProgram->SetUniformVec3("directionalLight.direction", directionalLight.direction);
 			shaderProgram->SetUniformVec3("directionalLight.ambient", directionalLight.ambient);
@@ -79,13 +78,20 @@ public:
 
 			glUseProgram(0);
 		}
-		
+		//std::cout << sceneObjects.size() << std::endl;
 		for (auto& sceneObject : sceneObjects) 
 		{
-			sceneObject->rotation.y = rotationAngle;
+			//sceneObject->rotation.y = rotationAngle;
 			sceneObject->Draw();
 		}
 		skybox.Draw(camera.GetViewMatrix(), projection);
+	}
+
+	void Fill(ShaderProgram& defaultShader)
+	{
+		
+
+
 	}
 
 private:

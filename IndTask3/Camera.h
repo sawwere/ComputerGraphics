@@ -18,10 +18,12 @@ enum Camera_Movement {
     DOWNROTATION
 };
 const float YAW = -90.0f;
-const float PITCH = 0.0f;
+const float PITCH = -45.0f;
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
+
+
 
 class Camera
 {
@@ -39,6 +41,9 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+
+    int SCREEN_WIDTH = 800;
+    int SCREEN_HEIGHT = 800;
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 7.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = position;

@@ -12,16 +12,6 @@
 
 
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
-// camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCREEN_WIDTH / 2.0f;
-float lastY = SCREEN_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-
-
 void SetIcon(sf::Window& wnd)
 {
     sf::Image image;
@@ -29,30 +19,56 @@ void SetIcon(sf::Window& wnd)
     wnd.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
 }
 
+
+void Fill(Scene* scene, ShaderProgram& defaultShader)
+{
+    int board[100];
+    for (int i = 0; i < 100; i++)
+    {
+        board[i] == 0;
+    }
+    Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
+    SceneObject* fir = new SceneObject(_fir, &defaultShader);
+    (*scene).AddSceneObject(*fir);
+
+}
+
 int main()
 {
-    sf::Window window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "IndTask3", sf::Style::Default, sf::ContextSettings(24));
+    sf::Window window(sf::VideoMode(800, 800), "IndTask3", sf::Style::Default, sf::ContextSettings(24));
     SetIcon(window);
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
     glewInit();
     glEnable(GL_DEPTH_TEST);
 
-    ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
+    ShaderProgram defaultShader = ShaderProgram("Shaders//player.vs", "Shaders//sun.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
 
-    Mesh mesh = Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
-    SceneObject sun = SceneObject(&mesh, &ourShader);
-    sun.scale = sun.scale * 0.25f;
+    Mesh plane = Mesh("Meshes//cube.obj", "Meshes//grass.jpg");
+    SceneObject ground = SceneObject(&plane, &defaultShader);
+    ground.scale = { 200.0f, 1.0f, 200.0f };
 
-    InstansedMesh meshPlanet = InstansedMesh("Meshes//bird.obj", "Meshes//bird.jpg", 11);
-    SceneObject planet = SceneObject(&meshPlanet, &planetShader);
+    Mesh mesh = Mesh("Meshes//zeppelin.obj", "Meshes//zeppelin.png");
+    Player player = Player(&mesh, &defaultShader);
+    player.position.y += 20.0f;
+    player.scale = player.scale * 0.025f;
+    player.rotation.y = glm::radians(-90.0f);
+
+    //InstansedMesh meshPlanet = InstansedMesh("Meshes//bird.obj", "Meshes//bird.jpg", 11);
+    //SceneObject planet = SceneObject(&meshPlanet, &planetShader);
 
     Scene mainScene = Scene();
-    mainScene.AddSceneObject(sun);
-    mainScene.AddSceneObject(planet);
-    mainScene.AddShaderProgram(ourShader);
+    mainScene.AddSceneObject(player);
+    //mainScene.AddSceneObject(planet);
+    mainScene.AddSceneObject(ground);
+    mainScene.AddShaderProgram(defaultShader);
     mainScene.AddShaderProgram(planetShader);
+
+
+    Fill(&mainScene, defaultShader);
+
+    //mainScene.Fill(defaultShader);
 
     sf::Time elapsedTime;
     sf::Clock clock;
@@ -71,16 +87,14 @@ int main()
             {
                 // Изменён размер окна, надо поменять и размер области Opengl отрисовки
                 glViewport(0, 0, event.size.width, event.size.height);
+                mainScene.camera.SCREEN_WIDTH = event.size.width;
+                mainScene.camera.SCREEN_HEIGHT = event.size.height;
             }
             else if (event.type == sf::Event::KeyPressed)
             {
-                switch (event.key.code) {
-                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::A): mainScene.camera.ProcessKeyboard(LEFT, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::D): mainScene.camera.ProcessKeyboard(RIGHT, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
+                player.OnKeyPress(event.key.code, elapsedTime.asSeconds());
+                switch (event.key.code) 
+                {
                 case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, elapsedTime.asSeconds()); break;
@@ -90,7 +104,7 @@ int main()
             }
         }
         elapsedTime = clock.getElapsedTime();
-        if (elapsedTime > sf::milliseconds(5))
+        if (elapsedTime > sf::milliseconds(4))
         {
             rotationAngle += 0.01f;
             if (rotationAngle > 360)

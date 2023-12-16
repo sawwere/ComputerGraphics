@@ -175,8 +175,8 @@ float perlin_fractal_3(vec3 pos, int iters) {
 	return smooth_step(0, 1, res / sum);
 }
 
-uniform vec4 Color1 = vec4(0.20);
-uniform vec4 Color2 = vec4(0.45);
+uniform vec4 Color1 = vec4(0.30);
+uniform vec4 Color2 = vec4(0.55);
 void main()
 {
     vec2 pos = (TexCoord + vec2(0.5)) * 10;

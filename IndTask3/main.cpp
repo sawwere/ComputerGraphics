@@ -23,21 +23,41 @@ void SetIcon(sf::Window& wnd)
     wnd.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
 }
 
+glm::mat4* GenerateModelMatrices(int count, int* board, const glm::vec3& offset)
+{
+    glm::mat4* modelMatrices = new glm::mat4[count]{ };
+
+    for (GLuint i = 0; i < count; i++)
+    {
+        int ind = rand() % 100;
+        while (board[ind])
+        {
+            std::cout << board[ind] << " - " << ind << std::endl;
+            ind = rand() % 100;
+
+        }
+        std::cout << ind << std::endl;
+        board[ind] = 1;
+
+        float x = (ind % 10 - 5) * 10;
+        float y = 0.0f;
+        float z = (ind / 10 - 5) * 10;
+        glm::mat4 model = glm::mat4(1.0f);
+        float angle = rand() % 360;
+        model = glm::translate(model, offset);
+        model = glm::translate(model, glm::vec3(x, y, z));
+        model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+        modelMatrices[i] = model;
+    }
+    return modelMatrices;
+}
 
 void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedShader)
 {
     int board[100];
-    std::array<int, 100> bb = std::array<int, 100>();
-    /*for (int i = 0; i < 100; i++)
-    {
-        board[i] == 0;
-    }*/
     for (int i = 0; i < 100; i++)
     {
-        
-        bb[i] = 0;
         board[i] = 0;
-        std::cout << bb[i] << " - " << board[i] << "---" <<  i << std::endl;
     }
     Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
@@ -45,25 +65,26 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     (*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
-    InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 5, board);
+    glm::mat4* modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 1.0f, 0.0f));
+    InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 7, modelMatrices);
     SceneObject* target = new SceneObject(_targets, targetShader);
     (*scene).AddShaderProgram(*targetShader);
     (*scene).AddSceneObject(*target);
 
-    InstansedMesh* _lamps = new InstansedMesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg", 5, board);
+    modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 1.0f, 0.0f));
+    InstansedMesh* _lamps = new InstansedMesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg", 5, modelMatrices);
     SceneObject* lamps = new SceneObject(_lamps, &instancedShader);
-    lamps->position.y += 1.0f;
     (*scene).AddSceneObject(*lamps);
 
-    InstansedMesh* _pumpkins = new InstansedMesh("Meshes//Pumpkin//pumpkin.obj", "Meshes//Pumpkin//pumpkin.png", 5, board);
+    modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 20.0f, 0.0f));
+    InstansedMesh* _pumpkins = new InstansedMesh("Meshes//Pumpkin//pumpkin.obj", "Meshes//Pumpkin//pumpkin.png", 5, modelMatrices);
     SceneObject* pumpkin = new SceneObject(_pumpkins, &instancedShader);
-    pumpkin->position.y += 20.0f;
     (*scene).AddSceneObject(*pumpkin);
 
+    modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 20.0f, 0.0f));
     ShaderProgram* cloudShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
-    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Pumpkin//pumpkin.png", 4, board);//"Meshes//Cloud//CloudMedium.obj"
+    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Pumpkin//pumpkin.png", 4, modelMatrices);//"Meshes//Cloud//CloudMedium.obj"
     SceneObject* clouds = new SceneObject(_clouds, cloudShader);
-    clouds->position.y += 20.0f;
     (*scene).AddShaderProgram(*cloudShader);
     (*scene).AddSceneObject(*clouds);
 }

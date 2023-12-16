@@ -16,11 +16,11 @@ class InstansedMesh : public Mesh
 public:
 	
 
-	InstansedMesh(const char* filePath, const char* texturePath, int count, int* board): Mesh(filePath, texturePath)
+	InstansedMesh(const char* filePath, const char* texturePath, int count, glm::mat4* matrices) : Mesh(filePath, texturePath)
 	{
 		this->count = count;
 
-        InitializeBuffers(board);
+        InitializeBuffers(matrices);
 	}
 
 
@@ -37,35 +37,19 @@ public:
         }
         glUseProgram(0);
 	}
+
+    ~InstansedMesh()
+    {
+        delete[] modelMatrices;
+        modelMatrices = nullptr;
+        Mesh::~Mesh();
+    }
 private:
-    void InitializeBuffers(int* board)
+    void InitializeBuffers(glm::mat4* matrices)
     {
 		Mesh::InitializeBuffers();
         
-        modelMatrices = new glm::mat4[count];
-        
-        for (GLuint i = 0; i < count; i++)
-        {
-            int ind = rand() % 100;
-            while (board[ind])
-            {
-                std::cout << board[ind] << " - " << ind << std::endl;
-                ind = rand() % 100;
-                
-            }
-            std::cout << ind << std::endl;
-            board[ind] = 1;
-
-            float x = (ind % 10 - 5) * 10;
-            float y = 0.0f;
-            float z = (ind / 10 - 5) * 10;
-            glm::mat4 model = glm::mat4(1.0f);
-            float angle = rand() % 360;
-            model = glm::translate(model, glm::vec3(x, y, z));
-            model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
-            modelMatrices[i] = model;
-        }
-
+        modelMatrices = matrices;
 
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);

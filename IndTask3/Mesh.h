@@ -33,6 +33,7 @@ struct Vertex
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
+	glm::vec3 Tangent;
 };
 
 
@@ -46,6 +47,8 @@ public:
     
 	Material* material;
     Texture texture;    
+	bool useNormalMap = false;
+	sf::Texture normalMap;
 
     //TODO indexing
     Mesh(const char* filePath, const char* texturePath, const char* normalMap = nullptr)
@@ -176,6 +179,11 @@ public:
 		}
 		std::cout << "Total vertices count: " << vertices.size() << std::endl;
 		InitializeTexture(texturePath, normalMap);
+		if (normalMap != nullptr)
+		{
+			useNormalMap = true;
+			InitializeTangent(normalMap);
+		}
 		InitializeBuffers();
     }
 
@@ -183,6 +191,16 @@ public:
     {
         shader.Use();
 		material->Use(&shader);
+		auto unifTexture1 = glGetUniformLocation(shader.ID, "material.diffuse");
+		glUniform1i(unifTexture1, 0);
+		if (useNormalMap)
+		{
+			glActiveTexture(GL_TEXTURE1);
+			sf::Texture::bind(&normalMap);
+			auto unifTexture2 = glGetUniformLocation(shader.ID, "normalMap");
+			glUniform1i(unifTexture2, 1);
+		}
+		
         {
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -199,14 +217,51 @@ public:
 		Release();
 	}
 protected:
-	void InitializeTexture(const char* texturePath, const char* normalMap = nullptr)
+	void InitializeTangent(const char* normalMap = nullptr)
+	{
+		for (unsigned int i = 0; i < indices.size(); i += 3) {
+			Vertex& v0 = vertices[indices[i]];
+			Vertex& v1 = vertices[indices[i + 1]];
+			Vertex& v2 = vertices[indices[i + 2]];
+
+			glm::vec3 Edge1 = v1.Position - v0.Position;
+			glm::vec3 Edge2 = v2.Position - v0.Position;
+
+			float DeltaU1 = v1.TexCoords.x - v0.TexCoords.x;
+			float DeltaV1 = v1.TexCoords.y - v0.TexCoords.y;
+			float DeltaU2 = v2.TexCoords.x - v0.TexCoords.x;
+			float DeltaV2 = v2.TexCoords.y - v0.TexCoords.y;
+
+			float f = 1.0f / (DeltaU1 * DeltaV2 - DeltaU2 * DeltaV1);
+
+			glm::vec3 Tangent, Bitangent;
+
+			Tangent.x = f * (DeltaV2 * Edge1.x - DeltaV1 * Edge2.x);
+			Tangent.y = f * (DeltaV2 * Edge1.y - DeltaV1 * Edge2.y);
+			Tangent.z = f * (DeltaV2 * Edge1.z - DeltaV1 * Edge2.z);
+
+			Bitangent.x = f * (-DeltaU2 * Edge1.x - DeltaU1 * Edge2.x);
+			Bitangent.y = f * (-DeltaU2 * Edge1.y - DeltaU1 * Edge2.y);
+			Bitangent.z = f * (-DeltaU2 * Edge1.z - DeltaU1 * Edge2.z);
+
+			v0.Tangent += Tangent;
+			v1.Tangent += Tangent;
+			v2.Tangent += Tangent;
+		}
+
+		for (unsigned int i = 0; i < vertices.size(); i++) 
+		{
+			vertices[i].Tangent = glm::normalize(vertices[i].Tangent);
+		}
+	}
+
+	void InitializeTexture(const char* texturePath, const char* normalMapPath = nullptr)
 	{
 		material = new Material(texturePath);
-
-		sf::Texture texture1;
-		texture1.loadFromFile(texturePath);
-		texture1.setRepeated(true);
-		texture = { 0, "testing", texture1 };
+		if (normalMapPath != nullptr)
+		{
+			normalMap.loadFromFile(normalMapPath);
+		}
 	}
 
     virtual void InitializeBuffers()
@@ -232,6 +287,9 @@ protected:
         // Texture
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
+		// Tangent
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(8 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
 
         glBindVertexArray(0); // Unbind VAO
     }

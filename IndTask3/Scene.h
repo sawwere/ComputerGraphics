@@ -12,6 +12,7 @@
 class Scene
 {
 	DirectionalLight directionalLight;
+	SpotLight spotLight;
 	std::vector<PointLight*> pointLights;
 
 	sf::Time deltaTime;
@@ -34,7 +35,7 @@ public:
 	Scene() 
 	{
 		skybox = Skybox();
-		camera = Camera({0.0f, 80.0f, 120.0f});
+		camera = Camera({0.0f, 00.0f, 5.0f});
 		pointLights = std::vector<PointLight*>();
 
 		clock.restart();
@@ -61,9 +62,9 @@ public:
 		pointLights.push_back(pl);
 	}
 
-	void RemovePointLight(PointLight* pl)
+	bool RemovePointLight(PointLight* pl)
 	{
-		std::remove(pointLights.begin(), pointLights.end(), pl);
+		return (std::remove(pointLights.begin(), pointLights.end(), pl) == pointLights.end());
 	}
 
 	void Draw()
@@ -109,9 +110,9 @@ public:
 			shaderProgram->SetUniformVec3("spotLight.position", camera.Position);
 			shaderProgram->SetUniformVec3("spotLight.direction", camera.Front);
 
-			shaderProgram->SetUniformVec3("spotLight.ambient", 0.05f, 0.05f, 0.05f);
-			shaderProgram->SetUniformVec3("spotLight.diffuse", 0.4f, 0.4f, 0.4f);
-			shaderProgram->SetUniformVec3("spotLight.specular", 0.5f, 0.5f, 0.5f);
+			shaderProgram->SetUniformVec3("spotLight.ambient", spotLight.ambient);
+			shaderProgram->SetUniformVec3("spotLight.diffuse", spotLight.diffuse);
+			shaderProgram->SetUniformVec3("spotLight.specular", spotLight.specular);
 			shaderProgram->SetUniformVec3("spotLight.attenuation", 1.0f, 0.09f, 0.032f);
 
 			shaderProgram->SetUniformFloat("spotLight.innerAngle", 5.0f);

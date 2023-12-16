@@ -62,7 +62,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     board[50] = 1;
-    (*scene).AddSceneObject(*fir);
+    //(*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
     glm::mat4* modelMatrices = GenerateModelMatrices(8, board, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -78,11 +78,17 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
         PointLight* pl = new PointLight();
         glm::mat4 model = modelMatrices[i];
         model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-        pl->position =  model * glm::vec4(1.0f);
+        pl->position =  model * glm::vec4(0.0f, 4.0f, 0.0f, 1.0f);
         (*scene).AddPointLight(pl);
     }
     SceneObject* lamps = new SceneObject(_lamps, &instancedShader);
     (*scene).AddSceneObject(*lamps);
+
+    modelMatrices = GenerateModelMatrices(4, board, glm::vec3(0.0f, 1.0f, 0.0f));
+    InstansedMesh* _snowmens = new InstansedMesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png", 4, modelMatrices);//"Meshes//Cloud//CloudMedium.obj"
+    SceneObject* snowmens = new SceneObject(_snowmens, &instancedShader);
+    (*scene).AddShaderProgram(instancedShader);
+    (*scene).AddSceneObject(*snowmens);
 
     modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 20.0f, 0.0f));
     InstansedMesh* _pumpkins = new InstansedMesh("Meshes//Pumpkin//pumpkin.obj", "Meshes//Pumpkin//pumpkin.png", 5, modelMatrices);
@@ -111,14 +117,15 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     ShaderProgram defaultShader = ShaderProgram("Shaders//defaultPhong.vs", "Shaders//defaultPhong.frag");
+    ShaderProgram normalMapShader = ShaderProgram("Shaders//normalMap.vs", "Shaders//normalMap.frag");
     ShaderProgram instancedShader = ShaderProgram("Shaders//instanced.vs", "Shaders//defaultPhong.frag");
 
-    Mesh plane = Mesh("Meshes//cube.obj", "Meshes//grass.jpg");
-    SceneObject ground = SceneObject(&plane, &defaultShader);
+    Mesh plane = Mesh("Meshes//Ground//cube.obj", "Meshes//Ground//grass.png", "Meshes//Ground//normal.png");
+    SceneObject ground = SceneObject(&plane, &normalMapShader);
     ground.scale = { 200.0f, 1.0f, 200.0f };
 
-    Mesh mesh = Mesh("Meshes//zeppelin.obj", "Meshes//zeppelin.png");
-    Player player = Player(&mesh, &defaultShader);
+    Mesh mesh = Mesh("Meshes//Zeppelin//zeppelin.obj", "Meshes//Zeppelin//zeppelin.png", "Meshes//Zeppelin//NormalMap.png");
+    Player player = Player(&mesh, &normalMapShader);
     player.position.y += 30.0f;
     player.scale = player.scale * 0.06f;
     player.rotation.y = glm::radians(-90.0f);
@@ -127,6 +134,7 @@ int main()
     mainScene.AddSceneObject(player);
     mainScene.AddSceneObject(ground);
     mainScene.AddShaderProgram(defaultShader);
+    mainScene.AddShaderProgram(normalMapShader);
     mainScene.AddShaderProgram(instancedShader);
 
 

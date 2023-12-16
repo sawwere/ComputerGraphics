@@ -12,6 +12,7 @@
 class Scene
 {
 	DirectionalLight directionalLight;
+	std::vector<PointLight*> pointLights;
 
 	sf::Time deltaTime;
 	sf::Clock clock;
@@ -19,6 +20,7 @@ class Scene
 public:
 	std::vector<ShaderProgram*> shaders;
 	std::vector<SceneObject*> sceneObjects;
+	
 	Camera camera;
 	Skybox skybox;
 
@@ -33,6 +35,8 @@ public:
 	{
 		skybox = Skybox();
 		camera = Camera({0.0f, 80.0f, 120.0f});
+		pointLights = std::vector<PointLight*>();
+
 		clock.restart();
 		unstopClock.restart();
 	}
@@ -50,6 +54,16 @@ public:
 	void AddSceneObject(SceneObject& so)
 	{
 		sceneObjects.push_back(&so);
+	}
+
+	void AddPointLight(PointLight* pl)
+	{
+		pointLights.push_back(pl);
+	}
+
+	void RemovePointLight(PointLight* pl)
+	{
+		std::remove(pointLights.begin(), pointLights.end(), pl);
 	}
 
 	void Draw()
@@ -72,12 +86,24 @@ public:
 			shaderProgram->SetUniformVec3("directionalLight.diffuse", directionalLight.diffuse);
 			shaderProgram->SetUniformVec3("directionalLight.specular", directionalLight.specular);
 
-
-			shaderProgram->SetUniformVec3("pointLight.position", 50.0f, 1.0f, -0.3f);
-			shaderProgram->SetUniformVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
-			shaderProgram->SetUniformVec3("pointLight.diffuse", 0.4f, 0.4f, 0.4f);
-			shaderProgram->SetUniformVec3("pointLight.specular", 0.5f, 0.5f, 0.5f);
-			shaderProgram->SetUniformVec3("pointLight.attenuation", 1.0f, 0.09f, 0.032f);
+			//int s = pointLights.size();
+			//glm::vec3 pointLightPositions[5];
+			for (int i = 0; i < pointLights.size(); i++)
+			{
+				//pointLightPositions[i] = pointLights[i]->position;
+				shaderProgram->SetUniformVec3((std::string("pointLight[") + std::to_string(i) + std::string("].position")), pointLights[i]->position);
+				//std::cout << (std::string("pointLight[") + std::to_string(i) + std::string("].position")) << std::endl;
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].ambient", 0.05f, 0.05f, 0.05f);
+				//std::cout << (std::string("pointLight[") + std::to_string(i) + "].ambient") << std::endl;
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].diffuse", 0.4f, 0.4f, 0.4f);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].specular", 0.5f, 0.5f, 0.5f);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].attenuation", 1.0f, 0.09f, 0.032f);
+			}
+			/*shaderProgram->SetUniformVec3("pointLight[0].position", 50.0f, 1.0f, -0.3f);
+			shaderProgram->SetUniformVec3("pointLight[0].ambient", 0.05f, 0.05f, 0.05f);
+			shaderProgram->SetUniformVec3("pointLight[0].diffuse", 0.4f, 0.4f, 0.4f);
+			shaderProgram->SetUniformVec3("pointLight[0].specular", 0.5f, 0.5f, 0.5f);
+			shaderProgram->SetUniformVec3("pointLight[0].attenuation", 1.0f, 0.09f, 0.032f);*/
 
 
 			shaderProgram->SetUniformVec3("spotLight.position", camera.Position);

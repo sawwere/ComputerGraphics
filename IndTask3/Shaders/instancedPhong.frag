@@ -49,7 +49,7 @@ uniform SpotLight spotLight;
 uniform vec3 viewPos;
 
 uniform float TIME;
-uniform float Stripes = 5.0;
+uniform float Stripes = 3.0;
 
 // Directional light
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -111,13 +111,6 @@ vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir
 
 void main()
 {
-    float dist = distance(TexCoord, vec2(0.5)) - TIME / 10.0;
-    dist = mod(dist * Stripes * 2.0, 1.0);
-    float color;
-    
-    color = float(dist > 0.5);
-    //FragColor = vec4(color, 0.0, 0.0, 1.0);
-
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
@@ -125,6 +118,5 @@ void main()
     result += CalculatePointLight(pointLight, norm, FragPos, viewDir);
     result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
-    //FragColor = texture(material.diffuse, TexCoord);
     //FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.1f);
 }

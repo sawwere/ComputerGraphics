@@ -42,14 +42,16 @@ in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoord;
 
+#define NR_POINT_LIGHTS 5
+
 uniform Material material;
 uniform DirectionalLight directionalLight;
-uniform PointLight pointLight;
+uniform PointLight[NR_POINT_LIGHTS] pointLight;
 uniform SpotLight spotLight;
 uniform vec3 viewPos;
 
 uniform float TIME;
-uniform float Stripes = 3.0;
+uniform float Stripes = 5.0;
 
 // Directional light
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -122,8 +124,12 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 result = vec3(0.0f, 0.0f, 0.0f);
     result += CalculateDirectionalLight(directionalLight, norm, viewDir);
-    result += CalculatePointLight(pointLight, norm, FragPos, viewDir);
+
+    for(int i = 0; i < NR_POINT_LIGHTS; i++)
+        result += CalculatePointLight(pointLight[i], norm, FragPos, viewDir);
+
     result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
+    //FragColor = texture(material.diffuse, TexCoord);
     //FragColor = mix(vec4(result, 1.0), vec4(color, 0.0, 0.0, 1.0), 0.1f);
 }

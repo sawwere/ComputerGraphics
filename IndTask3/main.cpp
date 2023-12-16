@@ -65,14 +65,22 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     (*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
-    glm::mat4* modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 1.0f, 0.0f));
-    InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 7, modelMatrices);
+    glm::mat4* modelMatrices = GenerateModelMatrices(8, board, glm::vec3(0.0f, 1.0f, 0.0f));
+    InstansedMesh* _targets = new InstansedMesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg", 8, modelMatrices);
     SceneObject* target = new SceneObject(_targets, targetShader);
     (*scene).AddShaderProgram(*targetShader);
     (*scene).AddSceneObject(*target);
 
     modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 1.0f, 0.0f));
     InstansedMesh* _lamps = new InstansedMesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg", 5, modelMatrices);
+    for (int i = 0; i < 5;i++)
+    {
+        PointLight* pl = new PointLight();
+        glm::mat4 model = modelMatrices[i];
+        model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+        pl->position =  model * glm::vec4(1.0f);
+        (*scene).AddPointLight(pl);
+    }
     SceneObject* lamps = new SceneObject(_lamps, &instancedShader);
     (*scene).AddSceneObject(*lamps);
 
@@ -81,7 +89,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     SceneObject* pumpkin = new SceneObject(_pumpkins, &instancedShader);
     (*scene).AddSceneObject(*pumpkin);
 
-    modelMatrices = GenerateModelMatrices(5, board, glm::vec3(0.0f, 20.0f, 0.0f));
+    modelMatrices = GenerateModelMatrices(4, board, glm::vec3(0.0f, 20.0f, 0.0f));
     ShaderProgram* cloudShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
     InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Pumpkin//pumpkin.png", 4, modelMatrices);//"Meshes//Cloud//CloudMedium.obj"
     SceneObject* clouds = new SceneObject(_clouds, cloudShader);
@@ -102,9 +110,8 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    ShaderProgram defaultShader = ShaderProgram("Shaders//player.vs", "Shaders//sun.frag");
-    ShaderProgram procShader = ShaderProgram("Shaders//player.vs", "Shaders//proc.frag");
-    ShaderProgram planetShader = ShaderProgram("Shaders//instanced.vs", "Shaders//proc.frag");
+    ShaderProgram defaultShader = ShaderProgram("Shaders//defaultPhong.vs", "Shaders//defaultPhong.frag");
+    ShaderProgram instancedShader = ShaderProgram("Shaders//instanced.vs", "Shaders//defaultPhong.frag");
 
     Mesh plane = Mesh("Meshes//cube.obj", "Meshes//grass.jpg");
     SceneObject ground = SceneObject(&plane, &defaultShader);
@@ -120,11 +127,10 @@ int main()
     mainScene.AddSceneObject(player);
     mainScene.AddSceneObject(ground);
     mainScene.AddShaderProgram(defaultShader);
-    mainScene.AddShaderProgram(procShader);
-    mainScene.AddShaderProgram(planetShader);
+    mainScene.AddShaderProgram(instancedShader);
 
 
-    Fill(&mainScene, defaultShader, planetShader);
+    Fill(&mainScene, defaultShader, instancedShader);
 
     bool running = true;
     bool isCamActive = false;
@@ -191,7 +197,6 @@ int main()
                 }
             }
         }
-        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         mainScene.Draw();

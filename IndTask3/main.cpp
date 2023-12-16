@@ -3,6 +3,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
+#include <chrono>
+#include <ctime>  
+#include <array>
+
 
 #include "ShaderProgram.h"
 #include "Mesh.h"
@@ -23,12 +27,21 @@ void SetIcon(sf::Window& wnd)
 void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedShader)
 {
     int board[100];
-    for (int i = 0; i < 100; i++)
+    std::array<int, 100> bb = std::array<int, 100>();
+    /*for (int i = 0; i < 100; i++)
     {
         board[i] == 0;
+    }*/
+    for (int i = 0; i < 100; i++)
+    {
+        
+        bb[i] = 0;
+        board[i] = 0;
+        std::cout << bb[i] << " - " << board[i] << "---" <<  i << std::endl;
     }
     Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
+    board[50] = 1;
     (*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
@@ -37,8 +50,18 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     (*scene).AddShaderProgram(*targetShader);
     (*scene).AddSceneObject(*target);
 
+    InstansedMesh* _lamps = new InstansedMesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg", 5, board);
+    SceneObject* lamps = new SceneObject(_lamps, &instancedShader);
+    lamps->position.y += 1.0f;
+    (*scene).AddSceneObject(*lamps);
+
+    InstansedMesh* _pumpkins = new InstansedMesh("Meshes//Pumpkin//pumpkin.obj", "Meshes//Pumpkin//pumpkin.png", 5, board);
+    SceneObject* pumpkin = new SceneObject(_pumpkins, &instancedShader);
+    pumpkin->position.y += 20.0f;
+    (*scene).AddSceneObject(*pumpkin);
+
     ShaderProgram* cloudShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
-    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Barn//barn.jpg", 5, board);//"Meshes//Cloud//CloudMedium.obj"
+    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Pumpkin//pumpkin.png", 4, board);//"Meshes//Cloud//CloudMedium.obj"
     SceneObject* clouds = new SceneObject(_clouds, cloudShader);
     clouds->position.y += 20.0f;
     (*scene).AddShaderProgram(*cloudShader);
@@ -47,6 +70,8 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
 
 int main()
 {
+    srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+
     sf::Window window(sf::VideoMode(800, 800), "IndTask3", sf::Style::Default, sf::ContextSettings(24));
     SetIcon(window);
     window.setVerticalSyncEnabled(true);

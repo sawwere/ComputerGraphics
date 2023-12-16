@@ -6,8 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <chrono>
-#include <ctime>  
+
 
 class InstansedMesh : public Mesh
 {
@@ -44,14 +43,17 @@ private:
 		Mesh::InitializeBuffers();
         
         modelMatrices = new glm::mat4[count];
-        srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+        
         for (GLuint i = 0; i < count; i++)
         {
             int ind = rand() % 100;
             while (board[ind])
             {
+                std::cout << board[ind] << " - " << ind << std::endl;
                 ind = rand() % 100;
+                
             }
+            std::cout << ind << std::endl;
             board[ind] = 1;
 
             float x = (ind % 10 - 5) * 10;

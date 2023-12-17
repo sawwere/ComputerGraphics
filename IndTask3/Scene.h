@@ -26,18 +26,33 @@ public:
 	Skybox skybox;
 
 	SceneObject fir;
-
+	ShaderProgram snowProgram = ShaderProgram("Shaders//snow.vs", "Shaders//snow.frag");
+	GLuint VBO;
 	float getDeltaTime()
 	{
 		return deltaTime.asSeconds();
 	}
 
+	const int numParticles = 10000;
+	glm::vec3 triangle[10000];
 	Scene() 
 	{
 		skybox = Skybox();
-		camera = Camera({0.0f, 00.0f, 5.0f});
+		camera = Camera({0.0f, 80.0f, 120.0f});
 		pointLights = std::vector<PointLight*>();
+		snowProgram = ShaderProgram("Shaders//snow.vs", "Shaders//snow.frag");
 
+
+		for (int i = 0; i < numParticles; i++) 
+		{
+			triangle[i] = { rand() % 200 - 100, rand() % 130, rand() % 200 - 100 };
+		}
+		std::cout << sizeof(triangle) << std::endl;
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, NULL);
+		shaders.push_back(&snowProgram);
 		clock.restart();
 		unstopClock.restart();
 	}
@@ -82,30 +97,19 @@ public:
 			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());
 			shaderProgram->SetUniformVec3("viewPos", camera.Position);
 
-			shaderProgram->SetUniformVec3("directionalLight.direction", directionalLight.direction);
+			shaderProgram->SetUniformVec3("directionalLight.direction", directionalLight.direction );
 			shaderProgram->SetUniformVec3("directionalLight.ambient", directionalLight.ambient);
 			shaderProgram->SetUniformVec3("directionalLight.diffuse", directionalLight.diffuse);
 			shaderProgram->SetUniformVec3("directionalLight.specular", directionalLight.specular);
 
-			//int s = pointLights.size();
-			//glm::vec3 pointLightPositions[5];
 			for (int i = 0; i < pointLights.size(); i++)
 			{
-				//pointLightPositions[i] = pointLights[i]->position;
-				shaderProgram->SetUniformVec3((std::string("pointLight[") + std::to_string(i) + std::string("].position")), pointLights[i]->position);
-				//std::cout << (std::string("pointLight[") + std::to_string(i) + std::string("].position")) << std::endl;
-				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].ambient", 0.05f, 0.05f, 0.05f);
-				//std::cout << (std::string("pointLight[") + std::to_string(i) + "].ambient") << std::endl;
-				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].diffuse", 0.4f, 0.4f, 0.4f);
-				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].specular", 0.5f, 0.5f, 0.5f);
-				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].attenuation", 1.0f, 0.09f, 0.032f);
+				shaderProgram->SetUniformVec3((std::string("pointLight[") + std::to_string(i) + "].position"), pointLights[i]->position);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].ambient", pointLights[i]->ambient);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].diffuse", pointLights[i]->diffuse);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].specular", pointLights[i]->specular);
+				shaderProgram->SetUniformVec3(std::string("pointLight[") + std::to_string(i) + "].attenuation", pointLights[i]->attenuation);
 			}
-			/*shaderProgram->SetUniformVec3("pointLight[0].position", 50.0f, 1.0f, -0.3f);
-			shaderProgram->SetUniformVec3("pointLight[0].ambient", 0.05f, 0.05f, 0.05f);
-			shaderProgram->SetUniformVec3("pointLight[0].diffuse", 0.4f, 0.4f, 0.4f);
-			shaderProgram->SetUniformVec3("pointLight[0].specular", 0.5f, 0.5f, 0.5f);
-			shaderProgram->SetUniformVec3("pointLight[0].attenuation", 1.0f, 0.09f, 0.032f);*/
-
 
 			shaderProgram->SetUniformVec3("spotLight.position", camera.Position);
 			shaderProgram->SetUniformVec3("spotLight.direction", camera.Front);
@@ -113,23 +117,35 @@ public:
 			shaderProgram->SetUniformVec3("spotLight.ambient", spotLight.ambient);
 			shaderProgram->SetUniformVec3("spotLight.diffuse", spotLight.diffuse);
 			shaderProgram->SetUniformVec3("spotLight.specular", spotLight.specular);
-			shaderProgram->SetUniformVec3("spotLight.attenuation", 1.0f, 0.09f, 0.032f);
+			shaderProgram->SetUniformVec3("spotLight.attenuation", spotLight.attenuation);
 
 			shaderProgram->SetUniformFloat("spotLight.innerAngle", 5.0f);
 			shaderProgram->SetUniformFloat("spotLight.outerAngle", 9.0f);
 
 			glUseProgram(0);
 		}
-		//std::cout << sceneObjects.size() << std::endl;
+
 		for (auto& sceneObject : sceneObjects) 
 		{
 			sceneObject->Draw();
 		}
 		skybox.Draw(camera.GetViewMatrix(), projection);
+
+		for (int i = 0; i < numParticles; i++)
+		{
+			snowProgram.Use();
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_POINTS, 0, numParticles);
+			glDisableVertexAttribArray(0);
+			glUseProgram(0);
+		}
+		
 	}
 
+
 private:
-	std::vector<Mesh> meshes;
 };
 
 

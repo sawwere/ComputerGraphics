@@ -62,7 +62,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     board[50] = 1;
-    //(*scene).AddSceneObject(*fir);
+    (*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");
     glm::mat4* modelMatrices = GenerateModelMatrices(8, board, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -85,7 +85,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     (*scene).AddSceneObject(*lamps);
 
     modelMatrices = GenerateModelMatrices(4, board, glm::vec3(0.0f, 1.0f, 0.0f));
-    InstansedMesh* _snowmens = new InstansedMesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png", 4, modelMatrices);//"Meshes//Cloud//CloudMedium.obj"
+    InstansedMesh* _snowmens = new InstansedMesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png", 4, modelMatrices);
     SceneObject* snowmens = new SceneObject(_snowmens, &instancedShader);
     (*scene).AddShaderProgram(instancedShader);
     (*scene).AddSceneObject(*snowmens);
@@ -97,7 +97,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
 
     modelMatrices = GenerateModelMatrices(4, board, glm::vec3(0.0f, 20.0f, 0.0f));
     ShaderProgram* cloudShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//cloud.frag");
-    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//co.obj", "Meshes//Pumpkin//pumpkin.png", 4, modelMatrices);//"Meshes//Cloud//CloudMedium.obj"
+    InstansedMesh* _clouds = new InstansedMesh("Meshes//Cloud//cloud.obj", "Meshes//Pumpkin//pumpkin.png", 4, modelMatrices);
     SceneObject* clouds = new SceneObject(_clouds, cloudShader);
     (*scene).AddShaderProgram(*cloudShader);
     (*scene).AddSceneObject(*clouds);
@@ -113,6 +113,7 @@ int main()
     window.setActive(true);
     glewInit();
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

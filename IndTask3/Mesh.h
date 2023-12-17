@@ -206,7 +206,6 @@ public:
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
             sf::Texture::bind(NULL);
-            
         }
         glUseProgram(0);
     }

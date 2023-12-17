@@ -56,8 +56,6 @@ public:
 	{
 	}
 
-
-
 	void OnKeyPress(sf::Keyboard::Key key, float deltaTime)
 	{
 		float velocity = MovementSpeed * deltaTime;
@@ -70,23 +68,23 @@ public:
 			case (sf::Keyboard::S): position += forward * velocity; break;
 			case (sf::Keyboard::A): 
 				Yaw -= RotationSpeed * rotationVelocity;
-				updateCameraVectors(); 
+				updateVectors();
 				rotation.y += glm::radians(RotationSpeed * rotationVelocity);
 				break;
 			case (sf::Keyboard::D): 
 				Yaw += RotationSpeed * rotationVelocity;
 				rotation.y -= glm::radians(RotationSpeed * rotationVelocity);
-				updateCameraVectors();
+				updateVectors();
 				break;
-			case (sf::Keyboard::R): position -= up * velocity; break;
-			case (sf::Keyboard::F): position += up * velocity; break;
+			case (sf::Keyboard::R): position += up * velocity; break;
+			case (sf::Keyboard::F): position -= up * velocity; break;
 			case (sf::Keyboard::V): std::cout << "veiw changed" <<std::endl; break;
 			default: break;
 		}
 	}
 private:
 	float Yaw = 90.0f;
-	void updateCameraVectors()
+	void updateVectors()
 	{
 		glm::vec3 front;
 		front.x = cos(glm::radians(Yaw));

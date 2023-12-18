@@ -59,7 +59,7 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     {
         board[i] = 0;
     }
-    Mesh* _fir = new Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
+    Mesh* _fir = new Mesh("Meshes//fir.obj", "Meshes//fir.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
     board[50] = 1;
     (*scene).AddSceneObject(*fir);

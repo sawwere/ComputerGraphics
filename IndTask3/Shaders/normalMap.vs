@@ -13,7 +13,7 @@ out Vertex {
 
 out vec3 FragPos;
 out vec2 TexCoord;
-out vec3 Normal;
+//out vec3 Normal;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -26,15 +26,14 @@ void main()
     TexCoord = textPosition;
 
     FragPos = vec3(model * vec4(vertexPosition, 1.0));
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
-    Normal = normalMatrix * normal;  
+    mat3 normalMatrix = mat3(model);
+    //Normal = normalMatrix * normal;  
 
     vs_out.FragPos = vec3(model * vec4(vertexPosition, 1.0));
     vs_out.TexCoord = TexCoord;
     
     vec3 T = normalize(normalMatrix * aTangent);
     vec3 N = normalize(normalMatrix * normal);
-    T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
 
     vs_out.TBN = mat3(T, B, N);

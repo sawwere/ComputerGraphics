@@ -218,30 +218,31 @@ public:
 protected:
 	void InitializeTangent(const char* normalMap = nullptr)
 	{
-		for (unsigned int i = 0; i < indices.size(); i += 3) {
+		for (unsigned int i = 0; i < indices.size(); i += 3) 
+		{
 			Vertex& v0 = vertices[indices[i]];
 			Vertex& v1 = vertices[indices[i + 1]];
 			Vertex& v2 = vertices[indices[i + 2]];
 
-			glm::vec3 Edge1 = v1.Position - v0.Position;
-			glm::vec3 Edge2 = v2.Position - v0.Position;
+			glm::vec3 edge1 = v1.Position - v0.Position;
+			glm::vec3 edge2 = v2.Position - v0.Position;
 
-			float DeltaU1 = v1.TexCoords.x - v0.TexCoords.x;
-			float DeltaV1 = v1.TexCoords.y - v0.TexCoords.y;
-			float DeltaU2 = v2.TexCoords.x - v0.TexCoords.x;
-			float DeltaV2 = v2.TexCoords.y - v0.TexCoords.y;
+			float deltaU1 = v1.TexCoords.x - v0.TexCoords.x;
+			float deltaV1 = v1.TexCoords.y - v0.TexCoords.y;
+			float deltaU2 = v2.TexCoords.x - v0.TexCoords.x;
+			float deltaV2 = v2.TexCoords.y - v0.TexCoords.y;
 
-			float f = 1.0f / (DeltaU1 * DeltaV2 - DeltaU2 * DeltaV1);
+			float f = 1.0f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
 
-			glm::vec3 Tangent, Bitangent;
+			glm::vec3 Tangent;
 
-			Tangent.x = f * (DeltaV2 * Edge1.x - DeltaV1 * Edge2.x);
-			Tangent.y = f * (DeltaV2 * Edge1.y - DeltaV1 * Edge2.y);
-			Tangent.z = f * (DeltaV2 * Edge1.z - DeltaV1 * Edge2.z);
+			Tangent.x = f * (deltaV2 * edge1.x - deltaV1 * edge2.x);
+			Tangent.y = f * (deltaV2 * edge1.y - deltaV1 * edge2.y);
+			Tangent.z = f * (deltaV2 * edge1.z - deltaV1 * edge2.z);
 
-			Bitangent.x = f * (-DeltaU2 * Edge1.x - DeltaU1 * Edge2.x);
-			Bitangent.y = f * (-DeltaU2 * Edge1.y - DeltaU1 * Edge2.y);
-			Bitangent.z = f * (-DeltaU2 * Edge1.z - DeltaU1 * Edge2.z);
+			//Bitangent.x = f * (-deltaU2 * edge1.x - deltaU1 * edge2.x);
+			//Bitangent.y = f * (-deltaU2 * edge1.y - deltaU1 * edge2.y);
+			//Bitangent.z = f * (-deltaU2 * edge1.z - deltaU1 * edge2.z);
 
 			v0.Tangent += Tangent;
 			v1.Tangent += Tangent;

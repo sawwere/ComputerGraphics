@@ -1,2 +1,2 @@
 # Индивидаульное задание 3
-вставить картинку:)
+![](https://github.com/sawwere/ComputerGraphics/blob/IndTask3/IndTask3.gif)

@@ -61,7 +61,9 @@ void Fill(Scene* scene, ShaderProgram& defaultShader, ShaderProgram& instancedSh
     }
     Mesh* _fir = new Mesh("Meshes//fir.obj", "Meshes//fir.jpg");
     SceneObject* fir = new SceneObject(_fir, &defaultShader);
+    fir->scale *= 2.0f;
     board[50] = 1;
+
     (*scene).AddSceneObject(*fir);
 
     ShaderProgram* targetShader = new ShaderProgram("Shaders//instanced.vs", "Shaders//target.frag");

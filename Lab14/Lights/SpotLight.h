@@ -8,11 +8,11 @@ struct SpotLight
 {
     glm::vec3 position;
 
-    glm::vec3 attenuation = { 1.0f, 0.007f, 0.0002f };
+    glm::vec3 attenuation = { 1.0f, 0.09f, 0.032f };
 
-    glm::vec3 ambient = { 0.2f, 0.2f, 0.2f };
-    glm::vec3 diffuse = { 0.7f, 0.7f, 0.7f };
-    glm::vec3 specular = { 1.0f, 1.0f, 1.0f };
+    glm::vec3 ambient = { 0.05f, 0.05f, 0.05f };
+    glm::vec3 diffuse = { 1.0f, 1.0f, 0.8f };
+    glm::vec3 specular = { 1.0f, 1.0f, 0.8f };
 
     SpotLight() {};
 };

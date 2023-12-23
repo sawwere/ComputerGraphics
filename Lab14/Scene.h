@@ -12,6 +12,7 @@
 class Scene
 {
 	DirectionalLight directionalLight;
+	SpotLight spotLight;
 public:
 	std::vector<ShaderProgram*> shaders;
 	std::vector<SceneObject*> sceneObjects;
@@ -61,7 +62,7 @@ public:
 			shaderProgram->SetUniformVec3("directionalLight.specular", directionalLight.specular);
 
 
-			shaderProgram->SetUniformVec3("pointLight.position", 50.0f, 1.0f, -0.3f);
+			shaderProgram->SetUniformVec3("pointLight.position", 0.0f, 1.0f, -0.3f);
 			shaderProgram->SetUniformVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
 			shaderProgram->SetUniformVec3("pointLight.diffuse", 0.4f, 0.4f, 0.4f);
 			shaderProgram->SetUniformVec3("pointLight.specular", 0.5f, 0.5f, 0.5f);
@@ -71,10 +72,10 @@ public:
 			shaderProgram->SetUniformVec3("spotLight.position", camera.Position);
 			shaderProgram->SetUniformVec3("spotLight.direction", camera.Front);
 
-			shaderProgram->SetUniformVec3("spotLight.ambient", 0.05f, 0.05f, 0.05f);
-			shaderProgram->SetUniformVec3("spotLight.diffuse", 0.4f, 0.4f, 0.4f);
-			shaderProgram->SetUniformVec3("spotLight.specular", 0.5f, 0.5f, 0.5f);
-			shaderProgram->SetUniformVec3("spotLight.attenuation", 1.0f, 0.09f, 0.032f);
+			shaderProgram->SetUniformVec3("spotLight.ambient", spotLight.ambient);
+			shaderProgram->SetUniformVec3("spotLight.diffuse", spotLight.diffuse);
+			shaderProgram->SetUniformVec3("spotLight.specular", spotLight.specular);
+			shaderProgram->SetUniformVec3("spotLight.attenuation", spotLight.attenuation);
 
 			shaderProgram->SetUniformFloat("spotLight.innerAngle", 5.0f);
 			shaderProgram->SetUniformFloat("spotLight.outerAngle", 9.0f);

@@ -38,21 +38,33 @@ int main()
     glewInit();
     glEnable(GL_DEPTH_TEST);
 
-    ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
-    ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
-
-    Mesh mesh = Mesh("Meshes//cube.obj", "Meshes//yell.jpg");
-    SceneObject sun = SceneObject(&mesh, &ourShader);
-    sun.scale = sun.scale * 0.25f;
-
-    InstansedMesh meshPlanet = InstansedMesh("Meshes//bird.obj", "Meshes//bird.jpg", 11);
-    SceneObject planet = SceneObject(&meshPlanet, &planetShader);
-
     Scene mainScene = Scene();
-    mainScene.AddSceneObject(sun);
-    mainScene.AddSceneObject(planet);
-    mainScene.AddShaderProgram(ourShader);
-    mainScene.AddShaderProgram(planetShader);
+
+    ShaderProgram phongShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
+    mainScene.AddShaderProgram(phongShader);
+    ShaderProgram toonShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
+    mainScene.AddShaderProgram(toonShader);
+    //TODO
+    ShaderProgram olegShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
+    mainScene.AddShaderProgram(olegShader);
+
+    Mesh _barn = Mesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg");
+    SceneObject barn = SceneObject(&_barn, &phongShader);
+    barn.scale *= 0.5f;
+    mainScene.AddSceneObject(barn);
+    Mesh plane = Mesh("Meshes//Ground//cube.obj", "Meshes//Ground//grass.png");
+    SceneObject ground = SceneObject(&plane, &phongShader);
+    ground.scale = { 200.0f, 0.2f, 200.0f };
+    ground.position.y -= 1.0f;
+    mainScene.AddSceneObject(ground);
+    Mesh _snowman = Mesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png");
+    SceneObject snowman = SceneObject(&_snowman, &phongShader);
+    snowman.position = { 2.5f, 0.0f, 0.5f };
+    mainScene.AddSceneObject(snowman);
+
+    Mesh mesh = Mesh("Meshes//cube.obj", "Meshes//Snowman//snowman.png");
+    SceneObject sun = SceneObject(&mesh, &phongShader);
+    sun.scale = sun.scale * 0.25f;
 
     sf::Time elapsedTime;
     sf::Clock clock;

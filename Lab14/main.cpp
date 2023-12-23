@@ -55,12 +55,16 @@ int main()
     Mesh plane = Mesh("Meshes//Ground//cube.obj", "Meshes//Ground//grass.png");
     SceneObject ground = SceneObject(&plane, &phongShader);
     ground.scale = { 200.0f, 0.2f, 200.0f };
-    ground.position.y -= 1.0f;
     mainScene.AddSceneObject(ground);
     Mesh _snowman = Mesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png");
     SceneObject snowman = SceneObject(&_snowman, &phongShader);
-    snowman.position = { 2.5f, 0.0f, 0.5f };
+    snowman.position = { 6.5f, 0.0f, 0.5f };
     mainScene.AddSceneObject(snowman);
+
+    Mesh _lamp = Mesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg");
+    SceneObject lamp = SceneObject(&_lamp, &phongShader);
+    lamp.position = { -4.0f, 0.0f, 0.5f };
+    mainScene.AddSceneObject(lamp);
 
     Mesh mesh = Mesh("Meshes//cube.obj", "Meshes//Snowman//snowman.png");
     SceneObject sun = SceneObject(&mesh, &phongShader);

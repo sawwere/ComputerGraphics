@@ -13,6 +13,7 @@ class Scene
 {
 	DirectionalLight directionalLight;
 	SpotLight spotLight;
+	PointLight pointLight;
 public:
 	std::vector<ShaderProgram*> shaders;
 	std::vector<SceneObject*> sceneObjects;
@@ -24,7 +25,7 @@ public:
 	{
 		skybox = Skybox();
 		Camera camera();
-
+		pointLight.position = { -4.5f, 2.0f, 0.5f };
 	}
 
 	void SetDirectionalLight(DirectionalLight dirLight)
@@ -62,11 +63,11 @@ public:
 			shaderProgram->SetUniformVec3("directionalLight.specular", directionalLight.specular);
 
 
-			shaderProgram->SetUniformVec3("pointLight.position", 0.0f, 1.0f, -0.3f);
-			shaderProgram->SetUniformVec3("pointLight.ambient", 0.05f, 0.05f, 0.05f);
-			shaderProgram->SetUniformVec3("pointLight.diffuse", 0.4f, 0.4f, 0.4f);
-			shaderProgram->SetUniformVec3("pointLight.specular", 0.5f, 0.5f, 0.5f);
-			shaderProgram->SetUniformVec3("pointLight.attenuation", 1.0f, 0.09f, 0.032f);
+			shaderProgram->SetUniformVec3("pointLight.position", pointLight.position);
+			shaderProgram->SetUniformVec3("pointLight.ambient", pointLight.ambient);
+			shaderProgram->SetUniformVec3("pointLight.diffuse", pointLight.diffuse);
+			shaderProgram->SetUniformVec3("pointLight.specular", pointLight.specular);
+			shaderProgram->SetUniformVec3("pointLight.attenuation", pointLight.attenuation);
 
 
 			shaderProgram->SetUniformVec3("spotLight.position", camera.Position);

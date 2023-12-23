@@ -46,6 +46,7 @@ uniform DirectionalLight directionalLight;
 uniform PointLight pointLight;
 uniform SpotLight spotLight;
 uniform vec3 viewPos;
+uniform float shadeCount;
 
 // Directional light
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -118,7 +119,7 @@ void main ()
     vec4  clr;
     clr= vec4(result, 1.0);
 
-    if ( diff < 0.4 )
+    /*if ( diff < 0.4 )
         clr = clr * 0.3;
     else
     if ( diff < 0.7 )
@@ -126,6 +127,15 @@ void main ()
     else
         clr = clr * 1.3;
 
+    */
+    float diffstep=1/shadeCount;
+    for(int i = 0; i < shadeCount; i++) {
+        if ( diff < (i+1)*diffstep )
+        {
+        clr = clr * (0.3+i*diffstep);
+        break;
+        }
+    }
     FragColor = clr;
 
 }

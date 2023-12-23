@@ -52,6 +52,8 @@ public:
 			shaderProgram->SetUniformMat4("view", camera.GetViewMatrix());
 			shaderProgram->SetUniformVec3("viewPos", camera.Position);
 
+			shaderProgram->SetUniformFloat("shadeCount", 5.0f);
+
 
 			shaderProgram->SetUniformVec3("directionalLight.direction", directionalLight.direction);
 			shaderProgram->SetUniformVec3("directionalLight.ambient", directionalLight.ambient);

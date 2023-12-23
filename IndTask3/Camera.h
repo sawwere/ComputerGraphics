@@ -18,10 +18,9 @@ enum Camera_Movement {
     DOWNROTATION
 };
 const float YAW = -90.0f;
-const float PITCH = 0.0f;
+const float PITCH = -30.0f;
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
-const float ZOOM = 45.0f;
 
 class Camera
 {
@@ -39,7 +38,10 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 7.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+
+    int SCREEN_WIDTH = 800;
+    int SCREEN_HEIGHT = 800;
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 7.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY)
     {
         Position = position;
         WorldUp = up;
@@ -91,6 +93,29 @@ public:
                 Pitch = -89.0f;
             updateCameraVectors();
         }
+    }
+
+    void ProcessMouseScroll(float yoffset)
+    {
+        float velocity = MovementSpeed * yoffset;
+        Position += Front * velocity;
+    }
+
+    void OnMouseMove(glm::vec2 offset, GLboolean constrainPitch = true)
+    {
+        offset *= MouseSensitivity;
+
+        Yaw += offset.x;
+        Pitch -= offset.y;
+
+        // make sure that when pitch is out of bounds, screen doesn't get flipped
+        if (constrainPitch)
+        {
+            if (Pitch > 89.0f) Pitch = 89.0f;
+            if (Pitch < -89.0f) Pitch = -89.0f;
+        }
+
+        updateCameraVectors();
     }
 private:
     void updateCameraVectors()

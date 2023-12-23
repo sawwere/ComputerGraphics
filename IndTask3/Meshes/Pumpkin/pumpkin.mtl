@@ -1,0 +1,54 @@
+# Textures packed with a simple packer
+# Blender 4.0.2 MTL File: 'pumpkin.blend'
+# www.blender.org
+
+newmtl Fire
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd pumpkin_packed_full.png
+
+newmtl balloon
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd pumpkin_packed_full.png
+
+newmtl branch
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.138432 0.181164 0.030713
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+
+newmtl metal
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Kd pumpkin_packed_full.png
+
+newmtl smoke
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 2
+
+newmtl wires
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 2

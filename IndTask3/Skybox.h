@@ -92,12 +92,12 @@ private:
 
 		std::vector<std::string> faces
 		{
-			"Images/right.png",
-			"Images/left.png",
-			"Images/top.png",
-			"Images/bottom.png",
-			"Images/front.png",
-			"Images/back.png"
+			"Images/right.jpg",
+			"Images/left.jpg",
+			"Images/top.jpg",
+			"Images/bottom.jpg",
+			"Images/front.jpg",
+			"Images/back.jpg"
 		};
 		cubemapTexture = loadCubemap(faces);
 		skyboxShader = new ShaderProgram("Shaders//skybox.vs", "Shaders//skybox.frag");

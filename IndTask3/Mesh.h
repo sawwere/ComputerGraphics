@@ -33,6 +33,7 @@ struct Vertex
     glm::vec3 Position;
     glm::vec3 Normal;
     glm::vec2 TexCoords;
+	glm::vec3 Tangent;
 };
 
 
@@ -46,9 +47,11 @@ public:
     
 	Material* material;
     Texture texture;    
+	bool useNormalMap = false;
+	sf::Texture normalMap;
 
     //TODO indexing
-    Mesh(const char* filePath, const char* texturePath)
+    Mesh(const char* filePath, const char* texturePath, const char* normalMap = nullptr)
     {
 		try 
 		{
@@ -175,29 +178,34 @@ public:
 			std::cout << e.what() << std::endl;
 		}
 		std::cout << "Total vertices count: " << vertices.size() << std::endl;
+		InitializeTexture(texturePath, normalMap);
+		if (normalMap != nullptr)
+		{
+			useNormalMap = true;
+			InitializeTangent(normalMap);
+		}
 		InitializeBuffers();
-		InitializeTexture(texturePath);
-    }
-
-    Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures)
-    {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->texture = textures[0];
-
-        InitializeBuffers();
     }
 
     virtual void Draw(ShaderProgram& shader) const
     {
         shader.Use();
 		material->Use(&shader);
+		auto unifTexture1 = glGetUniformLocation(shader.ID, "material.diffuse");
+		glUniform1i(unifTexture1, 0);
+		if (useNormalMap)
+		{
+			glActiveTexture(GL_TEXTURE1);
+			sf::Texture::bind(&normalMap);
+			auto unifTexture2 = glGetUniformLocation(shader.ID, "normalMap");
+			glUniform1i(unifTexture2, 1);
+		}
+		
         {
 			glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
             sf::Texture::bind(NULL);
-            
         }
         glUseProgram(0);
     }
@@ -208,14 +216,52 @@ public:
 		Release();
 	}
 protected:
-	void InitializeTexture(const char* texturePath)
+	void InitializeTangent(const char* normalMap = nullptr)
+	{
+		for (unsigned int i = 0; i < indices.size(); i += 3) 
+		{
+			Vertex& v0 = vertices[indices[i]];
+			Vertex& v1 = vertices[indices[i + 1]];
+			Vertex& v2 = vertices[indices[i + 2]];
+
+			glm::vec3 edge1 = v1.Position - v0.Position;
+			glm::vec3 edge2 = v2.Position - v0.Position;
+
+			float deltaU1 = v1.TexCoords.x - v0.TexCoords.x;
+			float deltaV1 = v1.TexCoords.y - v0.TexCoords.y;
+			float deltaU2 = v2.TexCoords.x - v0.TexCoords.x;
+			float deltaV2 = v2.TexCoords.y - v0.TexCoords.y;
+
+			float f = 1.0f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
+
+			glm::vec3 Tangent;
+
+			Tangent.x = f * (deltaV2 * edge1.x - deltaV1 * edge2.x);
+			Tangent.y = f * (deltaV2 * edge1.y - deltaV1 * edge2.y);
+			Tangent.z = f * (deltaV2 * edge1.z - deltaV1 * edge2.z);
+
+			//Bitangent.x = f * (-deltaU2 * edge1.x - deltaU1 * edge2.x);
+			//Bitangent.y = f * (-deltaU2 * edge1.y - deltaU1 * edge2.y);
+			//Bitangent.z = f * (-deltaU2 * edge1.z - deltaU1 * edge2.z);
+
+			v0.Tangent += Tangent;
+			v1.Tangent += Tangent;
+			v2.Tangent += Tangent;
+		}
+
+		for (unsigned int i = 0; i < vertices.size(); i++) 
+		{
+			vertices[i].Tangent = glm::normalize(vertices[i].Tangent);
+		}
+	}
+
+	void InitializeTexture(const char* texturePath, const char* normalMapPath = nullptr)
 	{
 		material = new Material(texturePath);
-
-		sf::Texture texture1;
-		texture1.loadFromFile(texturePath);
-		texture1.setRepeated(true);
-		texture = { 0, "testing", texture1 };
+		if (normalMapPath != nullptr)
+		{
+			normalMap.loadFromFile(normalMapPath);
+		}
 	}
 
     virtual void InitializeBuffers()
@@ -241,6 +287,9 @@ protected:
         // Texture
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
         glEnableVertexAttribArray(2);
+		// Tangent
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(8 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
 
         glBindVertexArray(0); // Unbind VAO
     }

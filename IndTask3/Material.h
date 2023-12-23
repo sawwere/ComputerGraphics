@@ -36,12 +36,12 @@ public:
 		
 	}
 private:
-	void InitializeTexture(const char* texturePath)
+	void InitializeTexture(const char* texturePath, std::string type = "texture_diffuse")
 	{
 		sf::Texture texture1;
 		texture1.loadFromFile(texturePath);
 		texture1.setRepeated(true);
-		texture = { 0, "testing", texture1 };
+		texture = { 0, type, texture1 };
 	}
 };
 

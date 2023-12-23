@@ -38,10 +38,10 @@ int main()
     glewInit();
     glEnable(GL_DEPTH_TEST);
 
-    ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//sun.frag");
+    ShaderProgram ourShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
     ShaderProgram planetShader = ShaderProgram("Shaders//planet.vs", "Shaders//planet.frag");
 
-    Mesh mesh = Mesh("Meshes//bird.obj", "Meshes//bird.jpg");
+    Mesh mesh = Mesh("Meshes//cube.obj", "Meshes//yell.jpg");
     SceneObject sun = SceneObject(&mesh, &ourShader);
     sun.scale = sun.scale * 0.25f;
 

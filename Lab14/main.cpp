@@ -45,7 +45,7 @@ int main()
     ShaderProgram toonShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
     mainScene.AddShaderProgram(toonShader);
     //TODO
-    ShaderProgram olegShader = ShaderProgram("Shaders//sun.vs", "Shaders//toon.frag");
+    ShaderProgram olegShader = ShaderProgram("Shaders//sun.vs", "Shaders//minnaert.frag");
     mainScene.AddShaderProgram(olegShader);
 
     Mesh _barn = Mesh("Meshes//Barn//barn.obj", "Meshes//Barn//barn.jpg");
@@ -57,12 +57,12 @@ int main()
     ground.scale = { 200.0f, 0.2f, 200.0f };
     mainScene.AddSceneObject(ground);
     Mesh _snowman = Mesh("Meshes//Snowman//snowman.obj", "Meshes//Snowman//snowman.png");
-    SceneObject snowman = SceneObject(&_snowman, &phongShader);
+    SceneObject snowman = SceneObject(&_snowman, &toonShader);
     snowman.position = { 6.5f, 0.0f, 0.5f };
     mainScene.AddSceneObject(snowman);
 
     Mesh _lamp = Mesh("Meshes//Lamp//lamp.obj", "Meshes//Lamp//lamp.jpg");
-    SceneObject lamp = SceneObject(&_lamp, &phongShader);
+    SceneObject lamp = SceneObject(&_lamp, &olegShader);
     lamp.position = { -4.0f, 0.0f, 0.5f };
     mainScene.AddSceneObject(lamp);
 
